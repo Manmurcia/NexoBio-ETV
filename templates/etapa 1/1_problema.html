@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">1. Problema y Contexto</h1>
+
+<h4 class="mt-4">Contexto general</h4>
+<p>
+    Las enfermedades transmitidas por vectores (ETV) como el dengue, la malaria, el chikungunya,
+    el zika, la leishmaniasis y el chagas representan un problema de salud pública persistente en
+    regiones tropicales y subtropicales. Su transmisión depende de factores biológicos (vectores como
+    mosquitos y otros artrópodos), climáticos (temperatura, precipitación, estacionalidad) y
+    socioeconómicos (urbanización, acceso a servicios de salud, condiciones de saneamiento).
+</p>
+
+<h4 class="mt-4">Problema específico</h4>
+<p>
+    A pesar de que las ETV se monitorean de forma rutinaria por organismos de salud a nivel mundial,
+    nacional y local, no siempre es claro cómo se comparan los patrones de incidencia, letalidad y
+    estacionalidad entre estas tres escalas, ni qué factores explican las diferencias observadas.
+    Este proyecto busca comparar la carga, distribución geográfica y comportamiento estacional de las
+    principales ETV en tres niveles global, nacional (Colombia) y regional (Bogotá–Cundinamarca)
+    para identificar patrones comunes y divergencias entre escalas.
+</p>
+
+<h4 class="mt-4">Análisis por niveles</h4>
+<div class="row mt-3">
+    <div class="col-md-4 mb-3">
+        <div class="p-3 border rounded h-100">
+            <h5>🌍 Global</h5>
+            <p class="mb-0">Comparación entre países usando datos de la OMS y la OPS: incidencia,
+            mortalidad y distribución de ETV en distintas regiones del mundo.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="p-3 border rounded h-100">
+            <h5>🇨🇴 Nacional</h5>
+            <p class="mb-0">Comportamiento de las ETV en Colombia por departamento, usando datos de
+            vigilancia epidemiológica (SIVIGILA, Minsalud).</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="p-3 border rounded h-100">
+            <h5>📍 Regional</h5>
+            <p class="mb-0">Distribución de casos en Bogotá y los municipios de Cundinamarca, usando
+            boletines de las secretarías de salud distrital y departamental.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
