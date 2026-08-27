@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">3. Necesidades de Información</h1>
+
+<p>Para responder las preguntas de investigación planteadas, el proyecto requiere la siguiente información:</p>
+
+<div class="table-responsive mt-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Elemento</th>
+            <th>Descripción para el proyecto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Entidades involucradas</strong></td>
+            <td>OMS, OPS, Instituto Nacional de Salud (SIVIGILA), Minsalud, Secretaría Distrital de Salud
+            de Bogotá, Secretaría de Salud de Cundinamarca.</td>
+        </tr>
+        <tr>
+            <td><strong>Variables relevantes</strong></td>
+            <td>Enfermedad (dengue, malaria, chikungunya, zika, leishmaniasis, chagas), fecha o semana
+            epidemiológica, edad, sexo, ubicación (país / departamento / municipio), desenlace
+            (vivo / fallecido), número de casos confirmados.</td>
+        </tr>
+        <tr>
+            <td><strong>Periodo de análisis</strong></td>
+            <td>2015–2024 (o el rango más amplio disponible por fuente).</td>
+        </tr>
+        <tr>
+            <td><strong>Cobertura geográfica</strong></td>
+            <td>Países (nivel global) → departamentos de Colombia (nivel nacional) → municipios de
+            Cundinamarca incluyendo Bogotá (nivel regional).</td>
+        </tr>
+        <tr>
+            <td><strong>Población / unidad de análisis</strong></td>
+            <td>Caso notificado individual, o agregado por semana epidemiológica cuando no se disponga
+            de microdato.</td>
+        </tr>
+        <tr>
+            <td><strong>Nivel de granularidad</strong></td>
+            <td>El más fino disponible por fuente: idealmente caso individual; como mínimo, agregado
+            semanal por unidad geográfica.</td>
+        </tr>
+        <tr>
+            <td><strong>Variable de comparación entre escalas</strong></td>
+            <td>Tasa de incidencia por 100.000 habitantes, que permite comparar poblaciones distintas
+            entre país, departamento y municipio.</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">7. Calidad Inicial de los Datos</h1>
+<p>Diagnóstico (no limpieza) del estado inicial del dataset consolidado:</p>
+
+<div class="table-responsive mt-3">
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr><th>Aspecto</th><th>Hallazgo</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Valores faltantes</td><td><em>[completar]</em></td></tr>
+        <tr><td>Registros duplicados</td><td><em>[completar]</em></td></tr>
+        <tr><td>Inconsistencias</td><td><em>[completar]</em></td></tr>
+        <tr><td>Valores fuera de dominio esperado</td><td><em>[completar]</em></td></tr>
+        <tr><td>Diferencias de formato entre fuentes</td><td><em>[completar]</em></td></tr>
+        <tr><td>Problemas de integración entre fuentes</td><td><em>[completar]</em></td></tr>
+        <tr><td>Posibles sesgos</td><td><em>[completar]</em></td></tr>
+    </tbody>
+</table>
+</div>
+<p class="text-muted"><em>Pendiente: ejecutar el diagnóstico (ej. pandas .isnull(), .duplicated()) sobre el dataset real y completar la tabla.</em></p>
+{% endblock %}

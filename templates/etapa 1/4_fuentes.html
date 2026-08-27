@@ -1,0 +1,124 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">4. Fuentes de Datos</h1>
+<p>Se documentan seis fuentes, mínimo dos por cada nivel de análisis (global, nacional, regional),
+clasificadas como primarias, secundarias o terciarias.</p>
+
+<h4 class="mt-4">🌍 Nivel Global</h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered table-sm">
+    <tbody>
+        <tr><th style="width:220px;">Nombre</th><td>WHO Global Health Observatory (GHO)</td></tr>
+        <tr><th>Institución</th><td>Organización Mundial de la Salud (OMS)</td></tr>
+        <tr><th>URL</th><td><a href="https://www.who.int/data/gho" target="_blank">who.int/data/gho</a></td></tr>
+        <tr><th>Tipo de fuente</th><td>Secundaria</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Global (países miembros de la OMS)</td></tr>
+        <tr><th>Periodo disponible</th><td>Variable según indicador, generalmente 2000–presente</td></tr>
+        <tr><th>Formato</th><td>CSV / JSON vía API OData, tablas descargables</td></tr>
+        <tr><th>Método de adquisición</th><td>Descarga directa o consulta a la API pública</td></tr>
+        <tr><th>N.º aprox. de registros</th><td><em>[completar al consultar]</em></td></tr>
+        <tr><th>Variables disponibles</th><td>Casos confirmados, incidencia, mortalidad por país y año, por enfermedad</td></tr>
+        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Restricciones</th><td>Uso libre citando a la OMS como fuente</td></tr>
+    </tbody>
+</table>
+</div>
+
+<div class="table-responsive mb-4">
+<table class="table table-bordered table-sm">
+    <tbody>
+        <tr><th style="width:220px;">Nombre</th><td>PLISA – Plataforma de Información en Salud para las Américas</td></tr>
+        <tr><th>Institución</th><td>Organización Panamericana de la Salud (OPS)</td></tr>
+        <tr><th>URL</th><td><a href="https://www3.paho.org/data/index.php/es/" target="_blank">www3.paho.org/data</a></td></tr>
+        <tr><th>Tipo de fuente</th><td>Secundaria</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Región de las Américas</td></tr>
+        <tr><th>Periodo disponible</th><td>~2014–presente (dengue, malaria)</td></tr>
+        <tr><th>Formato</th><td>Tablas web descargables en Excel/CSV</td></tr>
+        <tr><th>Método de adquisición</th><td>Descarga manual por módulo de indicadores</td></tr>
+        <tr><th>N.º aprox. de registros</th><td><em>[completar al consultar]</em></td></tr>
+        <tr><th>Variables disponibles</th><td>Casos, muertes, tasa de incidencia, serotipos de dengue por país</td></tr>
+        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Restricciones</th><td>Uso libre citando a la OPS</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h4 class="mt-4">🇨🇴 Nivel Nacional (Colombia)</h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered table-sm">
+    <tbody>
+        <tr><th style="width:220px;">Nombre</th><td>SIVIGILA (microdatos de notificación)</td></tr>
+        <tr><th>Institución</th><td>Instituto Nacional de Salud (INS)</td></tr>
+        <tr><th>URL</th><td><a href="https://www.datos.gov.co/" target="_blank">datos.gov.co</a> (buscar "SIVIGILA") / <a href="https://www.ins.gov.co" target="_blank">ins.gov.co</a></td></tr>
+        <tr><th>Tipo de fuente</th><td>Primaria</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Nacional, desagregado por departamento y municipio</td></tr>
+        <tr><th>Periodo disponible</th><td><em>[completar según el dataset descargado]</em></td></tr>
+        <tr><th>Formato</th><td>CSV</td></tr>
+        <tr><th>Método de adquisición</th><td>Descarga desde datos.gov.co</td></tr>
+        <tr><th>N.º aprox. de registros</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Variables disponibles</th><td>Código del evento, fecha de notificación, edad, sexo, municipio, condición final</td></tr>
+        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Restricciones</th><td>Datos abiertos y anonimizados, uso libre citando la fuente</td></tr>
+    </tbody>
+</table>
+</div>
+
+<div class="table-responsive mb-4">
+<table class="table table-bordered table-sm">
+    <tbody>
+        <tr><th style="width:220px;">Nombre</th><td>SISPRO – Cubo de Indicadores</td></tr>
+        <tr><th>Institución</th><td>Ministerio de Salud y Protección Social (Minsalud)</td></tr>
+        <tr><th>URL</th><td><a href="https://www.sispro.gov.co" target="_blank">sispro.gov.co</a></td></tr>
+        <tr><th>Tipo de fuente</th><td>Secundaria</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Nacional / departamental</td></tr>
+        <tr><th>Periodo disponible</th><td>Histórico multianual</td></tr>
+        <tr><th>Formato</th><td>Consulta web exportable a Excel</td></tr>
+        <tr><th>Método de adquisición</th><td>Consulta en cubos de indicadores públicos</td></tr>
+        <tr><th>N.º aprox. de registros</th><td><em>[completar al consultar]</em></td></tr>
+        <tr><th>Variables disponibles</th><td>Tasa de incidencia, mortalidad, cobertura por departamento y año</td></tr>
+        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Restricciones</th><td>Acceso público, uso no comercial</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h4 class="mt-4">📍 Nivel Regional (Bogotá–Cundinamarca)</h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered table-sm">
+    <tbody>
+        <tr><th style="width:220px;">Nombre</th><td>Boletines epidemiológicos ETV Bogotá</td></tr>
+        <tr><th>Institución</th><td>Secretaría Distrital de Salud de Bogotá</td></tr>
+        <tr><th>URL</th><td><a href="https://www.saludcapital.gov.co" target="_blank">saludcapital.gov.co</a></td></tr>
+        <tr><th>Tipo de fuente</th><td>Secundaria</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Localidades de Bogotá</td></tr>
+        <tr><th>Periodo disponible</th><td><em>[completar según boletín consultado]</em></td></tr>
+        <tr><th>Formato</th><td>PDF, algunos tableros Power BI</td></tr>
+        <tr><th>Método de adquisición</th><td>Descarga de boletines públicos</td></tr>
+        <tr><th>N.º aprox. de registros</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Variables disponibles</th><td>Casos por localidad y semana, tipo de ETV, tasa de incidencia</td></tr>
+        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Restricciones</th><td>Uso público con atribución a la fuente</td></tr>
+    </tbody>
+</table>
+</div>
+
+<div class="table-responsive mb-4">
+<table class="table table-bordered table-sm">
+    <tbody>
+        <tr><th style="width:220px;">Nombre</th><td>Informes de vigilancia epidemiológica municipal</td></tr>
+        <tr><th>Institución</th><td>Secretaría de Salud de Cundinamarca</td></tr>
+        <tr><th>URL</th><td><a href="https://www.cundinamarca.gov.co" target="_blank">cundinamarca.gov.co</a> (Secretaría de Salud)</td></tr>
+        <tr><th>Tipo de fuente</th><td>Primaria / secundaria</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Municipios de Cundinamarca (incluye Chía)</td></tr>
+        <tr><th>Periodo disponible</th><td><em>[completar según informe consultado]</em></td></tr>
+        <tr><th>Formato</th><td>PDF / informes</td></tr>
+        <tr><th>Método de adquisición</th><td>Descarga pública o solicitud directa</td></tr>
+        <tr><th>N.º aprox. de registros</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Variables disponibles</th><td>Casos por municipio y semana epidemiológica</td></tr>
+        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
+        <tr><th>Restricciones</th><td>Uso público, verificar vigencia del enlace</td></tr>
+    </tbody>
+</table>
+</div>
+{% endblock %}

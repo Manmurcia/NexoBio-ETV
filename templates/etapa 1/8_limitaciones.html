@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">8. Limitaciones y Consideraciones</h1>
+
+<h4 class="mt-4">Limitaciones previstas</h4>
+<ul>
+    <li>Diferencias en la granularidad temporal y geográfica entre fuentes globales, nacionales y regionales.</li>
+    <li>Posible subregistro en fuentes regionales frente a las nacionales.</li>
+    <li>Cambios en criterios de notificación o clasificación de casos a lo largo del periodo analizado.</li>
+</ul>
+
+<h4 class="mt-4">Trazabilidad</h4>
+<p>
+    Todas las fuentes originales (sección 4) se conservan sin modificar; cualquier transformación o
+    filtro aplicado durante la construcción del dataset se documentará en el repositorio del proyecto
+    (rama <code>feature/etapa-1</code>).
+</p>
+
+<div class="p-3 mt-3" style="background:#fef9c3; border-left:4px solid #ca8a04; border-radius:6px;">
+    <p class="mb-0"><em>Pendiente: ampliar con las limitaciones específicas encontradas durante la
+    construcción real del dataset (sección 5) y el diagnóstico de calidad (sección 7).</em></p>
+</div>
+{% endblock %}
