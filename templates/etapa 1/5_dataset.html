@@ -3,35 +3,57 @@
 {% block content %}
 <h1 class="page-title">5. Dataset Inicial</h1>
 
+<h4 class="mt-4">Resultado real de la consolidación</h4>
+<div class="table-responsive mt-3">
+<table class="table table-bordered">
+    <thead class="table-light"><tr><th>Tabla</th><th>Registros</th><th>Descripción</th></tr></thead>
+    <tbody>
+        <tr><td>Nacional (Colombia)</td><td><strong>241.746</strong></td><td>Casos por evento/depto/municipio/semana, 2007–2022</td></tr>
+        <tr><td>Regional (Cundinamarca, combinado)</td><td><strong>1.640</strong></td><td>Conteo de casos + tasa de incidencia y letalidad oficial, por municipio-año</td></tr>
+        <tr><td>Global (brotes OMS)</td><td><strong>520</strong></td><td>Filtrado de 3.566 brotes totales a solo enfermedades ETV</td></tr>
+        <tr><td>Global-vector (CDC ArboNET)</td><td><strong>21.784</strong></td><td>Vigilancia de Ixodes por condado, EE. UU., 1996–2022</td></tr>
+        <tr><td>Complementaria (perfil clínico)</td><td><strong>8.799</strong></td><td>Casos ETV con edad, sexo, nacionalidad, régimen de afiliación</td></tr>
+    </tbody>
+</table>
+</div>
+
 <h4 class="mt-4">Cumplimiento de requisitos mínimos</h4>
 <div class="table-responsive mt-3">
 <table class="table table-bordered">
     <thead class="table-light"><tr><th>Requisito</th><th>Estado</th></tr></thead>
     <tbody>
-        <tr><td>10.000 registros mínimo</td><td>✅ Cumplido — el dataset nacional aporta 241.746 registros por sí solo</td></tr>
-        <tr><td>10 variables mínimo</td><td>✅ Cumplido tras el cruce (evento, departamento, municipio, semana, año, conteo, temperatura, precipitación, edad, sexo)</td></tr>
-        <tr><td>3 variables numéricas</td><td>conteo de casos, temperatura, precipitación (+ edad en fuentes de microdato)</td></tr>
-        <tr><td>3 variables categóricas</td><td>evento/enfermedad, departamento, municipio (+ sexo, régimen de afiliación)</td></tr>
-        <tr><td>1 variable temporal</td><td>semana epidemiológica / año / mes</td></tr>
+        <tr><td>10.000 registros mínimo</td><td>✅ Cumplido — 241.746 en la tabla nacional, 274.489 en total entre todas las tablas</td></tr>
+        <tr><td>10 variables mínimo</td><td>✅ Cumplido — ver diccionario de datos (sección 6)</td></tr>
+        <tr><td>3 variables numéricas</td><td>conteo de casos, tasa de incidencia dengue, letalidad por dengue, edad</td></tr>
+        <tr><td>3 variables categóricas</td><td>evento/enfermedad, departamento, municipio, sexo, régimen de afiliación</td></tr>
+        <tr><td>1 variable temporal</td><td>semana epidemiológica / año</td></tr>
         <tr><td>1 variable geográfica</td><td>departamento / municipio (código DANE)</td></tr>
-        <tr><td>Variable de comparación entre escalas (tasa de incidencia)</td><td>✅ Cumplido — el dataset "SALUD 2024" de Cundinamarca ya trae la tasa de incidencia de dengue calculada por municipio y año, sin necesidad de conseguir población aparte</td></tr>
     </tbody>
 </table>
 </div>
 
-<h4 class="mt-4">Plan de consolidación</h4>
+<h4 class="mt-4">Cómo se construyó el dataset regional (el más relevante del proyecto)</h4>
 <ol>
-    <li><strong>Base nacional/regional:</strong> "Datos de Vigilancia en Salud Pública de Colombia" (241.746 filas) se filtra por departamento para separar Cundinamarca (14.035 filas) del resto del país.</li>
-    <li><strong>Indicador regional oficial:</strong> el dataset "SALUD 2024" de la Gobernación de Cundinamarca (2.214 filas ETV) aporta la tasa de incidencia y letalidad de dengue ya calculada por municipio, cruzable por código de municipio (COD_MUN) y año.</li>
-    <li><strong>Enriquecimiento climático:</strong> cruce por municipio + semana/mes con el dataset satelital de PhysioNet (81 municipios, 2016–2018) para agregar temperatura y precipitación, si alguno de esos municipios pertenece a Cundinamarca.</li>
-    <li><strong>Comparación global:</strong> WHO Disease Outbreak News (3.567 filas) se usa como tabla de referencia por país/año, sin cruce directo por clave comparación a nivel agregado.</li>
-    <li><strong>Perfil clínico complementario:</strong> Perfil Epidemiológico Anual (8.765 filas ETV) se incorpora tras corregir el desalineamiento de columnas descrito en la sección 7; no tiene clave geográfica, así que se analiza aparte (perfil demográfico nacional).</li>
+    <li>Se agregó el conteo de casos de Cundinamarca (del dataset nacional) por
+        <code>cod_municipio + municipio + año + evento</code>.</li>
+    <li>Se cruzó (<code>merge</code> tipo <em>left</em>) con los indicadores oficiales de la Gobernación
+        (tasa de incidencia y letalidad de dengue), usando <code>cod_municipio + año</code> como clave.</li>
+    <li>Resultado: <strong>1.640 filas</strong> con ambas fuentes combinadas.</li>
 </ol>
 
-<h4 class="mt-4">Estado actual</h4>
-<div class="p-3" style="background:#dcfce7; border-left:4px solid #16a34a; border-radius:6px;">
-    <p class="mb-0">Las 6 fuentes están descargadas y verificadas (ver sección 4). El script de
-    consolidación (limpieza, cruce y unificación en un solo dataset tabular) está pendiente de
-    ejecutarse — próximo paso del proyecto.</p>
+<h4 class="mt-4">Hallazgo real del cruce</h4>
+<div class="p-3" style="background:#fef2f2; border-left:4px solid #dc2626; border-radius:6px;">
+    <p class="mb-0">
+        Al combinar quedaron <strong>486 valores nulos en "tasa de incidencia"</strong> y
+        <strong>1.434 en "letalidad"</strong> de las 1.640 filas. Motivo: los periodos de las dos
+        fuentes no coinciden del todo (conteo nacional 2007–2022 vs. indicador oficial 2011–2024), y
+        el código <code>25000</code> (Cundinamarca como agregado) no siempre tiene indicador calculado
+        a ese nivel. Se documenta también en la sección 7.
+    </p>
 </div>
+
+<h4 class="mt-4">Script de consolidación</h4>
+<p>El script <code>consolidar_datos.py</code> (repositorio del proyecto, rama <code>feature/etapa-1</code>)
+genera las 5 tablas anteriores a partir de los archivos crudos, con limpieza de tipos de dato
+(años y códigos de municipio que venían como texto con separador de miles) y normalización de texto.</p>
 {% endblock %}
