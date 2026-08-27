@@ -8,12 +8,13 @@
 <table class="table table-bordered">
     <thead class="table-light"><tr><th>Requisito</th><th>Estado</th></tr></thead>
     <tbody>
-        <tr><td>10.000 registros mínimo</td><td>✅ Cumplido el dataset nacional aporta 241.746 registros por sí solo</td></tr>
+        <tr><td>10.000 registros mínimo</td><td>✅ Cumplido — el dataset nacional aporta 241.746 registros por sí solo</td></tr>
         <tr><td>10 variables mínimo</td><td>✅ Cumplido tras el cruce (evento, departamento, municipio, semana, año, conteo, temperatura, precipitación, edad, sexo)</td></tr>
         <tr><td>3 variables numéricas</td><td>conteo de casos, temperatura, precipitación (+ edad en fuentes de microdato)</td></tr>
         <tr><td>3 variables categóricas</td><td>evento/enfermedad, departamento, municipio (+ sexo, régimen de afiliación)</td></tr>
         <tr><td>1 variable temporal</td><td>semana epidemiológica / año / mes</td></tr>
         <tr><td>1 variable geográfica</td><td>departamento / municipio (código DANE)</td></tr>
+        <tr><td>Variable de comparación entre escalas (tasa de incidencia)</td><td>✅ Cumplido — el dataset "SALUD 2024" de Cundinamarca ya trae la tasa de incidencia de dengue calculada por municipio y año, sin necesidad de conseguir población aparte</td></tr>
     </tbody>
 </table>
 </div>
@@ -21,15 +22,16 @@
 <h4 class="mt-4">Plan de consolidación</h4>
 <ol>
     <li><strong>Base nacional/regional:</strong> "Datos de Vigilancia en Salud Pública de Colombia" (241.746 filas) se filtra por departamento para separar Cundinamarca (14.035 filas) del resto del país.</li>
-    <li><strong>Enriquecimiento climático:</strong> cruce por municipio + semana/mes con el dataset satelital de PhysioNet (81 municipios, 2016–2018) para agregar temperatura y precipitación.</li>
+    <li><strong>Indicador regional oficial:</strong> el dataset "SALUD 2024" de la Gobernación de Cundinamarca (2.214 filas ETV) aporta la tasa de incidencia y letalidad de dengue ya calculada por municipio, cruzable por código de municipio (COD_MUN) y año.</li>
+    <li><strong>Enriquecimiento climático:</strong> cruce por municipio + semana/mes con el dataset satelital de PhysioNet (81 municipios, 2016–2018) para agregar temperatura y precipitación, si alguno de esos municipios pertenece a Cundinamarca.</li>
     <li><strong>Comparación global:</strong> WHO Disease Outbreak News (3.567 filas) se usa como tabla de referencia por país/año, sin cruce directo por clave comparación a nivel agregado.</li>
     <li><strong>Perfil clínico complementario:</strong> Perfil Epidemiológico Anual (8.765 filas ETV) se incorpora tras corregir el desalineamiento de columnas descrito en la sección 7; no tiene clave geográfica, así que se analiza aparte (perfil demográfico nacional).</li>
 </ol>
 
 <h4 class="mt-4">Estado actual</h4>
 <div class="p-3" style="background:#dcfce7; border-left:4px solid #16a34a; border-radius:6px;">
-    <p class="mb-0">Las 5 fuentes están descargadas y verificadas (ver sección 4). El script de
+    <p class="mb-0">Las 6 fuentes están descargadas y verificadas (ver sección 4). El script de
     consolidación (limpieza, cruce y unificación en un solo dataset tabular) está pendiente de
-    ejecutarse próximo paso del proyecto.</p>
+    ejecutarse — próximo paso del proyecto.</p>
 </div>
 {% endblock %}
