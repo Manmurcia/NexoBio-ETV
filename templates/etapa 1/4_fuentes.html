@@ -2,25 +2,24 @@
 
 {% block content %}
 <h1 class="page-title">4. Fuentes de Datos</h1>
-<p>Se documentan seis fuentes, mínimo dos por cada nivel de análisis (global, nacional, regional),
-clasificadas como primarias, secundarias o terciarias.</p>
+<p>Siete fuentes reales ya recolectadas y verificadas (mínimo 2 por nivel).</p>
 
 <h4 class="mt-4">🌍 Nivel Global</h4>
 <div class="table-responsive mb-4">
 <table class="table table-bordered table-sm">
     <tbody>
-        <tr><th style="width:220px;">Nombre</th><td>WHO Global Health Observatory (GHO)</td></tr>
-        <tr><th>Institución</th><td>Organización Mundial de la Salud (OMS)</td></tr>
-        <tr><th>URL</th><td><a href="https://www.who.int/data/gho" target="_blank">who.int/data/gho</a></td></tr>
+        <tr><th style="width:230px;">Nombre</th><td>WHO Disease Outbreak News (vía HDX)</td></tr>
+        <tr><th>Institución</th><td>Organización Mundial de la Salud (OMS) / Humanitarian Data Exchange</td></tr>
+        <tr><th>URL</th><td><a href="https://data.humdata.org/dataset/global-pandemic-and-epidemic-outbreaks" target="_blank">data.humdata.org/dataset/global-pandemic-and-epidemic-outbreaks</a></td></tr>
         <tr><th>Tipo de fuente</th><td>Secundaria</td></tr>
-        <tr><th>Cobertura geográfica</th><td>Global (países miembros de la OMS)</td></tr>
-        <tr><th>Periodo disponible</th><td>Variable según indicador, generalmente 2000–presente</td></tr>
-        <tr><th>Formato</th><td>CSV / JSON vía API OData, tablas descargables</td></tr>
-        <tr><th>Método de adquisición</th><td>Descarga directa o consulta a la API pública</td></tr>
-        <tr><th>N.º aprox. de registros</th><td><em>[completar al consultar]</em></td></tr>
-        <tr><th>Variables disponibles</th><td>Casos confirmados, incidencia, mortalidad por país y año, por enfermedad</td></tr>
-        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Restricciones</th><td>Uso libre citando a la OMS como fuente</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Multi-país (global)</td></tr>
+        <tr><th>Periodo disponible</th><td>~2010–2026</td></tr>
+        <tr><th>Formato</th><td>Excel (.xlsx)</td></tr>
+        <tr><th>Método de adquisición</th><td>Descarga directa desde HDX</td></tr>
+        <tr><th>N.º de registros</th><td>3.567 (todas las enfermedades; incluye dengue, chikungunya, zika, fiebre amarilla, entre otras ETV)</td></tr>
+        <tr><th>Variables disponibles</th><td>país, iso2/iso3, enfermedad, código CIE10, año, región OMS, región UNSD</td></tr>
+        <tr><th>Fecha de consulta</th><td>27 de agosto de 2026</td></tr>
+        <tr><th>Restricciones</th><td>Datos abiertos, uso libre citando OMS/HDX</td></tr>
     </tbody>
 </table>
 </div>
@@ -28,18 +27,18 @@ clasificadas como primarias, secundarias o terciarias.</p>
 <div class="table-responsive mb-4">
 <table class="table table-bordered table-sm">
     <tbody>
-        <tr><th style="width:220px;">Nombre</th><td>PLISA – Plataforma de Información en Salud para las Américas</td></tr>
-        <tr><th>Institución</th><td>Organización Panamericana de la Salud (OPS)</td></tr>
-        <tr><th>URL</th><td><a href="https://www3.paho.org/data/index.php/es/" target="_blank">www3.paho.org/data</a></td></tr>
-        <tr><th>Tipo de fuente</th><td>Secundaria</td></tr>
-        <tr><th>Cobertura geográfica</th><td>Región de las Américas</td></tr>
-        <tr><th>Periodo disponible</th><td>~2014–presente (dengue, malaria)</td></tr>
-        <tr><th>Formato</th><td>Tablas web descargables en Excel/CSV</td></tr>
-        <tr><th>Método de adquisición</th><td>Descarga manual por módulo de indicadores</td></tr>
-        <tr><th>N.º aprox. de registros</th><td><em>[completar al consultar]</em></td></tr>
-        <tr><th>Variables disponibles</th><td>Casos, muertes, tasa de incidencia, serotipos de dengue por país</td></tr>
-        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Restricciones</th><td>Uso libre citando a la OPS</td></tr>
+        <tr><th style="width:230px;">Nombre</th><td>Public Use Ixodes County Table (ArboNET Tick Module)</td></tr>
+        <tr><th>Institución</th><td>CDC (Centers for Disease Control and Prevention, EE. UU.)</td></tr>
+        <tr><th>URL</th><td>Portal ArboNET Tick Module (archivo de uso público, CDC)</td></tr>
+        <tr><th>Tipo de fuente</th><td>Primaria (vigilancia entomológica directa)</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Condados de EE. UU. (⚠ no es multi-país; se usa como referencia de vigilancia de vector, no como comparación global de casos)</td></tr>
+        <tr><th>Periodo disponible</th><td>1996–2022</td></tr>
+        <tr><th>Formato</th><td>Excel (.xlsx), una hoja por año</td></tr>
+        <tr><th>Método de adquisición</th><td>Descarga directa (Public Use Data Agreement)</td></tr>
+        <tr><th>N.º de registros</th><td>~3.100 condados por año (ej. 3.116 en 2022)</td></tr>
+        <tr><th>Variables disponibles</th><td>código FIPS del condado, estatus de Ixodes scapularis/pacificus, año, fuente del dato</td></tr>
+        <tr><th>Fecha de consulta</th><td>27 de agosto de 2026</td></tr>
+        <tr><th>Restricciones</th><td>Acceso de uso público bajo acuerdo de datos del CDC</td></tr>
     </tbody>
 </table>
 </div>
@@ -48,18 +47,18 @@ clasificadas como primarias, secundarias o terciarias.</p>
 <div class="table-responsive mb-4">
 <table class="table table-bordered table-sm">
     <tbody>
-        <tr><th style="width:220px;">Nombre</th><td>SIVIGILA (microdatos de notificación)</td></tr>
-        <tr><th>Institución</th><td>Instituto Nacional de Salud (INS)</td></tr>
-        <tr><th>URL</th><td><a href="https://www.datos.gov.co/" target="_blank">datos.gov.co</a> (buscar "SIVIGILA") / <a href="https://www.ins.gov.co" target="_blank">ins.gov.co</a></td></tr>
-        <tr><th>Tipo de fuente</th><td>Primaria</td></tr>
-        <tr><th>Cobertura geográfica</th><td>Nacional, desagregado por departamento y municipio</td></tr>
-        <tr><th>Periodo disponible</th><td><em>[completar según el dataset descargado]</em></td></tr>
+        <tr><th style="width:230px;">Nombre</th><td>Datos de Vigilancia en Salud Pública de Colombia</td></tr>
+        <tr><th>Institución</th><td>Instituto Nacional de Salud (SIVIGILA), vía datos.gov.co</td></tr>
+        <tr><th>URL</th><td>datos.gov.co (portal de datos abiertos)</td></tr>
+        <tr><th>Tipo de fuente</th><td>Primaria/Secundaria (conteo agregado)</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Nacional — todos los departamentos de Colombia, incluida Cundinamarca</td></tr>
+        <tr><th>Periodo disponible</th><td>2007–2022</td></tr>
         <tr><th>Formato</th><td>CSV</td></tr>
         <tr><th>Método de adquisición</th><td>Descarga desde datos.gov.co</td></tr>
-        <tr><th>N.º aprox. de registros</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Variables disponibles</th><td>Código del evento, fecha de notificación, edad, sexo, municipio, condición final</td></tr>
-        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Restricciones</th><td>Datos abiertos y anonimizados, uso libre citando la fuente</td></tr>
+        <tr><th>N.º de registros</th><td><strong>241.746</strong></td></tr>
+        <tr><th>Variables disponibles</th><td>código de evento, nombre del evento (dengue, dengue grave, chikungunya, chagas), semana, año, departamento, municipio, conteo</td></tr>
+        <tr><th>Fecha de consulta</th><td>26 de agosto de 2026</td></tr>
+        <tr><th>Restricciones</th><td>Datos abiertos, uso libre citando la fuente</td></tr>
     </tbody>
 </table>
 </div>
@@ -67,57 +66,61 @@ clasificadas como primarias, secundarias o terciarias.</p>
 <div class="table-responsive mb-4">
 <table class="table table-bordered table-sm">
     <tbody>
-        <tr><th style="width:220px;">Nombre</th><td>SISPRO – Cubo de Indicadores</td></tr>
-        <tr><th>Institución</th><td>Ministerio de Salud y Protección Social (Minsalud)</td></tr>
-        <tr><th>URL</th><td><a href="https://www.sispro.gov.co" target="_blank">sispro.gov.co</a></td></tr>
-        <tr><th>Tipo de fuente</th><td>Secundaria</td></tr>
-        <tr><th>Cobertura geográfica</th><td>Nacional / departamental</td></tr>
-        <tr><th>Periodo disponible</th><td>Histórico multianual</td></tr>
-        <tr><th>Formato</th><td>Consulta web exportable a Excel</td></tr>
-        <tr><th>Método de adquisición</th><td>Consulta en cubos de indicadores públicos</td></tr>
-        <tr><th>N.º aprox. de registros</th><td><em>[completar al consultar]</em></td></tr>
-        <tr><th>Variables disponibles</th><td>Tasa de incidencia, mortalidad, cobertura por departamento y año</td></tr>
-        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Restricciones</th><td>Acceso público, uso no comercial</td></tr>
+        <tr><th style="width:230px;">Nombre</th><td>A Multi-Modal Satellite Imagery Dataset (81 municipalities)</td></tr>
+        <tr><th>Institución</th><td>PhysioNet / investigación académica (SatelliteBench)</td></tr>
+        <tr><th>URL</th><td><a href="https://physionet.org/content/multimodal-satellite-data/1.0.0/81_municipalities_v2.0/81_municipalities_v2.0/68679/" target="_blank">physionet.org/content/multimodal-satellite-data</a></td></tr>
+        <tr><th>Tipo de fuente</th><td>Terciaria (compila SIVIGILA + WorldClim + censo DANE)</td></tr>
+        <tr><th>Cobertura geográfica</th><td>81 municipios de Colombia</td></tr>
+        <tr><th>Periodo disponible</th><td>2016–2018</td></tr>
+        <tr><th>Formato</th><td>Imágenes satelitales + metadatos (CSV/JSON)</td></tr>
+        <tr><th>Método de adquisición</th><td>Descarga desde PhysioNet</td></tr>
+        <tr><th>N.º de registros</th><td>12.636 imágenes satelitales con metadatos por municipio-semana</td></tr>
+        <tr><th>Variables disponibles</th><td>temperatura, precipitación, casos de dengue (SIVIGILA), índice de pobreza, acceso a educación (DANE 2018)</td></tr>
+        <tr><th>Fecha de consulta</th><td>27 de agosto de 2026</td></tr>
+        <tr><th>Restricciones</th><td>Uso académico, citar el paper original (SatelliteBench)</td></tr>
     </tbody>
 </table>
 </div>
 
-<h4 class="mt-4">📍 Nivel Regional (Bogotá–Cundinamarca)</h4>
+<h4 class="mt-4">📍 Nivel Regional (Cundinamarca)</h4>
 <div class="table-responsive mb-4">
 <table class="table table-bordered table-sm">
     <tbody>
-        <tr><th style="width:220px;">Nombre</th><td>Boletines epidemiológicos ETV Bogotá</td></tr>
-        <tr><th>Institución</th><td>Secretaría Distrital de Salud de Bogotá</td></tr>
-        <tr><th>URL</th><td><a href="https://www.saludcapital.gov.co" target="_blank">saludcapital.gov.co</a></td></tr>
-        <tr><th>Tipo de fuente</th><td>Secundaria</td></tr>
-        <tr><th>Cobertura geográfica</th><td>Localidades de Bogotá</td></tr>
-        <tr><th>Periodo disponible</th><td><em>[completar según boletín consultado]</em></td></tr>
-        <tr><th>Formato</th><td>PDF, algunos tableros Power BI</td></tr>
-        <tr><th>Método de adquisición</th><td>Descarga de boletines públicos</td></tr>
-        <tr><th>N.º aprox. de registros</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Variables disponibles</th><td>Casos por localidad y semana, tipo de ETV, tasa de incidencia</td></tr>
-        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Restricciones</th><td>Uso público con atribución a la fuente</td></tr>
+        <tr><th style="width:230px;">Nombre</th><td>Subconjunto Cundinamarca — Datos de Vigilancia en Salud Pública de Colombia</td></tr>
+        <tr><th>Institución</th><td>Instituto Nacional de Salud (SIVIGILA)</td></tr>
+        <tr><th>URL</th><td>Mismo origen que la fuente nacional, filtrado por departamento</td></tr>
+        <tr><th>Tipo de fuente</th><td>Primaria</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Municipios de Cundinamarca</td></tr>
+        <tr><th>Periodo disponible</th><td>2007–2022</td></tr>
+        <tr><th>Formato</th><td>CSV (subconjunto filtrado)</td></tr>
+        <tr><th>N.º de registros</th><td><strong>14.035</strong></td></tr>
+        <tr><th>Variables disponibles</th><td>municipio, semana, año, evento, conteo (agregado — sin detalle por paciente)</td></tr>
+        <tr><th>Fecha de consulta</th><td>26 de agosto de 2026</td></tr>
+        <tr><th>Restricciones</th><td>Mismas del dataset nacional</td></tr>
     </tbody>
 </table>
 </div>
 
+<div class="p-3 mb-4" style="background:#fef9c3; border-left:4px solid #ca8a04; border-radius:6px;">
+    <p class="mb-0"><em>Pendiente: el criterio pide mínimo 2 fuentes por nivel. Por ahora solo
+    tenemos una fuente confirmada para Cundinamarca (el subconjunto del dataset nacional). Falta
+    conseguir una segunda fuente regional — por ejemplo, boletines de la Secretaría de Salud de
+    Cundinamarca (cundinamarca.gov.co) o verificar si alguno de los 81 municipios del dataset
+    satelital de PhysioNet cae dentro de Cundinamarca.</em></p>
+</div>
+
+<h4 class="mt-4">➕ Fuente complementaria (perfil clínico/demográfico)</h4>
 <div class="table-responsive mb-4">
 <table class="table table-bordered table-sm">
     <tbody>
-        <tr><th style="width:220px;">Nombre</th><td>Informes de vigilancia epidemiológica municipal</td></tr>
-        <tr><th>Institución</th><td>Secretaría de Salud de Cundinamarca</td></tr>
-        <tr><th>URL</th><td><a href="https://www.cundinamarca.gov.co" target="_blank">cundinamarca.gov.co</a> (Secretaría de Salud)</td></tr>
-        <tr><th>Tipo de fuente</th><td>Primaria / secundaria</td></tr>
-        <tr><th>Cobertura geográfica</th><td>Municipios de Cundinamarca (incluye Chía)</td></tr>
-        <tr><th>Periodo disponible</th><td><em>[completar según informe consultado]</em></td></tr>
-        <tr><th>Formato</th><td>PDF / informes</td></tr>
-        <tr><th>Método de adquisición</th><td>Descarga pública o solicitud directa</td></tr>
-        <tr><th>N.º aprox. de registros</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Variables disponibles</th><td>Casos por municipio y semana epidemiológica</td></tr>
-        <tr><th>Fecha de consulta</th><td><em>[completar al descargar]</em></td></tr>
-        <tr><th>Restricciones</th><td>Uso público, verificar vigencia del enlace</td></tr>
+        <tr><th style="width:230px;">Nombre</th><td>Perfil Epidemiológico Anual</td></tr>
+        <tr><th>Institución</th><td>EPS / Secretaría de Salud (registro de morbilidad)</td></tr>
+        <tr><th>Tipo de fuente</th><td>Primaria</td></tr>
+        <tr><th>Cobertura geográfica</th><td>Sin variable geográfica explícita (⚠ ver sección 7 — no se puede cruzar por ubicación)</td></tr>
+        <tr><th>N.º de registros</th><td>98.322 totales; <strong>8.765</strong> corresponden a ETV (dengue, leishmaniasis, chagas, malaria, chikungunya)</td></tr>
+        <tr><th>Variables disponibles</th><td>edad, sexo, nacionalidad, régimen de afiliación, código y nombre CIE10, mes</td></tr>
+        <tr><th>Fecha de consulta</th><td>27 de agosto de 2026</td></tr>
+        <tr><th>Restricciones</th><td>Uso académico; requiere corrección de columnas (ver sección 7)</td></tr>
     </tbody>
 </table>
 </div>

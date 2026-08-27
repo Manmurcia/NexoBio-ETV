@@ -2,23 +2,48 @@
 
 {% block content %}
 <h1 class="page-title">7. Calidad Inicial de los Datos</h1>
-<p>Diagnóstico (no limpieza) del estado inicial del dataset consolidado:</p>
+<p>Diagnóstico inicial (sin limpieza aún) sobre los 5 datasets ya descargados:</p>
 
 <div class="table-responsive mt-3">
 <table class="table table-bordered">
     <thead class="table-light">
-        <tr><th>Aspecto</th><th>Hallazgo</th></tr>
+        <tr><th>Fuente</th><th>Hallazgo</th></tr>
     </thead>
     <tbody>
-        <tr><td>Valores faltantes</td><td><em>[completar]</em></td></tr>
-        <tr><td>Registros duplicados</td><td><em>[completar]</em></td></tr>
-        <tr><td>Inconsistencias</td><td><em>[completar]</em></td></tr>
-        <tr><td>Valores fuera de dominio esperado</td><td><em>[completar]</em></td></tr>
-        <tr><td>Diferencias de formato entre fuentes</td><td><em>[completar]</em></td></tr>
-        <tr><td>Problemas de integración entre fuentes</td><td><em>[completar]</em></td></tr>
-        <tr><td>Posibles sesgos</td><td><em>[completar]</em></td></tr>
+        <tr>
+            <td>Perfil Epidemiológico Anual</td>
+            <td><strong>Columnas desalineadas:</strong> la columna "CICLO DE VIDA" contiene en
+            realidad nombres de meses, y "MES" contiene el texto que debería ir en "SUBGRUPO CAUSAS
+            DE MORBILIDAD". Además, valores de texto con inconsistencia de mayúsculas/minúsculas
+            (ej. "SUBSIDIADO" vs "Subsidiado"). No tiene variable geográfica.</td>
+        </tr>
+        <tr>
+            <td>Datos de Vigilancia en Salud Pública de Colombia</td>
+            <td>Existen filas con municipio "* [DEPARTAMENTO]. MUNICIPIO DESCONOCIDO" que deben
+            tratarse aparte al hacer análisis geográfico fino.</td>
+        </tr>
+        <tr>
+            <td>CDC ArboNET (Ixodes)</td>
+            <td>Cobertura exclusiva de EE. UU. no permite comparación multi-país directa; se usará
+            solo como referencia de vigilancia de vector, no como parte del cruce principal.</td>
+        </tr>
+        <tr>
+            <td>Dataset satelital PhysioNet</td>
+            <td>Cobertura temporal corta (2016–2018) frente al resto de fuentes (hasta 2022); el
+            cruce climático solo será posible para esos años.</td>
+        </tr>
+        <tr>
+            <td>Registros duplicados / valores faltantes</td>
+            <td><em>[pendiente — se evaluará con pandas .isnull() / .duplicated() al ejecutar el
+            script de consolidación]</em></td>
+        </tr>
+        <tr>
+            <td>Posibles sesgos</td>
+            <td>El nivel regional (Cundinamarca) solo cuenta con conteos agregados semanales, sin
+            microdato de caso individual; cualquier análisis demográfico (edad, sexo) queda limitado
+            a la escala nacional a través del Perfil Epidemiológico, que no tiene variable geográfica.</td>
+        </tr>
     </tbody>
 </table>
 </div>
-<p class="text-muted"><em>Pendiente: ejecutar el diagnóstico (ej. pandas .isnull(), .duplicated()) sobre el dataset real y completar la tabla.</em></p>
 {% endblock %}

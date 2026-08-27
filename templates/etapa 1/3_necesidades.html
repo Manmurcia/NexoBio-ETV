@@ -3,51 +3,49 @@
 {% block content %}
 <h1 class="page-title">3. Necesidades de Información</h1>
 
-<p>Para responder las preguntas de investigación planteadas, el proyecto requiere la siguiente información:</p>
+<p>Información requerida, ajustada a los datasets reales ya recolectados:</p>
 
 <div class="table-responsive mt-4">
 <table class="table table-bordered align-middle">
     <thead class="table-light">
-        <tr>
-            <th>Elemento</th>
-            <th>Descripción para el proyecto</th>
-        </tr>
+        <tr><th>Elemento</th><th>Descripción para el proyecto</th></tr>
     </thead>
     <tbody>
         <tr>
             <td><strong>Entidades involucradas</strong></td>
-            <td>OMS, OPS, Instituto Nacional de Salud (SIVIGILA), Minsalud, Secretaría Distrital de Salud
-            de Bogotá, Secretaría de Salud de Cundinamarca.</td>
+            <td>OMS (WHO Disease Outbreak News), CDC (ArboNET), Instituto Nacional de Salud
+            (SIVIGILA / Datos de Vigilancia en Salud Pública de Colombia), PhysioNet/investigación
+            académica (satelital 81 municipios), EPS/Secretaría de Salud (Perfil Epidemiológico Anual).</td>
         </tr>
         <tr>
             <td><strong>Variables relevantes</strong></td>
-            <td>Enfermedad (dengue, malaria, chikungunya, zika, leishmaniasis, chagas), fecha o semana
-            epidemiológica, edad, sexo, ubicación (país / departamento / municipio), desenlace
-            (vivo / fallecido), número de casos confirmados.</td>
+            <td>Enfermedad/evento (dengue, dengue grave, chikungunya, chagas, leishmaniasis, malaria),
+            fecha/semana/mes, año, departamento, municipio, edad, sexo, nacionalidad, régimen de
+            afiliación, conteo de casos, temperatura, precipitación.</td>
         </tr>
         <tr>
             <td><strong>Periodo de análisis</strong></td>
-            <td>2015–2024 (o el rango más amplio disponible por fuente).</td>
+            <td>1996–2026 según fuente: OMS/DONs ~2010–2026, CDC ticks 1996–2022, Colombia nacional
+            (incl. Cundinamarca) 2007–2022, satelital 2016–2018.</td>
         </tr>
         <tr>
             <td><strong>Cobertura geográfica</strong></td>
-            <td>Países (nivel global) → departamentos de Colombia (nivel nacional) → municipios de
-            Cundinamarca incluyendo Bogotá (nivel regional).</td>
+            <td>Países (global) → departamentos de Colombia (nacional) → municipios de Cundinamarca
+            (regional).</td>
         </tr>
         <tr>
             <td><strong>Población / unidad de análisis</strong></td>
-            <td>Caso notificado individual, o agregado por semana epidemiológica cuando no se disponga
-            de microdato.</td>
+            <td>Caso individual (Perfil Epidemiológico, sin geografía) o conteo agregado por
+            semana/municipio (Datos de Vigilancia Colombia filtrado a Cundinamarca, satelital).</td>
         </tr>
         <tr>
             <td><strong>Nivel de granularidad</strong></td>
-            <td>El más fino disponible por fuente: idealmente caso individual; como mínimo, agregado
-            semanal por unidad geográfica.</td>
+            <td>Agregado semanal por municipio en Cundinamarca; se documentará explícitamente por
+            fuente en la sección 6.</td>
         </tr>
         <tr>
             <td><strong>Variable de comparación entre escalas</strong></td>
-            <td>Tasa de incidencia por 100.000 habitantes, que permite comparar poblaciones distintas
-            entre país, departamento y municipio.</td>
+            <td>Tasa de incidencia por 100.000 habitantes.</td>
         </tr>
     </tbody>
 </table>

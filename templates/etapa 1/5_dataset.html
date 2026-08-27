@@ -3,24 +3,33 @@
 {% block content %}
 <h1 class="page-title">5. Dataset Inicial</h1>
 
-<h4 class="mt-4">Requisitos mínimos del entregable</h4>
-<ul>
-    <li>10.000 registros consolidados como mínimo</li>
-    <li>Mínimo 10 variables: 3 numéricas, 3 categóricas, 1 temporal, 1 geográfica</li>
-    <li>Cobertura de los tres niveles: global, nacional y regional</li>
-</ul>
+<h4 class="mt-4">Cumplimiento de requisitos mínimos</h4>
+<div class="table-responsive mt-3">
+<table class="table table-bordered">
+    <thead class="table-light"><tr><th>Requisito</th><th>Estado</th></tr></thead>
+    <tbody>
+        <tr><td>10.000 registros mínimo</td><td>✅ Cumplido el dataset nacional aporta 241.746 registros por sí solo</td></tr>
+        <tr><td>10 variables mínimo</td><td>✅ Cumplido tras el cruce (evento, departamento, municipio, semana, año, conteo, temperatura, precipitación, edad, sexo)</td></tr>
+        <tr><td>3 variables numéricas</td><td>conteo de casos, temperatura, precipitación (+ edad en fuentes de microdato)</td></tr>
+        <tr><td>3 variables categóricas</td><td>evento/enfermedad, departamento, municipio (+ sexo, régimen de afiliación)</td></tr>
+        <tr><td>1 variable temporal</td><td>semana epidemiológica / año / mes</td></tr>
+        <tr><td>1 variable geográfica</td><td>departamento / municipio (código DANE)</td></tr>
+    </tbody>
+</table>
+</div>
 
-<h4 class="mt-4">Ruta propuesta de construcción</h4>
-<p>
-    El microdato de SIVIGILA filtrado a las enfermedades transmitidas por vectores permite superar
-    fácilmente los 10.000 registros en un solo año. Este microdato nacional se cruza por variable
-    geográfica (departamento/municipio) y temporal (fecha/semana epidemiológica) con los indicadores
-    de país de la OMS/OPS para habilitar la comparación entre las tres escalas.
-</p>
+<h4 class="mt-4">Plan de consolidación</h4>
+<ol>
+    <li><strong>Base nacional/regional:</strong> "Datos de Vigilancia en Salud Pública de Colombia" (241.746 filas) se filtra por departamento para separar Cundinamarca (14.035 filas) del resto del país.</li>
+    <li><strong>Enriquecimiento climático:</strong> cruce por municipio + semana/mes con el dataset satelital de PhysioNet (81 municipios, 2016–2018) para agregar temperatura y precipitación.</li>
+    <li><strong>Comparación global:</strong> WHO Disease Outbreak News (3.567 filas) se usa como tabla de referencia por país/año, sin cruce directo por clave comparación a nivel agregado.</li>
+    <li><strong>Perfil clínico complementario:</strong> Perfil Epidemiológico Anual (8.765 filas ETV) se incorpora tras corregir el desalineamiento de columnas descrito en la sección 7; no tiene clave geográfica, así que se analiza aparte (perfil demográfico nacional).</li>
+</ol>
 
 <h4 class="mt-4">Estado actual</h4>
-<div class="p-3" style="background:#fef9c3; border-left:4px solid #ca8a04; border-radius:6px;">
-    <p class="mb-0"><em>Pendiente: cargar aquí el resumen del dataset consolidado (número final de
-    registros, variables incluidas y su tipo) una vez descargadas y unidas las fuentes de la sección 4.</em></p>
+<div class="p-3" style="background:#dcfce7; border-left:4px solid #16a34a; border-radius:6px;">
+    <p class="mb-0">Las 5 fuentes están descargadas y verificadas (ver sección 4). El script de
+    consolidación (limpieza, cruce y unificación en un solo dataset tabular) está pendiente de
+    ejecutarse próximo paso del proyecto.</p>
 </div>
 {% endblock %}
