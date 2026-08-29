@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">7. Calidad Inicial de los Datos</h1>
+<p>Diagnóstico real, obtenido al ejecutar el script de consolidación sobre las 5 fuentes descargadas.</p>
+
+<div class="table-responsive mt-3">
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr><th>Fuente</th><th>Hallazgo</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Datos de Vigilancia en Salud Pública de Colombia</td>
+            <td>Las columnas <code>ANO</code> y <code>COD_MUN_O</code> venían como texto con
+            separador de miles (ej. "2,007", "25,754") en vez de números — se corrigió en el script
+            antes de cualquier análisis. Existen filas con municipio marcado como "desconocido"
+            (se conservaron con una bandera <code>municipio_desconocido</code>, no se descartaron).</td>
+        </tr>
+        <tr>
+            <td>Cruce Nacional + SALUD 2024 (nivel regional)</td>
+            <td><strong>486 de 1.640 filas (30%)</strong> quedan sin dato de tasa de incidencia, y
+            <strong>1.434 de 1.640 (87%)</strong> sin dato de letalidad, tras el cruce por
+            municipio-año. Causa: los periodos de las dos fuentes no coinciden del todo (2007–2022
+            vs. 2011–2024), y el código 25000 (Cundinamarca agregado) no siempre tiene indicador
+            calculado a ese nivel.</td>
+        </tr>
+        <tr>
+            <td>Perfil Epidemiológico Anual</td>
+            <td>Columnas "CICLO DE VIDA" y "MES" venían desalineadas (el mes estaba en la primera y
+            el subgrupo de causas en la segunda) — corregido y renombrado a <code>mes_real</code> y
+            <code>subgrupo_causas_real</code>. Inconsistencia de mayúsculas/minúsculas en texto
+            (ej. "SUBSIDIADO" vs "Subsidiado") — normalizado a mayúsculas.</td>
+        </tr>
+        <tr>
+            <td>WHO Disease Outbreak News (HDX)</td>
+            <td>El archivo trae una fila de metadatos HXL justo bajo el encabezado (ej.
+            <code>#date+year</code> en la columna Year) que se excluyó antes de filtrar. De 3.566
+            brotes totales, solo 520 corresponden a enfermedades transmitidas por vectores.</td>
+        </tr>
+        <tr>
+            <td>CDC ArboNET (Ixodes)</td>
+            <td>Cobertura exclusiva de EE. UU. — no permite comparación multi-país directa; se
+            mantiene como tabla de referencia de vigilancia de vector, separada del resto.</td>
+        </tr>
+        <tr>
+            <td>Registros duplicados</td>
+            <td>No se han evaluado aún de forma sistemática (<code>.duplicated()</code>) — Pendiente
+            para la etapa de limpieza formal.</td>
+        </tr>
+        <tr>
+            <td>Posibles sesgos</td>
+            <td>El nivel regional depende de un indicador oficial que no cubre todos los
+            municipios-año, lo que puede subestimar la tasa de incidencia real en los periodos sin
+            dato.</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+{% endblock %}

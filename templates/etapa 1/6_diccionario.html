@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">6. Diccionario de Datos</h1>
+<p>Variables reales del dataset consolidado, por tabla de salida.</p>
+
+<h4 class="mt-4">regional_cundinamarca_etv.csv <span class="text-muted">(dataset principal, 1.640 filas)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr><th>Variable</th><th>Tipo</th><th>Unidad</th><th>Dominio / valores</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>cod_municipio</td><td>Geográfica</td><td>—</td><td>Código DANE (5 dígitos)</td><td>Identificador del municipio de Cundinamarca</td></tr>
+        <tr><td>municipio</td><td>Categórica</td><td>—</td><td>117 municipios</td><td>Nombre del municipio</td></tr>
+        <tr><td>anio</td><td>Temporal</td><td>Año</td><td>2007–2022</td><td>Año de ocurrencia</td></tr>
+        <tr><td>evento</td><td>Categórica</td><td>—</td><td>DENGUE, DENGUE GRAVE, CHIKUNGUNYA, CHAGAS</td><td>Enfermedad notificada</td></tr>
+        <tr><td>conteo</td><td>Numérica</td><td>Casos</td><td>Entero ≥ 0</td><td>Casos notificados en el municipio-año</td></tr>
+        <tr><td>TASA DE INCIDENCIA DENGUE</td><td>Numérica</td><td>Porcentaje</td><td>Decimal ≥ 0 (puede ser nulo)</td><td>Indicador oficial de la Gobernación de Cundinamarca</td></tr>
+        <tr><td>LETALIDAD POR DENGUE</td><td>Numérica</td><td>Porcentaje</td><td>Decimal ≥ 0 (puede ser nulo)</td><td>Indicador oficial de la Gobernación de Cundinamarca</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h4 class="mt-4">nacional_colombia_etv.csv <span class="text-muted">(241.746 filas)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr><th>Variable</th><th>Tipo</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>cod_evento</td><td>Categórica</td><td>Código interno del evento SIVIGILA</td></tr>
+        <tr><td>evento</td><td>Categórica</td><td>DENGUE, DENGUE GRAVE, CHIKUNGUNYA, CHAGAS</td></tr>
+        <tr><td>semana</td><td>Temporal</td><td>Semana epidemiológica (1–53)</td></tr>
+        <tr><td>anio</td><td>Temporal</td><td>2007–2022</td></tr>
+        <tr><td>cod_departamento / departamento</td><td>Geográfica</td><td>Código y nombre DANE del departamento</td></tr>
+        <tr><td>cod_municipio / municipio</td><td>Geográfica</td><td>Código y nombre DANE del municipio</td></tr>
+        <tr><td>conteo</td><td>Numérica</td><td>Casos notificados</td></tr>
+        <tr><td>municipio_desconocido</td><td>Categórica (booleana)</td><td>Marca filas donde el municipio no está identificado</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h4 class="mt-4">global_brotes_etv.csv <span class="text-muted">(520 filas)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr><th>Variable</th><th>Tipo</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Year</td><td>Temporal</td><td>Año del brote</td></tr>
+        <tr><td>Disease</td><td>Categórica</td><td>Nombre de la enfermedad (13 ETV distintas)</td></tr>
+        <tr><td>Country / iso2 / iso3</td><td>Geográfica</td><td>País y códigos ISO</td></tr>
+        <tr><td>who_region / unsd_region</td><td>Categórica</td><td>Región OMS / región UNSD</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h4 class="mt-4">perfil_clinico_etv.csv <span class="text-muted">(8.799 filas, complementaria)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr><th>Variable</th><th>Tipo</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>EDAD</td><td>Numérica</td><td>Edad del paciente</td></tr>
+        <tr><td>SEXO</td><td>Categórica</td><td>M / F</td></tr>
+        <tr><td>NACIONALIDAD</td><td>Categórica</td><td>Colombiano, Venezolano, etc.</td></tr>
+        <tr><td>REGIMEN DE AFILIACION</td><td>Categórica</td><td>Subsidiado, Contributivo, etc.</td></tr>
+        <tr><td>NOMBRE CIE10</td><td>Categórica</td><td>Diagnóstico específico (dengue, chagas, leishmaniasis, malaria, chikungunya)</td></tr>
+        <tr><td>mes_real</td><td>Temporal</td><td>Mes (corregido — antes venía en la columna "CICLO DE VIDA")</td></tr>
+    </tbody>
+</table>
+</div>
+{% endblock %}
+
