@@ -1,11 +1,8 @@
 from flask import Flask, render_template, abort
-
 app = Flask(__name__)
 
 
-# ==========================================
 # RUTAS DE LA ETAPA 1
-# ==========================================
 
 RUTAS_ETAPA1 = {
     'problema': '1_problema.html',
@@ -18,11 +15,8 @@ RUTAS_ETAPA1 = {
     'limitaciones': '8_limitaciones.html',
 }
 
-
-# ==========================================
 # RUTAS DE LA ETAPA 2
 # CALIDAD DE DATOS
-# ==========================================
 
 RUTAS_ETAPA2 = {
     'descripcion-datos': '1_descripcion_datos.html',
@@ -34,10 +28,7 @@ RUTAS_ETAPA2 = {
     'estrategias': '7_estrategias.html',
 }
 
-
-# ==========================================
 # PÁGINA DE INICIO
-# ==========================================
 
 @app.route('/')
 def inicio():
@@ -47,9 +38,9 @@ def inicio():
     )
 
 
-# ==========================================
+
 # RUTAS DE LA ETAPA 1
-# ==========================================
+
 
 @app.route('/etapa1/<seccion>')
 def etapa1_seccion(seccion):
@@ -65,9 +56,9 @@ def etapa1_seccion(seccion):
     )
 
 
-# ==========================================
+
 # RUTAS DE LA ETAPA 2
-# ==========================================
+
 
 @app.route('/etapa2/<seccion>')
 def etapa2_seccion(seccion):
@@ -81,11 +72,6 @@ def etapa2_seccion(seccion):
         f'etapa 2/{plantilla}',
         slug_activo=seccion
     )
-
-
-# ==========================================
-# EJECUTAR LA APLICACIÓN
-# ==========================================
 
 if __name__ == '__main__':
     app.run(debug=True)
