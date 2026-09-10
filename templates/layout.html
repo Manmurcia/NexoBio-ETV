@@ -1,61 +1,275 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Enfermedades</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body class="d-flex flex-column min-vh-100">
 
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-custom px-4">
+
         <div class="container-fluid justify-content-start">
+
+            <!-- LOGO -->
             <a class="navbar-brand brand-container me-3" href="{{ url_for('inicio') }}">
                 <img src="/static/img/logo.png" alt="Logo Proyecto" class="brand-logo">
                 <span class="brand-title">Proyecto: NexoBio</span>
             </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+            <!-- BOTÓN RESPONSIVE -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
                 <span class="navbar-toggler-icon"></span>
+
             </button>
 
-            <!-- Menú -->
+            <!-- MENÚ -->
             <div class="collapse navbar-collapse flex-grow-0 ms-3" id="navbarNav">
+
                 <ul class="navbar-nav">
+
+                    <!-- ===================== -->
+                    <!-- ETAPA 1 -->
+                    <!-- ===================== -->
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                        <a class="nav-link nav-link-custom dropdown-toggle"
+                            href="#"
+                            id="navbarDropdownEtapa1"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+
                             Etapa 1
+
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item {% if slug_activo == 'problema' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='problema') }}">1. Problema</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'preguntas' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='preguntas') }}">2. Pregunta Principal y Secundarias</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'necesidades' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='necesidades') }}">3. Necesidades de Información</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'fuentes' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='fuentes') }}">4. Fuentes de Datos</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'dataset' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='dataset') }}">5. Dataset</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'diccionario' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='diccionario') }}">6. Diccionario de Datos</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'calidad' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='calidad') }}">7. Calidad Inicial de los Datos</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'limitaciones' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='limitaciones') }}">8. Limitaciones y Consideraciones</a></li>
+
+                        <ul class="dropdown-menu"
+                            aria-labelledby="navbarDropdownEtapa1">
+
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'problema' %}active{% endif %}"
+                                    href="{{ url_for('etapa1_seccion', seccion='problema') }}">
+
+                                    1. Problema
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'preguntas' %}active{% endif %}"
+                                    href="{{ url_for('etapa1_seccion', seccion='preguntas') }}">
+
+                                    2. Pregunta Principal y Secundarias
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'necesidades' %}active{% endif %}"
+                                    href="{{ url_for('etapa1_seccion', seccion='necesidades') }}">
+
+                                    3. Necesidades de Información
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'fuentes' %}active{% endif %}"
+                                    href="{{ url_for('etapa1_seccion', seccion='fuentes') }}">
+
+                                    4. Fuentes de Datos
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'dataset' %}active{% endif %}"
+                                    href="{{ url_for('etapa1_seccion', seccion='dataset') }}">
+
+                                    5. Dataset
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'diccionario' %}active{% endif %}"
+                                    href="{{ url_for('etapa1_seccion', seccion='diccionario') }}">
+
+                                    6. Diccionario de Datos
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'calidad' %}active{% endif %}"
+                                    href="{{ url_for('etapa1_seccion', seccion='calidad') }}">
+
+                                    7. Calidad Inicial de los Datos
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'limitaciones' %}active{% endif %}"
+                                    href="{{ url_for('etapa1_seccion', seccion='limitaciones') }}">
+
+                                    8. Limitaciones y Consideraciones
+
+                                </a>
+                            </li>
+
                         </ul>
+
                     </li>
+
+
+                    <!-- ===================== -->
+                    <!-- ETAPA 2 -->
+                    <!-- CALIDAD DE DATOS -->
+                    <!-- ===================== -->
+
+                    <li class="nav-item dropdown">
+
+                        <a class="nav-link nav-link-custom dropdown-toggle"
+                            href="#"
+                            id="navbarDropdownEtapa2"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+
+                            Etapa 2
+
+                        </a>
+
+                        <ul class="dropdown-menu"
+                            aria-labelledby="navbarDropdownEtapa2">
+
+                            <!-- 1 -->
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'descripcion-datos' %}active{% endif %}"
+                                    href="{{ url_for('etapa2_seccion', seccion='descripcion-datos') }}">
+
+                                    1. Descripción de los Datos
+
+                                </a>
+                            </li>
+
+
+                            <!-- 2 -->
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'requisitos-calidad' %}active{% endif %}"
+                                    href="{{ url_for('etapa2_seccion', seccion='requisitos-calidad') }}">
+
+                                    2. Requisitos de Calidad
+
+                                </a>
+                            </li>
+
+
+                            <!-- 3 -->
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'perfilamiento' %}active{% endif %}"
+                                    href="{{ url_for('etapa2_seccion', seccion='perfilamiento') }}">
+
+                                    3. Perfilamiento de los Datos
+
+                                </a>
+                            </li>
+
+
+                            <!-- 4 -->
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'dimensiones' %}active{% endif %}"
+                                    href="{{ url_for('etapa2_seccion', seccion='dimensiones') }}">
+
+                                    4. Dimensiones de Calidad
+
+                                </a>
+                            </li>
+
+
+                            <!-- 5 -->
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'problemas' %}active{% endif %}"
+                                    href="{{ url_for('etapa2_seccion', seccion='problemas') }}">
+
+                                    5. Problemas Identificados
+
+                                </a>
+                            </li>
+
+
+                            <!-- 6 -->
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'causas' %}active{% endif %}"
+                                    href="{{ url_for('etapa2_seccion', seccion='causas') }}">
+
+                                    6. Análisis de Causas
+
+                                </a>
+                            </li>
+
+
+                            <!-- 7 -->
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'estrategias' %}active{% endif %}"
+                                    href="{{ url_for('etapa2_seccion', seccion='estrategias') }}">
+
+                                    7. Estrategias de Mejora
+
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </li>
+
                 </ul>
+
             </div>
+
         </div>
+
     </nav>
 
-    <!-- Principal -->
+
+    <!-- CONTENIDO PRINCIPAL -->
     <main class="container my-5 flex-grow-1">
+
         <div class="card-custom">
-            {% block content %}{% endblock %}
+
+            {% block content %}
+            {% endblock %}
+
         </div>
+
     </main>
 
-    <!-- Pie de Página-->
+
+    <!-- PIE DE PÁGINA -->
     <footer class="footer-custom">
-        <p class="mb-0">&copy; 2026 Proyecto Análisis de Datos sobre Enfermedades.</p>
+
+        <p class="mb-0">
+            &copy; 2026 Proyecto Análisis de Datos sobre Enfermedades.
+        </p>
+
     </footer>
 
+
+    <!-- BOOTSTRAP JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>
