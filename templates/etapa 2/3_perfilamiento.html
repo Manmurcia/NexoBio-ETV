@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="border-bottom pb-2 text-primary"><i class="bi bi-bar-chart-steps me-2"></i>3. Perfilamiento del Conjunto de Datos</h2>
+    <p class="lead">Resumen analítico consolidado sobre 464,553 registros evaluados.</p>
+
+    <div class="row text-center mb-4">
+        <div class="col-md-3">
+            <div class="card bg-light p-3 border">
+                <h3 class="text-primary mb-0">464,553</h3>
+                <small class="text-muted">Total Registros Evaluados</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-light p-3 border">
+                <h3 class="text-danger mb-0">42,729</h3>
+                <small class="text-muted">Duplicados Identificados</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-light p-3 border">
+                <h3 class="text-warning mb-0">31,529</h3>
+                <small class="text-muted">Registros con Nulos/Vacíos</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-light p-3 border">
+                <h3 class="text-info mb-0">6</h3>
+                <small class="text-muted">Fuentes / Archivos Analizados</small>
+            </div>
+        </div>
+    </div>
+
+    <h4>Resumen Técnico por Dataset</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Archivo</th>
+                    <th>Registros</th>
+                    <th>Columnas</th>
+                    <th>Duplicados Directos</th>
+                    <th>Nulos Identificados</th>
+                    <th>Anomalías Estadísticas / Atípicos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>sivigila_dengue.csv</code></td>
+                    <td>53,813</td>
+                    <td>38</td>
+                    <td>0</td>
+                    <td>0 (3,376 "SIN INFORMACION")</td>
+                    <td>Máx Edad = 174 años (3 registros atípicos > 100)</td>
+                </tr>
+                <tr>
+                    <td><code>PERFIL_EPIDEMIOLOGICO_ANUAL.csv</code></td>
+                    <td>98,322</td>
+                    <td>10</td>
+                    <td><span class="badge bg-danger">42,723</span></td>
+                    <td>1 (CODIGO CIE10)</td>
+                    <td>Edad Máx = 109 años. Replicación masiva de registros.</td>
+                </tr>
+                <tr>
+                    <td><code>SALUD.xlsx</code></td>
+                    <td>63,989</td>
+                    <td>12</td>
+                    <td>6</td>
+                    <td>31,110 (Col CUALITATIVO)</td>
+                    <td>Encabezados desalineados por 10 filas de metadatos.</td>
+                </tr>
+                <tr>
+                    <td><code>disease_outbreaks_HDX.xlsx</code></td>
+                    <td>3,567</td>
+                    <td>17</td>
+                    <td>0</td>
+                    <td>419 (266 en who_region)</td>
+                    <td>Variabilidad en códigos ISO2 por región.</td>
+                </tr>
+                <tr>
+                    <td><code>Vigilancia_Colombia.csv</code></td>
+                    <td>241,746</td>
+                    <td>9</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>Heterogeneidad en nombres de municipios (Mayúsculas/Tildes).</td>
+                </tr>
+                <tr>
+                    <td><code>Ixodes_County_2023.xlsx</code></td>
+                    <td>3,116</td>
+                    <td>7</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>Encabezados integrados en la primera fila. FIPS textual.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

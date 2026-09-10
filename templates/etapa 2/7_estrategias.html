@@ -1,0 +1,213 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-primary fw-bold mb-3">
+                <i class="bi bi-tools"></i> 7. Plan de Tratamiento y Estrategias Futuras de Calidad
+            </h1>
+            <p class="lead">
+                Diseño metodológico para el tratamiento correctivo actual y propuesta estratégica a futuro para la prevención, mitigación y control permanente de los errores detectados en los datos de salud pública.
+            </p>
+            <hr class="my-4">
+        </div>
+    </div>
+
+    <!-- SECCIÓN 1: PLAN DE TRATAMIENTO INMEDIATO -->
+    <div class="card shadow-sm mb-5 border-start border-4 border-primary">
+        <div class="card-header bg-primary text-white fw-bold">
+            <i class="bi bi-gear-fill"></i> 1. Plan de Tratamiento Inmediato (Acciones Correctivas en la Canalización ETL)
+        </div>
+        <div class="card-body">
+            <p>
+                Para garantizar que los tableros analíticos y modelos de predicción funcionen sobre datos fiables, se diseñó un algoritmo de procesamiento automatizado en Python (Pandas) que ejecuta las siguientes intervenciones:
+            </p>
+
+            <div class="accordion" id="accordionTratamiento">
+                <!-- Eliminación de Duplicados -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            <i class="bi bi-files me-2 text-danger"></i> 1.1 Deduplicación Explicita y Control de Claves Primarias
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionTratamiento">
+                        <div class="accordion-body">
+                            <strong>Acción Aplicada:</strong> Se identificaron y eliminaron <strong>42,723 registros idénticos redundantes</strong> presentes en el <em>Perfil Epidemiológico Anual</em>.<br>
+                            <strong>Justificación Técnica:</strong> La existencia de filas idénticas altera gravemente los agregados estadísticos (sumatorias de casos, tasas de incidencia e indicadores de morbilidad). Se estableció un criterio estricto donde solo se retiene la primera instancia registrada (<code>df.drop_duplicates(keep='first')</code>).
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Homologación de Textos -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            <i class="bi bi-fonts me-2 text-warning"></i> 1.2 Homologación Categórica y Estandarización Textual
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionTratamiento">
+                        <div class="accordion-body">
+                            <strong>Acción Aplicada:</strong> Unificación de variables categóricas (como <code>REGIMEN DE AFILIACION</code> y <code>SEXO</code>).
+                            <ul>
+                                <li>Eliminación de espacios en blanco iniciales/finales mediante <code>strip()</code>.</li>
+                                <li>Conversión total de cadenas a mayúsculas sostenidas (<code>str.upper()</code>).</li>
+                                <li>Mapeo de diccionarios de homologación para agrupar variantes como <code>'subsidiado'</code>, <code>'SUBSIDIADO'</code> y <code>'Subsidiado'</code> en un único estándar: <code>SUBSIDIADO</code>.</li>
+                                <li>Sustitución de etiquetas genéricas o no estandarizadas como <code>'SD'</code> en sexo por valores nulos explícitos o categoría <code>'NO REPORTADO'</code>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tratamiento de Atípicos -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                            <i class="bi bi-speedometer2 me-2 text-info"></i> 1.3 Reglas de Validación de Rangos y Tratamiento de Atípicos
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionTratamiento">
+                        <div class="accordion-body">
+                            <strong>Acción Aplicada:</strong> Aplicación de límites biológicos estrictos sobre variables numéricas de edad ($0 \le \text{Edad} \le 110$).<br>
+                            <strong>Justificación Técnica:</strong> En el dataset de SIVIGILA Dengue se identificó una edad atípica de <strong>174 años</strong>. La regla de tratamiento reemplaza este valor anómalo mediante la mediana del grupo de diagnóstico o la eliminación del registro si no es posible inferirlo, evitando sesgar el cálculo de la media etaria nacional.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tratamiento de Nulos -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                            <i class="bi bi-card-checklist me-2 text-success"></i> 1.4 Depuración Estructural e Imputación de Nulos
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionTratamiento">
+                        <div class="accordion-body">
+                            <strong>Acción Aplicada:</strong> Omisión de las primeras 10 filas informativas en reportes Excel de salud territorial (para convertir hojas de cálculo administrativas en tablas relacionales limpias) y eliminación de variables no informativas con más del 40% de celdas vacías (como la columna cualitativa <code>Unnamed: 8</code> de Cundinamarca).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: PROPUESTA ESTRATÉGICA A FUTURO -->
+    <div class="card shadow-sm mb-5 border-start border-4 border-success">
+        <div class="card-header bg-success text-white fw-bold">
+            <i class="bi bi-lightbulb-fill"></i> 2. Propuesta Estratégica a Futuro (Prevención y Sostenibilidad)
+        </div>
+        <div class="card-body">
+            <p>
+                Para evitar la reaparición de estos problemas en futuras entregas del sistema epidemiológico, se propone la implementación de un **Marco de Gobernanza y Control de Calidad Continuo** estructurado en cuatro ejes clave:
+            </p>
+
+            <div class="row g-4">
+                <!-- Eje 1 -->
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 bg-light shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-success fw-bold">
+                                <i class="bi bi-shield-lock-fill"></i> Eje 1: Validaciones en la Fuente (Frontend/Ingreso)
+                            </h5>
+                            <p class="card-text text-muted">
+                                Implementar listas desplegables obligatorias (combobox) y máscaras de entrada en las plataformas de captura de las IPS. Restringir la digitación libre en variables críticas (Régimen, Sexo, CIE-10) y configurar alertas en tiempo real que impidan guardar edades mayores a 110 años o campos requeridos vacíos.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eje 2 -->
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 bg-light shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-success fw-bold">
+                                <i class="bi bi-file-earmark-code-fill"></i> Eje 2: Arquitectura ETL y Claves Únicas
+                            </h5>
+                            <p class="card-text text-muted">
+                                Rediseñar los flujos de consolidación de datos para exigir una <strong>Clave Primaria Compuesta</strong> (ej. <code>ID_Paciente + Fecha_Notificación + Código_Evento</code>). Esto bloqueará de forma automática la ingesta de archivos duplicados o la re-importación masiva de datos antiguos.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eje 3 -->
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 bg-light shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-success fw-bold">
+                                <i class="bi bi-journal-bookmark-fill"></i> Eje 3: Estandarización de Catálogos Institucionales
+                            </h5>
+                            <p class="card-text text-muted">
+                                Adoptar oficialmente el Diccionario de Datos del SIVIGILA y las tablas de referencia del Ministerio de Salud. Todos los sistemas territoriales deberán mapear sus bases locales contra la norma técnica nacional antes de sincronizarse con la aplicación central en Flask.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eje 4 -->
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 bg-light shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-success fw-bold">
+                                <i class="bi bi-robot"></i> Eje 4: Monitoreo Automatizado de Calidad (Data Quality Gate)
+                            </h5>
+                            <p class="card-text text-muted">
+                                Integrar un pipeline de prueba automática de datos (utilizando librerías como <em>Great Expectations</em> o scripts en Python integrados en Flask). Si un dataset entrante no cumple con un umbral de completitud (&ge;98%) o unicidad (100%), el sistema rechazará la carga automáticante y notificará al administrador.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: TABLA COMPARATIVA ANTES VS DESPUÉS -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            <i class="bi bi-arrow-left-right"></i> 3. Impacto Estimado: Evaluación Antes vs. Después del Tratamiento
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0 align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Dimensión / Indicador</th>
+                            <th>Métrica Inicial (Antes)</th>
+                            <th>Métrica Proyectada (Después)</th>
+                            <th>Estrategia Aplicada / Propuesta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold text-start">Unicidad (Perfil Epidemiológico)</td>
+                            <td><span class="badge bg-danger">56.55%</span> (42,723 duplicados)</td>
+                            <td><span class="badge bg-success">100.0%</span> (0 duplicados)</td>
+                            <td>Filtro deduplicador por hash de fila + Clave Primaria en BD.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-start">Consistencia (Régimen de Afiliación)</td>
+                            <td><span class="badge bg-warning text-dark">18 variaciones</span> (Mezcla texto)</td>
+                            <td><span class="badge bg-success">5 categorías estándar</span></td>
+                            <td>Transformación en cadena (Upper/Strip) + Mapeo categórico.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-start">Exactitud (Variable Edad)</td>
+                            <td><span class="badge bg-warning text-dark">99.99%</span> (Atípico Edad = 174)</td>
+                            <td><span class="badge bg-success">100.0%</span> (Rango 0 - 110)</td>
+                            <td>Validación de límites biológicos + Máscara en software de captura.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-start">Completitud (Salud Cundinamarca)</td>
+                            <td><span class="badge bg-warning text-dark">95.96%</span> (30,993 nulos)</td>
+                            <td><span class="badge bg-success">99.80%</span></td>
+                            <td>Depuración de columnas irrelevantes + Reestructuración de encabezados.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

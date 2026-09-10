@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="border-bottom pb-2 text-primary"><i class="bi bi-pie-chart me-2"></i>4. Evaluación de Dimensiones de Calidad</h2>
+    <p class="lead">Medición cuantitativa mediante métricas verificables.</p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Dimensión</th>
+                    <th>Fórmula de Métrica</th>
+                    <th>Resultado Medido</th>
+                    <th>Estado / Interpretación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Unicidad</strong></td>
+                    <td><code>(Registros Únicos / Total Registros) * 100</code></td>
+                    <td><span class="badge bg-danger fs-6">56.55%</span> (Perfil)</td>
+                    <td>Deficiente en Perfil Epidemiológico debido a 42,723 filas idénticas. En los demás datasets es 100%.</td>
+                </tr>
+                <tr>
+                    <td><strong>Completitud</strong></td>
+                    <td><code>(Celdas No Nulas / Total Celdas) * 100</code></td>
+                    <td><span class="badge bg-success fs-6">99.31%</span> (Outbreaks) <br> <span class="badge bg-warning text-dark fs-6">51.60%</span> (Salud Col CUALITATIVO)</td>
+                    <td>Aceptable en general, con deficiencias graves en atributos cualitativos secundarios de Salud Cundinamarca.</td>
+                </tr>
+                <tr>
+                    <td><strong>Validez</strong></td>
+                    <td><code>(Edad en Rango [0-100] / Total Registros) * 100</code></td>
+                    <td><span class="badge bg-success fs-6">99.99%</span> (Dengue)</td>
+                    <td>Solo 3 registros con edades atípicas o erróneas (112, 122, 174 años).</td>
+                </tr>
+                <tr>
+                    <td><strong>Consistencia</strong></td>
+                    <td><code>(Registros con Sexo Válido / Total Registros) * 100</code></td>
+                    <td><span class="badge bg-success fs-6">99.99%</span></td>
+                    <td>Excelente consistencia categórica salvo 1 registro con categoría 'SD' (Sin Dato).</td>
+                </tr>
+                <tr>
+                    <td><strong>Exactitud</strong></td>
+                    <td><code>(Municipios Homologados DANE / Total) * 100</code></td>
+                    <td><span class="badge bg-warning text-dark fs-6">88.40%</span></td>
+                    <td>Inconsistencia en uso de tildes y mayúsculas en nombres de municipios.</td>
+                </tr>
+                <tr>
+                    <td><strong>Actualidad</strong></td>
+                    <td><code>Años transcurridos desde última actualización</code></td>
+                    <td><span class="badge bg-info text-dark fs-6">2020 - 2024</span></td>
+                    <td>Información vigente correspondiente a los últimos periodos epidemiológicos reportados.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

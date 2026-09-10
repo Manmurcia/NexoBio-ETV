@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="border-bottom pb-2 text-primary"><i class="bi bi-search me-2"></i>6. Análisis de Causas Raíz</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-danger"><i class="bi bi-input-cursor me-2"></i>Errores de Captura Manual</h5>
+                    <p class="card-text">La digitación del campo edad en el sistema SIVIGILA sin validaciones de rango en frontend permitió el ingreso de valores de 3 dígitos (ej. 174 en vez de 17, 122 en vez de 22).</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-warning"><i class="bi bi-files me-2"></i>Unión / Fusion de Fuentes</h5>
+                    <p class="card-text">En el dataset de Perfil Epidemiológico Anual se unieron reportes mensuales acumulativos sin aplicar desduplicación, triplicando la cantidad de observaciones reales.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-info"><i class="bi bi-file-earmark-excel me-2"></i>Formatos de Presentación</h5>
+                    <p class="card-text">El archivo de SALUD de Cundinamarca fue exportado con formato decorativo para impresión (títulos institucionales en primeras filas), rompiendo el estándar relacional CSV/Excel.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
