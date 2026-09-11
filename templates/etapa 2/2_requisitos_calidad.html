@@ -1,34 +1,54 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="container my-4">
-    <h2 class="border-bottom pb-2 text-primary"><i class="bi bi-shield-check me-2"></i>2. Requisitos de Calidad de Datos</h2>
-    <p class="lead">Definición de criterios de aceptación y tolerancia para el uso seguro de la información.</p>
+<h1 class="page-title">2. Requisitos de Calidad de Datos</h1>
 
-    <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card h-100 border-primary">
-                <div class="card-header bg-primary text-white fw-bold">Completitud y Unicidad</div>
-                <div class="card-body">
-                    <ul>
-                        <li><strong>Cero Duplicados en Llaves Primarias:</strong> El 100% de los registros debe poseer un identificador único sintáctico sin repeticiones exactas no justificadas.</li>
-                        <li><strong>Campos Críticos Obligatorios:</strong> Variables como <code>EDAD</code>, <code>SEXO</code>, <code>CODIGO CIE10</code> y <code>FECHA</code> no deben presentar nulos ni cadenas vacías en más de un 0.5%.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card h-100 border-success">
-                <div class="card-header bg-success text-white fw-bold">Validez y Consistencia</div>
-                <div class="card-body">
-                    <ul>
-                        <li><strong>Rangos de Edad Válidos:</strong> Valores de edad entre 0 y 110 años. Todo valor superior debe ser etiquetado o corregido.</li>
-                        <li><strong>Estandarización de Texto:</strong> Homologación de campos categóricos como sexo a estándares unificados (<code>F</code>, <code>M</code>) e ignorar categorías ambiguas como 'SD'.</li>
-                        <li><strong>Estructura de Encabezados:</strong> Eliminación de metadatos o filas superiores innecesarias en archivos tabulares (.xlsx).</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+<p>Definición de criterios de aceptación y tolerancia para el uso seguro de la información.</p>
+
+<h4 class="mt-4 mb-3">Completitud y Unicidad</h4>
+<div class="table-responsive mt-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Criterio</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Cero Duplicados en Llaves Primarias</strong></td>
+            <td>El 100% de los registros debe poseer un identificador único sintáctico sin
+            repeticiones exactas no justificadas.</td>
+        </tr>
+        <tr>
+            <td><strong>Campos Críticos Obligatorios</strong></td>
+            <td>Variables como <code>EDAD</code>, <code>SEXO</code>, <code>CODIGO CIE10</code> y
+            <code>FECHA</code> no deben presentar nulos ni cadenas vacías en más de un 0.5%.</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<h4 class="mt-4 mb-3">Validez y Consistencia</h4>
+<div class="table-responsive mt-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Criterio</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Rangos de Edad Válidos</strong></td>
+            <td>Valores de edad entre 0 y 110 años. Todo valor superior debe ser etiquetado o
+            corregido.</td>
+        </tr>
+        <tr>
+            <td><strong>Estandarización de Texto</strong></td>
+            <td>Homologación de campos categóricos como sexo a estándares unificados
+            (<code>F</code>, <code>M</code>) e ignorar categorías ambiguas como 'SD'.</td>
+        </tr>
+        <tr>
+            <td><strong>Estructura de Encabezados</strong></td>
+            <td>Eliminación de metadatos o filas superiores innecesarias en archivos tabulares
+            (.xlsx).</td>
+        </tr>
+    </tbody>
+</table>
 </div>
 {% endblock %}

@@ -1,74 +1,72 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="container my-4">
-    <h2 class="border-bottom pb-2 text-primary"><i class="bi bi-card-checklist me-2"></i>1. Descripción y Propósito del Conjunto de Datos</h2>
-    <p class="lead">Consolidación estratégica y monitoreo de la Vigilancia Epidémica y Epidemiológica integral.</p>
+<h1 class="page-title">1. Descripción y Propósito del Conjunto de Datos</h1>
 
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-primary text-white fw-bold">Propósito Estratégico</div>
-        <div class="card-body">
-            <p>El propósito unificado de este repositorio de datos es integrar, estructurar y estandarizar la información sobre morbilidad, vigilancia de eventos epidemiológicos (SIVIGILA - Dengue) y brotes epidémicos a nivel territorial y global. El sistema permite evaluar la calidad de la información para la toma de decisiones informadas en salud pública.</p>
-        </div>
-    </div>
+<p>Consolidación estratégica y monitoreo de la Vigilancia Epidémica y Epidemiológica integral.</p>
 
-    <h4 class="mt-4 mb-3">Fuentes de Datos Evaluadas</h4>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle border">
-            <thead class="table-dark">
-                <tr>
-                    <th>Origen / Dataset</th>
-                    <th>Registros</th>
-                    <th>Columnas</th>
-                    <th>Variables Clave</th>
-                    <th>Uso Esperado</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>SIVIGILA Dengue</strong></td>
-                    <td>53,813</td>
-                    <td>38</td>
-                    <td><code>id, edad_, sexo_, fec_con_, comuna, nombre_barrio</code></td>
-                    <td>Análisis espacio-temporal de brotes de dengue a nivel micro-territorial.</td>
-                </tr>
-                <tr>
-                    <td><strong>Perfil Epidemiológico Anual</strong></td>
-                    <td>98,322</td>
-                    <td>10</td>
-                    <td><code>REGIMEN DE AFILIACION, CODIGO CIE10, EDAD, SEXO</code></td>
-                    <td>Caracterización demográfica de la atención en salud regional.</td>
-                </tr>
-                <tr>
-                    <td><strong>Salud Cundinamarca (SALUD.xlsx)</strong></td>
-                    <td>63,989</td>
-                    <td>12</td>
-                    <td><code>COD_MUN, MUNICIPIO, INDICADOR, DATO_NUMERICO, YEAR</code></td>
-                    <td>Evaluación de indicadores de infraestructura y programas de salud local.</td>
-                </tr>
-                <tr>
-                    <td><strong>Disease Outbreaks (HDX)</strong></td>
-                    <td>3,567</td>
-                    <td>17</td>
-                    <td><code>id_outbreak, Disease, icd10c, Year, who_region</code></td>
-                    <td>Monitoreo internacional de brotes epidémicos históricos.</td>
-                </tr>
-                <tr>
-                    <td><strong>Vigilancia Salud Pública Colombia</strong></td>
-                    <td>241,746</td>
-                    <td>9</td>
-                    <td><code>COD_EVE, Nombre_evento, SEMANA, ANO, Municipio_ocurrencia</code></td>
-                    <td>Consolidado nacional de conteo de eventos de salud pública.</td>
-                </tr>
-                <tr>
-                    <td><strong>Vigilancia Ixodes (Vectores CDC)</strong></td>
-                    <td>3,116</td>
-                    <td>7</td>
-                    <td><code>FIPSCode, State, County, Ixodes_scapularis_County_Status</code></td>
-                    <td>Monitoreo de vectores transmisores de Lyme y otras zoonosis.</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<h4 class="mt-4">Propósito Estratégico</h4>
+<p>El propósito unificado de este repositorio de datos es integrar, estructurar y estandarizar la
+información sobre morbilidad, vigilancia de eventos epidemiológicos (SIVIGILA - Dengue) y brotes
+epidémicos a nivel territorial y global. El sistema permite evaluar la calidad de la información
+para la toma de decisiones informadas en salud pública.</p>
+
+<h4 class="mt-4 mb-3">Fuentes de Datos Evaluadas</h4>
+<div class="table-responsive mt-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Origen / Dataset</th>
+            <th>Registros</th>
+            <th>Columnas</th>
+            <th>Variables Clave</th>
+            <th>Uso Esperado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>SIVIGILA Dengue</strong></td>
+            <td>53,813</td>
+            <td>38</td>
+            <td><code>id, edad_, sexo_, fec_con_, comuna, nombre_barrio</code></td>
+            <td>Análisis espacio-temporal de brotes de dengue a nivel micro-territorial.</td>
+        </tr>
+        <tr>
+            <td><strong>Perfil Epidemiológico Anual</strong></td>
+            <td>98,322</td>
+            <td>10</td>
+            <td><code>REGIMEN DE AFILIACION, CODIGO CIE10, EDAD, SEXO</code></td>
+            <td>Caracterización demográfica de la atención en salud regional.</td>
+        </tr>
+        <tr>
+            <td><strong>Salud Cundinamarca (SALUD.xlsx)</strong></td>
+            <td>63,989</td>
+            <td>12</td>
+            <td><code>COD_MUN, MUNICIPIO, INDICADOR, DATO_NUMERICO, YEAR</code></td>
+            <td>Evaluación de indicadores de infraestructura y programas de salud local.</td>
+        </tr>
+        <tr>
+            <td><strong>Disease Outbreaks (HDX)</strong></td>
+            <td>3,567</td>
+            <td>17</td>
+            <td><code>id_outbreak, Disease, icd10c, Year, who_region</code></td>
+            <td>Monitoreo internacional de brotes epidémicos históricos.</td>
+        </tr>
+        <tr>
+            <td><strong>Vigilancia Salud Pública Colombia</strong></td>
+            <td>241,746</td>
+            <td>9</td>
+            <td><code>COD_EVE, Nombre_evento, SEMANA, ANO, Municipio_ocurrencia</code></td>
+            <td>Consolidado nacional de conteo de eventos de salud pública.</td>
+        </tr>
+        <tr>
+            <td><strong>Vigilancia Ixodes (Vectores CDC)</strong></td>
+            <td>3,116</td>
+            <td>7</td>
+            <td><code>FIPSCode, State, County, Ixodes_scapularis_County_Status</code></td>
+            <td>Monitoreo de vectores transmisores de Lyme y otras zoonosis.</td>
+        </tr>
+    </tbody>
+</table>
 </div>
 {% endblock %}
