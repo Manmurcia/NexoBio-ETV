@@ -1,59 +1,78 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="container my-4">
-    <h2 class="border-bottom pb-2 text-primary"><i class="bi bi-exclamation-triangle me-2"></i>5. Inventario de Problemas Encontrados</h2>
-    <p class="lead">Matriz detallada de inconsistencias e impacto sobre el proyecto.</p>
+<h1 class="page-title">5. Inventario de Problemas Encontrados</h1>
+<p class="text-muted mt-2 mb-4">Matriz detallada de inconsistencias e impacto sobre el proyecto.</p>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Variable / Campo</th>
-                    <th>Descripción del Problema</th>
-                    <th>Registros Afectados</th>
-                    <th>Dimensión</th>
-                    <th>Impacto</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><code>PERFIL_EPIDEMIOLOGICO (Filas)</code></td>
-                    <td>Duplicidad masiva de filas idénticas generadas por consolidación múltiple.</td>
-                    <td>42,723</td>
-                    <td>Unicidad</td>
-                    <td><span class="badge bg-danger">Alto</span></td>
-                </tr>
-                <tr>
-                    <td><code>SALUD.xlsx (Encabezados)</code></td>
-                    <td>Renglones iniciales con títulos de la entidad desplazando los encabezados a la fila 10.</td>
-                    <td>63,989</td>
-                    <td>Validez / Estructura</td>
-                    <td><span class="badge bg-danger">Alto</span></td>
-                </tr>
-                <tr>
-                    <td><code>sivigila_dengue.edad_</code></td>
-                    <td>Edades biológicamente inverosímiles (112, 122, 174 años).</td>
-                    <td>3</td>
-                    <td>Validez</td>
-                    <td><span class="badge bg-warning text-dark">Medio</span></td>
-                </tr>
-                <tr>
-                    <td><code>sivigila_dengue.nombre_barrio</code></td>
-                    <td>Texto genérico "SIN INFORMACION" imputado en lugar de valor nulo real.</td>
-                    <td>3,376</td>
-                    <td>Completitud</td>
-                    <td><span class="badge bg-warning text-dark">Medio</span></td>
-                </tr>
-                <tr>
-                    <td><code>disease_outbreaks.who_region</code></td>
-                    <td>Ausencia de código de región para eventos internacionales.</td>
-                    <td>266</td>
-                    <td>Completitud</td>
-                    <td><span class="badge bg-info text-dark">Bajo</span></td>
-                </tr>
-            </tbody>
-        </table>
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="fw-bold mb-0"><code>PERFIL_EPIDEMIOLOGICO</code></h5>
+                <span class="badge bg-danger fs-6">Impacto Alto</span>
+            </div>
+            <p class="mb-1 text-secondary">Duplicidad masiva de filas idénticas generadas por consolidación múltiple.</p>
+            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
+                <span><strong>Registros afectados:</strong> 42,723</span>
+                <span><strong>Dimensión:</strong> Unicidad</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="fw-bold mb-0"><code>SALUD.xlsx (Encabezados)</code></h5>
+                <span class="badge bg-danger fs-6">Impacto Alto</span>
+            </div>
+            <p class="mb-1 text-secondary">Renglones iniciales con títulos de la entidad desplazando los encabezados a la fila 10.</p>
+            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
+                <span><strong>Registros afectados:</strong> 63,989</span>
+                <span><strong>Dimensión:</strong> Validez / Estructura</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="fw-bold mb-0"><code>sivigila_dengue.edad_</code></h5>
+                <span class="badge bg-warning text-dark fs-6">Impacto Medio</span>
+            </div>
+            <p class="mb-1 text-secondary">Edades biológicamente inverosímiles (112, 122, 174 años).</p>
+            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
+                <span><strong>Registros afectados:</strong> 3</span>
+                <span><strong>Dimensión:</strong> Validez</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="fw-bold mb-0"><code>sivigila_dengue.nombre_barrio</code></h5>
+                <span class="badge bg-warning text-dark fs-6">Impacto Medio</span>
+            </div>
+            <p class="mb-1 text-secondary">Texto genérico "SIN INFORMACION" imputado en lugar de valor nulo real.</p>
+            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
+                <span><strong>Registros afectados:</strong> 3,376</span>
+                <span><strong>Dimensión:</strong> Completitud</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="fw-bold mb-0"><code>disease_outbreaks.who_region</code></h5>
+                <span class="badge bg-info text-dark fs-6">Impacto Bajo</span>
+            </div>
+            <p class="mb-1 text-secondary">Ausencia de código de región para eventos internacionales.</p>
+            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
+                <span><strong>Registros afectados:</strong> 266</span>
+                <span><strong>Dimensión:</strong> Completitud</span>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

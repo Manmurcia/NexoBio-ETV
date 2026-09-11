@@ -105,3 +105,18 @@ body {
     padding: 1.25rem 0;
     font-size: 0.9rem;
 }
+
+.page-title {
+    border-left: 4px solid #0d6efd;
+    padding-left: 0.75rem;
+    font-weight: 700;
+}
+
+.card-clean {
+    background-color: #ffffff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-clean:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}

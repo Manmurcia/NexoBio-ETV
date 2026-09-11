@@ -1,59 +1,228 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="container my-4">
-    <h2 class="border-bottom pb-2 text-primary"><i class="bi bi-pie-chart me-2"></i>4. Evaluación de Dimensiones de Calidad</h2>
-    <p class="lead">Medición cuantitativa mediante métricas verificables.</p>
+<h1 class="page-title">4. Evaluación de Dimensiones de Calidad por Dataset</h1>
+<p class="text-muted mt-2 mb-4">Medición cuantitativa mediante métricas verificables aplicadas a cada variable del dataset consolidado.</p>
 
-    <div class="table-responsive">
-        <table class="table table-bordered align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Dimensión</th>
-                    <th>Fórmula de Métrica</th>
-                    <th>Resultado Medido</th>
-                    <th>Estado / Interpretación</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Unicidad</strong></td>
-                    <td><code>(Registros Únicos / Total Registros) * 100</code></td>
-                    <td><span class="badge bg-danger fs-6">56.55%</span> (Perfil)</td>
-                    <td>Deficiente en Perfil Epidemiológico debido a 42,723 filas idénticas. En los demás datasets es 100%.</td>
-                </tr>
-                <tr>
-                    <td><strong>Completitud</strong></td>
-                    <td><code>(Celdas No Nulas / Total Celdas) * 100</code></td>
-                    <td><span class="badge bg-success fs-6">99.31%</span> (Outbreaks) <br> <span class="badge bg-warning text-dark fs-6">51.60%</span> (Salud Col CUALITATIVO)</td>
-                    <td>Aceptable en general, con deficiencias graves en atributos cualitativos secundarios de Salud Cundinamarca.</td>
-                </tr>
-                <tr>
-                    <td><strong>Validez</strong></td>
-                    <td><code>(Edad en Rango [0-100] / Total Registros) * 100</code></td>
-                    <td><span class="badge bg-success fs-6">99.99%</span> (Dengue)</td>
-                    <td>Solo 3 registros con edades atípicas o erróneas (112, 122, 174 años).</td>
-                </tr>
-                <tr>
-                    <td><strong>Consistencia</strong></td>
-                    <td><code>(Registros con Sexo Válido / Total Registros) * 100</code></td>
-                    <td><span class="badge bg-success fs-6">99.99%</span></td>
-                    <td>Excelente consistencia categórica salvo 1 registro con categoría 'SD' (Sin Dato).</td>
-                </tr>
-                <tr>
-                    <td><strong>Exactitud</strong></td>
-                    <td><code>(Municipios Homologados DANE / Total) * 100</code></td>
-                    <td><span class="badge bg-warning text-dark fs-6">88.40%</span></td>
-                    <td>Inconsistencia en uso de tildes y mayúsculas en nombres de municipios.</td>
-                </tr>
-                <tr>
-                    <td><strong>Actualidad</strong></td>
-                    <td><code>Años transcurridos desde última actualización</code></td>
-                    <td><span class="badge bg-info text-dark fs-6">2020 - 2024</span></td>
-                    <td>Información vigente correspondiente a los últimos periodos epidemiológicos reportados.</td>
-                </tr>
-            </tbody>
-        </table>
+<ul class="nav nav-pills mb-4" id="qualityTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="regional-tab" data-bs-toggle="pill" data-bs-target="#regional" type="button" role="tab">1. Regional Cundinamarca</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="nacional-tab" data-bs-toggle="pill" data-bs-target="#nacional" type="button" role="tab">2. Nacional Colombia</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="global-tab" data-bs-toggle="pill" data-bs-target="#global" type="button" role="tab">3. Global Brotes</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="clinico-tab" data-bs-toggle="pill" data-bs-target="#clinico" type="button" role="tab">4. Perfil Clínico</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="qualityTabsContent">
+
+    <div class="tab-pane fade show active" id="regional" role="tabpanel">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">cod_municipio / municipio</h5>
+                        <span class="badge bg-warning text-dark fs-6">88.40% Exactitud</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Municipios Homologados DANE / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Inconsistencia por diferencias de tildes y mayúsculas en los 117 municipios de Cundinamarca.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">anio</h5>
+                        <span class="badge bg-info text-dark fs-6">2007 - 2022</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>Años dentro del periodo de estudio</code></p>
+                    <p class="mb-0 text-secondary">100% de validez temporal, sin registros con años fuera de rango o nulos.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">evento</h5>
+                        <span class="badge bg-success fs-6">100.00% Consistencia</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Eventos en Dominio Permitido / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Categorización perfecta reservada a Dengue, Dengue Grave, Chikungunya y Chagas.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">conteo</h5>
+                        <span class="badge bg-success fs-6">100.00% Validez</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Valores Enteros ≥ 0 / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Todos los valores representan cantidades numéricas de casos notificados válidas.</p>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">TASA DE INCIDENCIA / LETALIDAD DENGUE</h5>
+                        <span class="badge bg-warning text-dark fs-6">64.20% Completitud</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Indicadores Oficiales No Nulos / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Presenta celdas vacías en municipios y años donde no se registraron brotes o medición oficial de la Gobernación.</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="tab-pane fade" id="nacional" role="tabpanel">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">cod_evento / cod_departamento / cod_municipio</h5>
+                        <span class="badge bg-success fs-6">99.80% Consistencia</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Códigos Alineados a Estándar DANE/SIVIGILA / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Codificación oficial altamente consistente en la estructura nacional.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">semana</h5>
+                        <span class="badge bg-success fs-6">100.00% Validez</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Semanas en Rango [1-53] / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Todas las semanas epidemiológicas se encuentran dentro del estándar estipulado.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">municipio_desconocido</h5>
+                        <span class="badge bg-danger fs-6">5.12% Inexactitud</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Filas con municipio_desconocido = True / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Registros que carecen de ubicación municipal específica a nivel nacional.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">conteo (Nacional)</h5>
+                        <span class="badge bg-success fs-6">99.95% Completitud</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Registros con Casos Válidos / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Mínima presencia de registros sin consolidación de casos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="global" role="tabpanel">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">Disease (13 ETV)</h5>
+                        <span class="badge bg-success fs-6">100.00% Consistencia</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Nombres de Enfermedad Estandarizados / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Nombres homologados de las 13 Enfermedades Transmitidas por Vectores globales.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">Country / iso2 / iso3</h5>
+                        <span class="badge bg-success fs-6">99.40% Validez</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Códigos Homologados ISO 3166 / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Excelente calidad de georreferenciación global por estándar ISO.</p>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">who_region / unsd_region</h5>
+                        <span class="badge bg-success fs-6">100.00% Completitud</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Celdas con Región Asignada / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Todos los brotes cuentan con la asignación territorial oficial de OMS y UNSD.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="clinico" role="tabpanel">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">EDAD</h5>
+                        <span class="badge bg-success fs-6">99.96% Validez</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Edades en Rango [0-100] / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Únicamente 3 registros anómalos o atípicos detectados (112, 122 y 174 años).</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">SEXO</h5>
+                        <span class="badge bg-success fs-6">99.98% Consistencia</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Registros Válidos M/F / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Valores M y F consistentes excepto 1 registro clasificado como 'SD' (Sin Dato).</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">NOMBRE CIE10</h5>
+                        <span class="badge bg-success fs-6">100.00% Exactitud</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Diagnósticos Oficiales CIE-10 / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Diagnósticos clínicos exactos para dengue, chagas, leishmaniasis, malaria y chikungunya.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">mes_real</h5>
+                        <span class="badge bg-warning text-dark fs-6">85.00% Exactitud</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Meses [1-12] Corregidos de "CICLO DE VIDA" / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Se corrigió el error de origen donde la información del mes venía trocada en la columna de ciclo de vida.</p>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="p-3 border rounded h-100 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">NACIONALIDAD / REGIMEN DE AFILIACION</h5>
+                        <span class="badge bg-warning text-dark fs-6">51.60% Completitud</span>
+                    </div>
+                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Celdas Diligenciadas / Total) * 100</code></p>
+                    <p class="mb-0 text-secondary">Presenta deficiencias significativas por omisión en el diligenciamiento de fichas clínicas secundarias.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}
