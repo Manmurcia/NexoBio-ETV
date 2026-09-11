@@ -2,77 +2,232 @@
 
 {% block content %}
 <h1 class="page-title">5. Inventario de Problemas Encontrados</h1>
-<p class="text-muted mt-2 mb-4">Matriz detallada de inconsistencias e impacto sobre el proyecto.</p>
+<p class="text-muted mt-2 mb-4">Problemas identificados mediante perfilamiento con pandas, agrupados por archivo y detallados por variable afectada.</p>
 
-<div class="row g-3">
-    <div class="col-md-6">
-        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="fw-bold mb-0"><code>PERFIL_EPIDEMIOLOGICO</code></h5>
-                <span class="badge bg-danger fs-6">Impacto Alto</span>
-            </div>
-            <p class="mb-1 text-secondary">Duplicidad masiva de filas idénticas generadas por consolidación múltiple.</p>
-            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
-                <span><strong>Registros afectados:</strong> 42,723</span>
-                <span><strong>Dimensión:</strong> Unicidad</span>
-            </div>
-        </div>
-    </div>
+<h4 class="fw-bold mb-2">PERFIL_EPIDEMIOLOGICO_ANUAL.csv <span class="text-muted small">(98.322 filas)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>(fila completa)</code></td>
+            <td>Duplicidad exacta de filas completas.</td>
+            <td>42.723</td>
+            <td>Unicidad</td>
+            <td><span class="badge bg-danger">Alto</span></td>
+        </tr>
+        <tr>
+            <td><code>REGIMEN DE AFILIACION</code></td>
+            <td>18 valores únicos que en realidad son solo 8 categorías, repetidas en distinta capitalización (ej. "SUBSIDIADO", "Subsidiado", "subsidiado").</td>
+            <td>98.322 (toda la columna)</td>
+            <td>Consistencia</td>
+            <td><span class="badge bg-danger">Alto</span></td>
+        </tr>
+        <tr>
+            <td><code>NACIONALIDAD</code></td>
+            <td>13 valores únicos que corresponden a solo 8 categorías reales por el mismo problema de capitalización (ej. "COLOMBIANO" / "Colombiano").</td>
+            <td>98.322 (toda la columna)</td>
+            <td>Consistencia</td>
+            <td><span class="badge bg-warning text-dark">Medio</span></td>
+        </tr>
+        <tr>
+            <td><code>CICLO DE VIDA</code> / <code>MES</code></td>
+            <td>Columnas desalineadas: "CICLO DE VIDA" contiene en realidad el mes, y "MES" contiene el subgrupo de causas.</td>
+            <td>98.322 (todo el archivo)</td>
+            <td>Validez / Estructura</td>
+            <td><span class="badge bg-danger">Alto</span></td>
+        </tr>
+        <tr>
+            <td><code>CODIGO CIE10</code></td>
+            <td>Valor nulo.</td>
+            <td>1</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+    </tbody>
+</table>
+</div>
 
-    <div class="col-md-6">
-        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="fw-bold mb-0"><code>SALUD.xlsx (Encabezados)</code></h5>
-                <span class="badge bg-danger fs-6">Impacto Alto</span>
-            </div>
-            <p class="mb-1 text-secondary">Renglones iniciales con títulos de la entidad desplazando los encabezados a la fila 10.</p>
-            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
-                <span><strong>Registros afectados:</strong> 63,989</span>
-                <span><strong>Dimensión:</strong> Validez / Estructura</span>
-            </div>
-        </div>
-    </div>
+<h4 class="fw-bold mb-2">SALUD.xlsx <span class="text-muted small">(63.978 filas)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>(encabezados)</code></td>
+            <td>Filas iniciales con títulos institucionales desplazan el encabezado real a la fila 12 del Excel.</td>
+            <td>63.978 (todo el archivo si no se corrige)</td>
+            <td>Validez / Estructura</td>
+            <td><span class="badge bg-danger">Alto</span></td>
+        </tr>
+        <tr>
+            <td><code>DATO_NUMERICO</code></td>
+            <td>Valores nulos en el total del archivo.</td>
+            <td>7</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+        <tr>
+            <td><code>DATO_NUMERICO</code> (tasa de incidencia dengue)</td>
+            <td>Valores atípicos muy altos (hasta 18.640 casos por 100.000 hab.) en municipios pequeños — requieren validar si son reales o error de cálculo.</td>
+            <td>19</td>
+            <td>Exactitud</td>
+            <td><span class="badge bg-warning text-dark">Medio</span></td>
+        </tr>
+        <tr>
+            <td><code>CUALITATIVO</code></td>
+            <td>Valores nulos (columna secundaria, no siempre aplica).</td>
+            <td>30.986</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+    </tbody>
+</table>
+</div>
 
-    <div class="col-md-6">
-        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="fw-bold mb-0"><code>sivigila_dengue.edad_</code></h5>
-                <span class="badge bg-warning text-dark fs-6">Impacto Medio</span>
-            </div>
-            <p class="mb-1 text-secondary">Edades biológicamente inverosímiles (112, 122, 174 años).</p>
-            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
-                <span><strong>Registros afectados:</strong> 3</span>
-                <span><strong>Dimensión:</strong> Validez</span>
-            </div>
-        </div>
-    </div>
+<h4 class="fw-bold mb-2">sivigila_dengue.csv <span class="text-muted small">(53.813 filas)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>cod_mun_d</code></td>
+            <td>Valor "SD" (sin dato) usado como categoría en vez de nulo real.</td>
+            <td>49.532 (92% de las filas)</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-danger">Alto</span></td>
+        </tr>
+        <tr>
+            <td><code>somnolenci</code>, <code>hem_mucosa</code>, <code>aum_hemato</code>, <code>hipotermia</code></td>
+            <td>Mismo problema de "SD" como pseudo-nulo en varias columnas de síntomas de alarma.</td>
+            <td>~26.650 cada una (~50%)</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-danger">Alto</span></td>
+        </tr>
+        <tr>
+            <td><code>clas_dengue</code>, <code>dolrretroo</code>, <code>erupcionr</code>, <code>hipotensio</code>, <code>hepatomeg</code></td>
+            <td>Mismo problema de "SD" como pseudo-nulo en variables clínicas y de clasificación.</td>
+            <td>~11.590 cada una (~22%)</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-warning text-dark">Medio</span></td>
+        </tr>
+        <tr>
+            <td><code>edad_</code></td>
+            <td>Edades biológicamente inverosímiles (112, 122, 174 años) con <code>uni_med_</code> ya en años.</td>
+            <td>3</td>
+            <td>Exactitud</td>
+            <td><span class="badge bg-warning text-dark">Medio</span></td>
+        </tr>
+        <tr>
+            <td><code>nombre_barrio</code></td>
+            <td>Texto genérico "SIN INFORMACION" imputado en lugar de valor nulo real.</td>
+            <td>3.287</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-warning text-dark">Medio</span></td>
+        </tr>
+        <tr>
+            <td><code>sexo_</code>, <code>tip_cas_</code>, <code>tipo_ss_</code>, <code>uni_med_</code></td>
+            <td>Mismo problema de "SD" como pseudo-nulo, en menor cantidad.</td>
+            <td>1 a 8 filas cada una</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+    </tbody>
+</table>
+</div>
 
-    <div class="col-md-6">
-        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="fw-bold mb-0"><code>sivigila_dengue.nombre_barrio</code></h5>
-                <span class="badge bg-warning text-dark fs-6">Impacto Medio</span>
-            </div>
-            <p class="mb-1 text-secondary">Texto genérico "SIN INFORMACION" imputado en lugar de valor nulo real.</p>
-            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
-                <span><strong>Registros afectados:</strong> 3,376</span>
-                <span><strong>Dimensión:</strong> Completitud</span>
-            </div>
-        </div>
-    </div>
+<h4 class="fw-bold mb-2">Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv <span class="text-muted small">(241.746 filas)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>ANO</code>, <code>COD_MUN_O</code></td>
+            <td>Almacenadas como texto con separador de miles (ej. "2,012", "25,754") en vez de números.</td>
+            <td>241.746 (toda la columna, ambas)</td>
+            <td>Validez</td>
+            <td><span class="badge bg-warning text-dark">Medio</span></td>
+        </tr>
+        <tr>
+            <td><code>Municipio_ocurrencia</code></td>
+            <td>Valor genérico "* [DEPARTAMENTO]. MUNICIPIO DESCONOCIDO" en vez de dato real o nulo.</td>
+            <td>4.605</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-warning text-dark">Medio</span></td>
+        </tr>
+        <tr>
+            <td><code>Departamento_ocurrencia</code></td>
+            <td>Categorías no geográficas mezcladas con departamentos reales ("EXTERIOR", "PROCEDENCIA DESCONOCIDA").</td>
+            <td>Requiere conteo puntual</td>
+            <td>Validez</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+    </tbody>
+</table>
+</div>
 
-    <div class="col-md-6">
-        <div class="p-3 border rounded h-100" style="background-color: #ffffff;">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="fw-bold mb-0"><code>disease_outbreaks.who_region</code></h5>
-                <span class="badge bg-info text-dark fs-6">Impacto Bajo</span>
-            </div>
-            <p class="mb-1 text-secondary">Ausencia de código de región para eventos internacionales.</p>
-            <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top small text-muted">
-                <span><strong>Registros afectados:</strong> 266</span>
-                <span><strong>Dimensión:</strong> Completitud</span>
-            </div>
-        </div>
-    </div>
+<h4 class="fw-bold mb-2">disease_outbreaks_HDX.xlsx <span class="text-muted small">(3.566 filas)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>who_region</code></td>
+            <td>Ausencia de código de región para eventos internacionales.</td>
+            <td>266</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+        <tr>
+            <td><code>Definition</code></td>
+            <td>Valores nulos.</td>
+            <td>123</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+        <tr>
+            <td><code>unsd_region</code>, <code>unsd_subregion</code></td>
+            <td>Valores nulos.</td>
+            <td>12 cada una</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+        <tr>
+            <td><code>iso2</code></td>
+            <td>Valores nulos (código de 2 letras del país).</td>
+            <td>6</td>
+            <td>Completitud</td>
+            <td><span class="badge bg-info text-dark">Bajo</span></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<h4 class="fw-bold mb-2">Public_Use_Ixodes_County_Table_2023.xlsx <span class="text-muted small">(7 hojas, una por año)</span></h4>
+<div class="table-responsive mb-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>(encabezados)</code></td>
+            <td>Título institucional ocupa la fila de encabezado en cada una de las 7 hojas, generando columnas "Unnamed" al leer con pandas por defecto.</td>
+            <td>Las 7 hojas (todos los años)</td>
+            <td>Validez / Estructura</td>
+            <td><span class="badge bg-warning text-dark">Medio</span></td>
+        </tr>
+    </tbody>
+</table>
 </div>
 {% endblock %}
