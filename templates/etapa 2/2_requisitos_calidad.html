@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">2. Requisitos de Calidad de Datos</h1>
+
+<p>Definición de criterios de aceptación y tolerancia para el uso seguro de la información.</p>
+
+<h4 class="mt-4 mb-3">Completitud y Unicidad</h4>
+<div class="table-responsive mt-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Criterio</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Cero Duplicados en Llaves Primarias</strong></td>
+            <td>El 100% de los registros debe poseer un identificador único sintáctico sin
+            repeticiones exactas no justificadas.</td>
+        </tr>
+        <tr>
+            <td><strong>Campos Críticos Obligatorios</strong></td>
+            <td>Variables como <code>EDAD</code>, <code>SEXO</code>, <code>CODIGO CIE10</code> y
+            <code>FECHA</code> no deben presentar nulos ni cadenas vacías en más de un 0.5%.</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<h4 class="mt-4 mb-3">Validez y Consistencia</h4>
+<div class="table-responsive mt-4">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr><th>Criterio</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Rangos de Edad Válidos</strong></td>
+            <td>Valores de edad entre 0 y 110 años. Todo valor superior debe ser etiquetado o
+            corregido.</td>
+        </tr>
+        <tr>
+            <td><strong>Estandarización de Texto</strong></td>
+            <td>Homologación de campos categóricos como sexo a estándares unificados
+            (<code>F</code>, <code>M</code>) e ignorar categorías ambiguas como 'SD'.</td>
+        </tr>
+        <tr>
+            <td><strong>Estructura de Encabezados</strong></td>
+            <td>Eliminación de metadatos o filas superiores innecesarias en archivos tabulares
+            (.xlsx).</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<div class="card border mb-4">
+    <div class="card-body">
+        <h4>Propósito del Conjunto de Datos</h4>
+        <p class="mb-0 text-secondary">
+            El conjunto de datos consolidado se utilizará para responder la pregunta principal del
+            proyecto NexoBio: comparar la incidencia, distribución y estacionalidad de las principales
+            enfermedades transmitidas por vectores (dengue, dengue grave, chikungunya, chagas, entre
+            otras) en tres escalas global, nacional (Colombia) y regional (Cundinamarca). Los usuarios
+            de esta información son el equipo del proyecto, que la empleará para análisis exploratorio,
+            comparación entre escalas y, en etapas posteriores, minería de datos (asociación,
+            clustering, predicción). Por eso la calidad de las variables geográficas, temporales y de
+            conteo de casos es crítica: cualquier error en ellas compromete directamente la
+            comparabilidad entre niveles que es el objetivo central del proyecto.
+        </p>
+    </div>
+</div>
+{% endblock %}
