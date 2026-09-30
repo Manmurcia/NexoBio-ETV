@@ -1,0 +1,147 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="etapa3-content">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-title">
+                <i class="bi bi-diagram-3-fill"></i> 2. Diseño del Paquete ETL (SSIS)
+            </h1>
+            <p class="lead">
+                Arquitectura del proceso de extracción, transformación y carga (ETL) implementado en
+                SQL Server Integration Services, aplicando las reglas de tratamiento definidas en la
+                sección anterior. Se construyó un paquete <code>.dtsx</code> por cada archivo fuente, más
+                un paquete maestro que los orquesta.
+            </p>
+            <hr class="my-4">
+        </div>
+    </div>
+
+    <!-- CONTROL FLOW -->
+    <div class="card shadow-sm mb-4 border-start border-4 border-primary">
+        <div class="card-header bg-primary text-white fw-bold">
+            <i class="bi bi-signpost-split-fill"></i> Control Flow (igual para los 6 paquetes)
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-column align-items-center gap-2">
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <i class="bi bi-terminal-fill text-secondary"></i>
+                    <strong>Execute SQL Task</strong> — TRUNCATE staging_&lt;archivo&gt;
+                    <div class="text-muted small">Garantiza staging limpio antes de cada corrida (clave para la prueba anti-duplicados)</div>
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-primary"></i>
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <i class="bi bi-download text-secondary"></i>
+                    <strong>Data Flow Task</strong> — Extracción → Staging
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-primary"></i>
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <i class="bi bi-magic text-secondary"></i>
+                    <strong>Data Flow Task</strong> — Transformación y limpieza
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-primary"></i>
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <i class="bi bi-upload text-secondary"></i>
+                    <strong>Data Flow Task</strong> — Carga a tablas finales (aceptados / a revisión / duplicados)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATA FLOW -->
+    <div class="card shadow-sm mb-4 border-start border-4 border-success">
+        <div class="card-header bg-success text-white fw-bold">
+            <i class="bi bi-diagram-2-fill"></i> Data Flow (patrón general)
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-column align-items-center gap-2">
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <strong>Source</strong> (Flat File / Excel Source)
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-success"></i>
+                <div class="p-3 border rounded w-75 text-center bg-white border-secondary">
+                    <strong>OLE DB Destination → staging_&lt;archivo&gt;</strong>
+                    <div class="text-muted small">Copia cruda intacta del dato original, sin transformar — trazabilidad total</div>
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-success"></i>
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <strong>Derived Column</strong>
+                    <div class="text-muted small">TRIM/UPPER, reemplazo "SD"→NULL, corrección ANO/COD_MUN_O, reasignación CICLO DE VIDA/MES</div>
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-success"></i>
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <strong>Data Conversion</strong>
+                    <div class="text-muted small">Tipos correctos (DT_I4, DT_DATE, etc.)</div>
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-success"></i>
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <strong>Lookup</strong>
+                    <div class="text-muted small">Homologación categórica (régimen, nacionalidad) y geográfica (municipios/departamentos DANE)</div>
+                </div>
+                <div class="d-flex w-100 justify-content-center gap-4">
+                    <div class="text-center">
+                        <i class="bi bi-arrow-down fs-4 text-success"></i>
+                        <div class="p-2 bg-light border rounded text-center small">Match</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="bi bi-arrow-down-right fs-4 text-danger"></i>
+                        <div class="p-2 border border-danger rounded text-center small">No Match → a revisión</div>
+                    </div>
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-success"></i>
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <strong>Sort</strong> (Remove rows with duplicate sort values)
+                    <div class="text-muted small">Deduplicación exacta de filas</div>
+                </div>
+                <i class="bi bi-arrow-down fs-4 text-success"></i>
+                <div class="p-3 bg-light border rounded w-75 text-center">
+                    <strong>Conditional Split</strong>
+                    <div class="text-muted small">Reglas de validez/rango (edad 0-110, atípicos, nulos en campos clave)</div>
+                </div>
+                <div class="d-flex w-100 justify-content-center gap-4">
+                    <div class="text-center">
+                        <i class="bi bi-arrow-down fs-4 text-success"></i>
+                        <div class="p-2 bg-success bg-opacity-25 border border-success rounded text-center small">tabla_aceptados</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="bi bi-arrow-down fs-4 text-warning"></i>
+                        <div class="p-2 bg-warning bg-opacity-25 border border-warning rounded text-center small">tabla_revision (+ motivo, + valor original)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary fw-bold">
+                        <i class="bi bi-hdd-stack-fill"></i> Zona de Staging
+                    </h5>
+                    <p class="card-text text-muted">
+                        Cada paquete carga primero una copia 1:1 del archivo original en una tabla de staging,
+                        sin ninguna transformación. Esto permite repetir el proceso, auditar qué había antes
+                        del tratamiento, y sirve de base para la prueba de no duplicación al reejecutar el
+                        mismo lote.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary fw-bold">
+                        <i class="bi bi-arrow-repeat"></i> Prueba de Idempotencia
+                    </h5>
+                    <p class="card-text text-muted">
+                        Antes de cada corrida, un <code>Execute SQL Task</code> trunca la tabla de staging (o se
+                        valida una clave de lote/hash). Esto garantiza que reejecutar el mismo archivo fuente
+                        no genera registros duplicados adicionales en las tablas finales.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

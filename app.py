@@ -28,6 +28,19 @@ RUTAS_ETAPA2 = {
     'estrategias': '7_estrategias.html',
 }
 
+# RUTAS DE LA ETAPA 3
+# TRATAMIENTO ETL CON SSIS
+
+RUTAS_ETAPA3 = {
+    'reglas-tratamiento': '1_reglas_tratamiento.html',
+    'diseno-etl': '2_diseno_etl.html',
+    'iteracion-1': '3_iteracion1.html',
+    'iteracion-2': '4_iteracion2.html',
+    'iteracion-3': '5_iteracion3.html',
+    'comparacion': '6_comparacion.html',
+    'entregables': '7_entregables.html',
+}
+
 # PÁGINA DE INICIO
 
 @app.route('/')
@@ -70,6 +83,23 @@ def etapa2_seccion(seccion):
 
     return render_template(
         f'etapa 2/{plantilla}',
+        slug_activo=seccion
+    )
+
+
+# RUTAS DE LA ETAPA 3
+
+
+@app.route('/etapa3/<seccion>')
+def etapa3_seccion(seccion):
+
+    plantilla = RUTAS_ETAPA3.get(seccion)
+
+    if not plantilla:
+        abort(404)
+
+    return render_template(
+        f'etapa 3/{plantilla}',
         slug_activo=seccion
     )
 

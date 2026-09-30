@@ -1,0 +1,114 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="etapa3-content">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-title">
+                <i class="bi bi-bar-chart-line-fill"></i> 6. Comparación de Resultados
+            </h1>
+            <p class="lead">
+                Comparación de la calidad de los datos originales frente a los resultados obtenidos en
+                cada una de las tres iteraciones, con indicadores y ejemplos concretos de mejora.
+            </p>
+            <span class="badge bg-warning text-dark mb-3"><i class="bi bi-exclamation-triangle-fill"></i> Sección pendiente de datos reales — reemplaza los valores PENDIENTE con los resultados obtenidos</span>
+            <hr class="my-4">
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            <i class="bi bi-arrow-left-right"></i> Indicadores: Antes vs. Iteración 1 vs. Iteración 2 vs. Iteración 3
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0 align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-start">Dimensión / Indicador</th>
+                            <th>Antes (Etapa 2)</th>
+                            <th>Iteración 1</th>
+                            <th>Iteración 2</th>
+                            <th>Iteración 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start fw-bold">Unicidad (Perfil Epidemiológico)</td>
+                            <td><span class="badge bg-danger">56.55%</span> (42.723 duplicados)</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start fw-bold">Consistencia (Régimen de Afiliación)</td>
+                            <td><span class="badge bg-warning text-dark">18 variantes</span></td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start fw-bold">Exactitud (Variable Edad)</td>
+                            <td><span class="badge bg-warning text-dark">99.99%</span> (atípico = 174)</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start fw-bold">Completitud (SD como pseudo-nulo, sivigila_dengue)</td>
+                            <td><span class="badge bg-danger">92%</span> (cod_mun_d)</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start fw-bold">Validez (ANO / COD_MUN_O como texto)</td>
+                            <td><span class="badge bg-danger">0%</span> tipificado</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-check2-circle text-success"></i> Ejemplo concreto: antes</h5>
+                    <p class="card-text text-muted">
+                        PENDIENTE — pega aquí un ejemplo real de fila/registro antes del tratamiento
+                        (ej. una fila con "REGIMEN DE AFILIACION" = "subsidiado" en minúsculas).
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-check2-circle text-success"></i> Ejemplo concreto: después</h5>
+                    <p class="card-text text-muted">
+                        PENDIENTE — pega aquí la misma fila ya tratada (ej. "REGIMEN DE AFILIACION" = "SUBSIDIADO").
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4 border-start border-4 border-secondary">
+        <div class="card-header bg-secondary text-white fw-bold">
+            <i class="bi bi-exclamation-diamond-fill"></i> Problemas pendientes tras el tratamiento
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-0">
+                PENDIENTE — documenta honestamente cualquier problema de calidad que no se pudo resolver
+                por completo en esta etapa (ej. registros enviados a revisión que no se pudieron
+                reclasificar automáticamente), y por qué.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="etapa3-content">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-title">
+                <i class="bi bi-1-circle-fill"></i> 3. Iteración 1
+            </h1>
+            <p class="lead">
+                Primera ejecución del paquete ETL aplicando las reglas base definidas en la sección 1.
+            </p>
+            <span class="badge bg-warning text-dark mb-3"><i class="bi bi-exclamation-triangle-fill"></i> Sección pendiente de datos reales — reemplaza los valores marcados como PENDIENTE tras ejecutar el paquete</span>
+            <hr class="my-4">
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            <i class="bi bi-table"></i> Conteos de la Iteración 1
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0 align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-start">Archivo</th>
+                            <th>Recibidos</th>
+                            <th>Duplicados</th>
+                            <th>A revisión</th>
+                            <th>Aceptados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start">PERFIL_EPIDEMIOLOGICO_ANUAL.csv</td>
+                            <td>98.322</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">SALUD.xlsx</td>
+                            <td>63.978</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">sivigila_dengue.csv</td>
+                            <td>53.813</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv</td>
+                            <td>241.746</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">disease_outbreaks_HDX.xlsx</td>
+                            <td>3.566</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">Public_Use_Ixodes_County_Table_2023.xlsx</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                            <td>PENDIENTE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-search"></i> Hallazgos de la Iteración 1</h5>
+                    <p class="card-text text-muted">
+                        PENDIENTE — describe aquí qué se observó al ejecutar el paquete por primera vez
+                        (por ejemplo: si algún campo tuvo más/menos registros afectados de lo proyectado,
+                        errores de conversión de tipo, filas rechazadas por el Lookup, etc.).
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-tools"></i> Ajustes para la Iteración 2</h5>
+                    <p class="card-text text-muted">
+                        PENDIENTE — describe qué reglas o componentes se van a ajustar en la siguiente
+                        iteración a partir de los hallazgos anteriores, y por qué.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white fw-bold">
+            <i class="bi bi-camera-fill"></i> Evidencia de ejecución
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-2">PENDIENTE — inserta aquí capturas legibles de la ejecución del paquete (Control Flow y Data Flow en verde, contador de filas por componente).</p>
+            <!--
+            Ejemplo para insertar una captura una vez la tengas en /static/img/:
+            <img src="/static/img/etapa3_iteracion1_ejecucion.png" class="img-fluid rounded border" alt="Ejecución Iteración 1">
+            -->
+        </div>
+    </div>
+</div>
+{% endblock %}
