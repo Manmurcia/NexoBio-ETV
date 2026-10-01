@@ -54,6 +54,21 @@
                             <li><a class="dropdown-item {% if slug_activo == 'estrategias' %}active{% endif %}" href="{{ url_for('etapa2_seccion', seccion='estrategias') }}">7. Estrategias</a></li>
                         </ul>
                     </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Etapa 3
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropEtapa3">
+                            <li><a class="dropdown-item {% if slug_activo == 'reglas-tratamiento' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='reglas-tratamiento') }}">1. Diagnóstico y Reglas de Tratamiento</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'diseno-etl' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='diseno-etl') }}">2. Diseño del Paquete ETL (SSIS)</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'iteracion-1' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='iteracion-1') }}">3. Iteración 1</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'iteracion-2' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='iteracion-2') }}">4. Iteración 2</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'iteracion-3' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='iteracion-3') }}">5. Iteración 3</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'comparacion' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='comparacion') }}">6. Comparación de Resultados</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'entregables' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='entregables') }}">7. Informe y Video</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

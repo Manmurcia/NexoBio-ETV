@@ -1,0 +1,175 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="etapa3-content">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-title">
+                <i class="bi bi-clipboard2-check-fill"></i> 1. Diagnóstico y Reglas de Tratamiento
+            </h1>
+            <p class="text-muted mt-2 mb-4">
+                El paquete SSIS extrae datos de tres fuentes relacionadas con enfermedades, los conserva
+                sin alterar en una zona de staging dentro de la base <code>DB_ENFERMEDADES_ETV</code>
+                (SQL Server Express) y aplica reglas de limpieza, estandarización, detección de
+                duplicados y validación de atípicos antes de cargarlos en tablas finales. El principio
+                rector: ningún registro se pierde sin explicación lo que se elimina se contabiliza, lo
+                dudoso se separa en una tabla de revisión con su valor original, y el dato crudo siempre
+                permanece en staging para poder repetir el proceso.
+            </p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            <i class="bi bi-diagram-2"></i> Fuentes del paquete ETL
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Fuente</th>
+                            <th>Tipo de origen</th>
+                            <th>Tabla de staging</th>
+                            <th>Destino tratado</th>
+                            <th>Filas recibidas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">Perfil clínico</td>
+                            <td>Tabla SQL (OLE DB)</td>
+                            <td><code>dbo.stg_perfil_clinico</code></td>
+                            <td><code>dbo.tbl_perfil_clinico_final</code><br><code>dbo.tbl_revision_calidad</code></td>
+                            <td>1.377.630</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">SIVIGILA Nacional y Cundinamarca</td>
+                            <td>Archivo plano CSV</td>
+                            <td><code>dbo.stg_regional_cundinamarca</code></td>
+                            <td>Staging con tipos convertidos</td>
+                            <td>1.640</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">OMS – Brotes (Datasets Globales)</td>
+                            <td>Archivo plano CSV</td>
+                            <td><code>dbo.stg_oms_brotes</code></td>
+                            <td>Staging con tipos convertidos</td>
+                            <td>3.566</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white fw-bold">
+            <i class="bi bi-list-check"></i> Reglas de tratamiento (R1–R11)
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Problema</th>
+                            <th>Campo(s) afectado(s)</th>
+                            <th>Acción definida</th>
+                            <th>Justificación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">R1</td>
+                            <td>Registros duplicados</td>
+                            <td>Registro completo del perfil clínico (stg_perfil_clinico)</td>
+                            <td>Ordenar con <strong>Sort</strong> y eliminar las filas con valores de ordenación duplicados; contabilizar la diferencia entre filas de entrada y salida.</td>
+                            <td>Los duplicados inflan los conteos y sesgan los indicadores epidemiológicos. El original permanece en staging, por lo que la eliminación es trazable.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R2</td>
+                            <td>Valores nulos o vacíos</td>
+                            <td>SEXO</td>
+                            <td><strong>Derived Column</strong> <code>sexo_limpio</code>: si el valor es nulo se reemplaza por un valor por defecto; en caso contrario se estandariza.</td>
+                            <td>Evita categorías vacías en agrupaciones y garantiza un dominio completo del campo.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R3</td>
+                            <td>Valores nulos o vacíos</td>
+                            <td>REGIMEN_AFILIACION</td>
+                            <td><strong>Derived Column</strong> <code>regimen_limpio</code>: expresión condicional con reemplazo del nulo.</td>
+                            <td>Mismo criterio que R2: la variable se usa como dimensión de análisis.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R4</td>
+                            <td>Formato inconsistente (mayúsculas/minúsculas, espacios)</td>
+                            <td>SEXO, REGIMEN_AFILIACION</td>
+                            <td>Aplicar <strong>TRIM</strong> y <strong>UPPER</strong> dentro de la expresión de la columna derivada.</td>
+                            <td>Categorías como "F", "f" o "F " deben contarse como una sola.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R5</td>
+                            <td>Tipo de dato inadecuado</td>
+                            <td>EDAD</td>
+                            <td>Conversión con <code>(DT_I4) EDAD</code> a la columna <code>edad_int</code>.</td>
+                            <td>Un tipo numérico permite validar rangos y calcular grupos etarios.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R6</td>
+                            <td>Valores inválidos o atípicos</td>
+                            <td>edad_int</td>
+                            <td><strong>Conditional Split</strong>: válido si 0 ≤ edad ≤ 110; el resto (incluye nulos) va a <code>Registros_Atipicos</code> → <code>tbl_revision_calidad</code>.</td>
+                            <td>Edades negativas o superiores a 110 años no son plausibles; se separan para revisión sin descartarlas.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R7</td>
+                            <td>Longitud y página de códigos</td>
+                            <td>COD_CIE10</td>
+                            <td>Cast a <code>(DT_STR,10,1252)</code> → <code>cod_cie10_corto</code>.</td>
+                            <td>Ajusta el código CIE-10 a una longitud controlada y a la página de códigos 1252.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R8</td>
+                            <td>Longitud y página de códigos</td>
+                            <td>NACIONALIDAD</td>
+                            <td>Cast a <code>(DT_STR,50,1252)</code> → <code>nacionalidad_cast</code>.</td>
+                            <td>Homogeneiza el tipo con el destino y evita truncamientos silenciosos.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R9</td>
+                            <td>Longitud y página de códigos</td>
+                            <td>NOMBRE_CIE10</td>
+                            <td>Cast a <code>(DT_STR,250,1252)</code> → <code>cie10_diagnostico_cast</code>.</td>
+                            <td>Los nombres de diagnóstico son largos; se reservan 250 caracteres.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R10</td>
+                            <td>Tipos de dato en archivo plano (SIVIGILA)</td>
+                            <td>anio, cod_municipio, municipio, evento, conteo, LETALIDAD POR DENGUE, TASA DE INCIDENCIA DENGUE</td>
+                            <td><strong>Data Conversion</strong>: anio y conteo a entero de 4 bytes; cod_municipio (20), municipio (100), evento (100) y las dos tasas (50) como cadena.</td>
+                            <td>Un CSV entrega todo como texto; se tipifican las variables numéricas y se conservan como texto las tasas para no perder el formato original.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">R11</td>
+                            <td>Codificación de texto en archivo plano (OMS)</td>
+                            <td>Year, Disease, Country, iso2, iso3, unsd_region, who_region</td>
+                            <td><strong>Data Conversion</strong> a Unicode <code>DT_WSTR</code> (50 o 250 según el campo).</td>
+                            <td>Los nombres de países y regiones pueden incluir caracteres especiales que Unicode conserva.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+        <div>
+            Todo registro enviado a <strong>tbl_revision_calidad</strong> conserva el valor original de la
+            fila: como las columnas derivadas se crean como <code>&lt;add as new column&gt;</code>, la
+            columna original nunca se sobrescribe.
+        </div>
+    </div>
+</div>
+{% endblock %}

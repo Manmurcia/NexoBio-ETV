@@ -120,3 +120,22 @@ body {
 .card-clean:hover {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
 }
+
+.etapa3-content .page-title {
+    margin-bottom: 1.5rem;
+}
+
+.etapa3-content .card {
+    border-color: #cbd5e1;
+    border-radius: 6px;
+}
+
+.etapa3-content .card-header {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-bottom: 2px solid #0284c7;
+}
+
+.etapa3-content .card.border-start {
+    border-left-color: #0284c7 !important;
+}

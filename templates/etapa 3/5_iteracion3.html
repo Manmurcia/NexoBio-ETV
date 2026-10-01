@@ -1,0 +1,95 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="etapa3-content">
+    <h1 class="page-title"><i class="bi bi-3-circle-fill"></i> 5. Iteración 3 (versión final)</h1>
+    <p class="text-muted mt-2 mb-4">Se incorporan los destinos de válidos y de revisión, más los flujos de <strong>SIVIGILA</strong> y <strong>OMS</strong> con Data Conversion. Esta es la versión final del paquete, con todos los componentes ejecutados correctamente.</p>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold"><i class="bi bi-diagram-3"></i> Destinos de carga</div>
+        <div class="card-body">
+            <p class="mb-2">La carga rápida (fast load) inserta en bloque en lugar de fila por fila, esencial con ~730 mil registros. El bloqueo de tabla acelera la inserción y "comprobar restricciones" hace que la base valide sus reglas de integridad al cargar.</p>
+            <table class="table table-sm table-bordered mb-0">
+                <thead class="table-light"><tr><th>Destino</th><th>Tabla</th><th>Configuración</th></tr></thead>
+                <tbody>
+                    <tr><td>OLE DB Destination</td><td><code>[dbo].[tbl_perfil_clinico_final]</code></td><td>Carga rápida de tabla, bloqueo de tabla, comprobar restricciones</td></tr>
+                    <tr><td>OLE DB Destination 1</td><td><code>[dbo].[tbl_revision_calidad]</code></td><td>Carga rápida de tabla, bloqueo de tabla, comprobar restricciones</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white fw-bold"><i class="bi bi-check-circle-fill"></i> Ejecución — todos los componentes en verde</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0 align-middle text-center">
+                    <thead class="table-light">
+                        <tr><th class="text-start">Flujo</th><th>Recibidos</th><th>Aceptados</th><th>Duplicados eliminados</th><th>A revisión</th><th>Balance</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start fw-bold">Perfil clínico</td>
+                            <td>1.377.630</td><td>729.758</td><td>647.865</td><td>7</td>
+                            <td><span class="badge bg-success">✓ cuadra</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-start fw-bold">SIVIGILA</td>
+                            <td>1.640</td><td>1.640</td><td>n/a (sin Sort)</td><td>0</td>
+                            <td><span class="badge bg-success">✓ cuadra</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-start fw-bold">OMS</td>
+                            <td>3.566</td><td>3.566</td><td>n/a (sin Sort)</td><td>0</td>
+                            <td><span class="badge bg-success">✓ cuadra</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted mt-3 mb-0 small">
+                En el perfil clínico, 1.377.630 filas entraron y todas están explicadas: 729.758 se aceptaron,
+                647.865 se eliminaron como duplicadas en el Sort y 7 se enviaron a revisión. En SIVIGILA y OMS,
+                el número de filas es idéntico en la fuente, la conversión y el destino, por lo que no hubo
+                pérdidas. Ningún componente registró errores de conversión.
+            </p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Manejo de errores</div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered mb-0">
+                    <thead class="table-light"><tr><th>Situación</th><th>Componente</th><th>Tratamiento</th></tr></thead>
+                    <tbody>
+                        <tr><td>Registros duplicados</td><td>Sort</td><td>Se eliminan del flujo y se contabilizan (647.865). El original persiste en stg_perfil_clinico.</td></tr>
+                        <tr><td>Edad fuera de 0–110 o nula</td><td>Conditional Split</td><td>Salida por defecto Registros_Atipicos → tbl_revision_calidad (7 registros); no se descartan.</td></tr>
+                        <tr><td>Fallo de conversión de tipo (ej. EDAD no numérica)</td><td>Derived Column / Data Conversion</td><td>La pestaña "Salida de error" permite fallar el componente o redirigir la fila. En la ejecución final no hubo filas con error.</td></tr>
+                        <tr><td>Posible truncamiento por longitud</td><td>Data Conversion / Destinos</td><td>Longitudes definidas de forma explícita (10, 20, 50, 100, 250) para cada campo.</td></tr>
+                        <tr><td>Advertencias de validación (triángulo amarillo)</td><td>OLE DB Destination y Dest_Stg_OMS_Brotes</td><td>No impidieron la ejecución exitosa. Suelen deberse a diferencias de metadatos entre la columna de entrada y la del destino; se revisarán en el mapeo.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4 border-start border-4 border-warning">
+        <div class="card-header bg-warning text-dark fw-bold"><i class="bi bi-flag-fill"></i> Tratamiento de los registros de revisión</div>
+        <div class="card-body">
+            <ul class="mb-0">
+                <li><strong>Criterio de envío:</strong> edad fuera del intervalo 0–110 años o nula (regla R6).</li>
+                <li><strong>Conservación del valor original:</strong> como las columnas derivadas son nuevas, el valor original de EDAD sigue disponible en el flujo y se carga en tbl_revision_calidad sin modificaciones.</li>
+                <li><strong>Motivo:</strong> la condición del Conditional Split define un motivo único para esta salida. Se recomienda persistirlo en una columna <code>motivo_revision</code> y la fecha de carga, de modo que la tabla sea autoexplicativa.</li>
+                <li><strong>Ciclo de revisión:</strong> un responsable analiza los 7 registros, decide si corrige la fuente, acepta el valor o lo descarta de forma documentada, y el proceso puede repetirse desde staging.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4 border-start border-4 border-success">
+        <div class="card-header bg-success text-white fw-bold"><i class="bi bi-shield-check"></i> Prueba de no duplicación al reejecutar el mismo lote</div>
+        <div class="card-body">
+            <p class="mb-0">Como el OLE DB Source lee desde staging (no desde el archivo original) y el dato crudo nunca se modifica, si se vuelve a ejecutar el paquete con el mismo lote, el Sort vuelve a identificar las mismas filas como duplicadas y las retira antes de llegar a las tablas de destino el proceso no debe agregar filas repetidas en <code>tbl_perfil_clinico_final</code> ni en <code>tbl_revision_calidad</code>.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
