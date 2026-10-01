@@ -7,227 +7,155 @@
             <h1 class="page-title">
                 <i class="bi bi-clipboard2-check-fill"></i> 1. Diagnóstico y Reglas de Tratamiento
             </h1>
-            <p class="lead">
-                A partir del inventario de problemas de calidad identificado en la Etapa 2, se definieron
-                reglas de tratamiento específicas por variable, indicando el campo afectado, la acción de
-                tratamiento y su justificación técnica. Estas reglas son la base del diseño del paquete ETL
-                en SQL Server Integration Services (SSIS) presentado en la sección siguiente.
+            <p class="text-muted mt-2 mb-4">
+                El paquete SSIS extrae datos de tres fuentes relacionadas con enfermedades, los conserva
+                sin alterar en una zona de staging dentro de la base <code>DB_ENFERMEDADES_ETV</code>
+                (SQL Server Express) y aplica reglas de limpieza, estandarización, detección de
+                duplicados y validación de atípicos antes de cargarlos en tablas finales. El principio
+                rector: ningún registro se pierde sin explicación lo que se elimina se contabiliza, lo
+                dudoso se separa en una tabla de revisión con su valor original, y el dato crudo siempre
+                permanece en staging para poder repetir el proceso.
             </p>
-            <hr class="my-4">
         </div>
     </div>
 
-    <!-- PERFIL_EPIDEMIOLOGICO_ANUAL.csv -->
-    <div class="card shadow-sm mb-4 border-start border-4 border-primary">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            <i class="bi bi-diagram-2"></i> Fuentes del paquete ETL
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Fuente</th>
+                            <th>Tipo de origen</th>
+                            <th>Tabla de staging</th>
+                            <th>Destino tratado</th>
+                            <th>Filas recibidas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">Perfil clínico</td>
+                            <td>Tabla SQL (OLE DB)</td>
+                            <td><code>dbo.stg_perfil_clinico</code></td>
+                            <td><code>dbo.tbl_perfil_clinico_final</code><br><code>dbo.tbl_revision_calidad</code></td>
+                            <td>1.377.630</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">SIVIGILA Nacional y Cundinamarca</td>
+                            <td>Archivo plano CSV</td>
+                            <td><code>dbo.stg_regional_cundinamarca</code></td>
+                            <td>Staging con tipos convertidos</td>
+                            <td>1.640</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">OMS – Brotes (Datasets Globales)</td>
+                            <td>Archivo plano CSV</td>
+                            <td><code>dbo.stg_oms_brotes</code></td>
+                            <td>Staging con tipos convertidos</td>
+                            <td>3.566</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white fw-bold">
-            <i class="bi bi-file-earmark-spreadsheet"></i> PERFIL_EPIDEMIOLOGICO_ANUAL.csv <span class="badge bg-light text-dark ms-2">98.322 filas</span>
+            <i class="bi bi-list-check"></i> Reglas de tratamiento (R1–R11)
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mb-0 align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>Campo</th>
+                            <th>#</th>
                             <th>Problema</th>
-                            <th>Acción de tratamiento (componente SSIS)</th>
+                            <th>Campo(s) afectado(s)</th>
+                            <th>Acción definida</th>
                             <th>Justificación</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="fw-bold">Fila completa</td>
-                            <td>42.723 duplicados exactos <span class="badge bg-danger">Unicidad</span></td>
-                            <td><code>Sort</code> (Remove rows with duplicate sort values) sobre todas las columnas</td>
-                            <td>Los duplicados alteran sumatorias e indicadores de morbilidad; se conserva solo la primera ocurrencia.</td>
+                            <td class="fw-bold">R1</td>
+                            <td>Registros duplicados</td>
+                            <td>Registro completo del perfil clínico (stg_perfil_clinico)</td>
+                            <td>Ordenar con <strong>Sort</strong> y eliminar las filas con valores de ordenación duplicados; contabilizar la diferencia entre filas de entrada y salida.</td>
+                            <td>Los duplicados inflan los conteos y sesgan los indicadores epidemiológicos. El original permanece en staging, por lo que la eliminación es trazable.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">REGIMEN DE AFILIACION</td>
-                            <td>18 variantes de capitalización → 8 categorías reales <span class="badge bg-warning text-dark">Consistencia</span></td>
-                            <td><code>Derived Column</code> (UPPER/TRIM) + <code>Lookup</code> contra tabla de homologación</td>
-                            <td>Uniformiza texto libre a categorías comparables sin descartar registros.</td>
+                            <td class="fw-bold">R2</td>
+                            <td>Valores nulos o vacíos</td>
+                            <td>SEXO</td>
+                            <td><strong>Derived Column</strong> <code>sexo_limpio</code>: si el valor es nulo se reemplaza por un valor por defecto; en caso contrario se estandariza.</td>
+                            <td>Evita categorías vacías en agrupaciones y garantiza un dominio completo del campo.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">NACIONALIDAD</td>
-                            <td>13 variantes → 8 categorías reales <span class="badge bg-warning text-dark">Consistencia</span></td>
-                            <td><code>Derived Column</code> (UPPER/TRIM) + <code>Lookup</code> de homologación</td>
-                            <td>Mismo problema de consistencia textual que Régimen de Afiliación.</td>
+                            <td class="fw-bold">R3</td>
+                            <td>Valores nulos o vacíos</td>
+                            <td>REGIMEN_AFILIACION</td>
+                            <td><strong>Derived Column</strong> <code>regimen_limpio</code>: expresión condicional con reemplazo del nulo.</td>
+                            <td>Mismo criterio que R2: la variable se usa como dimensión de análisis.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">CICLO DE VIDA / MES</td>
-                            <td>Columnas desalineadas: el mes real está en "CICLO DE VIDA" <span class="badge bg-danger">Validez / Estructura</span></td>
-                            <td><code>Derived Column</code> para reasignar: <code>mes_real = [CICLO DE VIDA]</code>, <code>subgrupo_causa = [MES]</code></td>
-                            <td>Corrige el error estructural de origen antes de cualquier análisis posterior.</td>
+                            <td class="fw-bold">R4</td>
+                            <td>Formato inconsistente (mayúsculas/minúsculas, espacios)</td>
+                            <td>SEXO, REGIMEN_AFILIACION</td>
+                            <td>Aplicar <strong>TRIM</strong> y <strong>UPPER</strong> dentro de la expresión de la columna derivada.</td>
+                            <td>Categorías como "F", "f" o "F " deben contarse como una sola.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">CODIGO CIE10</td>
-                            <td>1 valor nulo <span class="badge bg-secondary">Completitud</span></td>
-                            <td><code>Conditional Split</code>: <code>ISNULL([CODIGO CIE10])</code> → rama "a revisión"</td>
-                            <td>Volumen mínimo; no se infiere un diagnóstico clínico, se envía a revisión manual.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- SALUD.xlsx -->
-    <div class="card shadow-sm mb-4 border-start border-4 border-info">
-        <div class="card-header bg-info text-white fw-bold">
-            <i class="bi bi-file-earmark-excel"></i> SALUD.xlsx <span class="badge bg-light text-dark ms-2">63.978 filas</span>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Campo</th>
-                            <th>Problema</th>
-                            <th>Acción de tratamiento (componente SSIS)</th>
-                            <th>Justificación</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="fw-bold">Encabezado</td>
-                            <td>Título institucional desplaza el encabezado real a la fila 12 <span class="badge bg-danger">Validez / Estructura</span></td>
-                            <td><code>Excel Source</code> configurado con rango desde fila 12, o <code>Script Component</code> que descarta las primeras 11 filas</td>
-                            <td>Sin esto, todo el archivo se lee con encabezados "Unnamed".</td>
+                            <td class="fw-bold">R5</td>
+                            <td>Tipo de dato inadecuado</td>
+                            <td>EDAD</td>
+                            <td>Conversión con <code>(DT_I4) EDAD</code> a la columna <code>edad_int</code>.</td>
+                            <td>Un tipo numérico permite validar rangos y calcular grupos etarios.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">DATO_NUMERICO</td>
-                            <td>7 nulos <span class="badge bg-secondary">Completitud</span></td>
-                            <td><code>Conditional Split</code> → rama "a revisión"</td>
-                            <td>Volumen bajo; no se imputa un indicador oficial sin respaldo.</td>
+                            <td class="fw-bold">R6</td>
+                            <td>Valores inválidos o atípicos</td>
+                            <td>edad_int</td>
+                            <td><strong>Conditional Split</strong>: válido si 0 ≤ edad ≤ 110; el resto (incluye nulos) va a <code>Registros_Atipicos</code> → <code>tbl_revision_calidad</code>.</td>
+                            <td>Edades negativas o superiores a 110 años no son plausibles; se separan para revisión sin descartarlas.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">DATO_NUMERICO (tasa incidencia)</td>
-                            <td>19 atípicos (hasta 18.640 casos/100k hab.) <span class="badge bg-warning text-dark">Exactitud</span></td>
-                            <td><code>Derived Column</code> con flag de atípico (umbral estadístico) + <code>Conditional Split</code> → rama "a revisión"</td>
-                            <td>No se descarta: puede ser un brote real en municipio pequeño; requiere validación humana.</td>
+                            <td class="fw-bold">R7</td>
+                            <td>Longitud y página de códigos</td>
+                            <td>COD_CIE10</td>
+                            <td>Cast a <code>(DT_STR,10,1252)</code> → <code>cod_cie10_corto</code>.</td>
+                            <td>Ajusta el código CIE-10 a una longitud controlada y a la página de códigos 1252.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">CUALITATIVO</td>
-                            <td>30.986 nulos (columna secundaria, &gt;40%) <span class="badge bg-secondary">Completitud</span></td>
-                            <td><code>Conditional Split</code> a nivel de columna: si % nulos &gt; 40% se excluye del Data Flow</td>
-                            <td>Columna no siempre aplica; eliminarla evita ruido sin perder registros completos.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- sivigila_dengue.csv -->
-    <div class="card shadow-sm mb-4 border-start border-4 border-warning">
-        <div class="card-header bg-warning text-dark fw-bold">
-            <i class="bi bi-file-earmark-text"></i> sivigila_dengue.csv <span class="badge bg-light text-dark ms-2">53.813 filas</span>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Campo</th>
-                            <th>Problema</th>
-                            <th>Acción de tratamiento (componente SSIS)</th>
-                            <th>Justificación</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="fw-bold">cod_mun_d y columnas de síntomas/clínicas</td>
-                            <td>"SD" usado como pseudo-nulo (hasta 92% de filas) <span class="badge bg-secondary">Completitud</span></td>
-                            <td><code>Derived Column</code>: <code>REPLACE(campo, "SD", NULL)</code> (o "NO REPORTADO" en categóricas clínicas)</td>
-                            <td>"SD" no es una categoría válida; tratarlo como nulo explícito evita contarlo como dato real.</td>
+                            <td class="fw-bold">R8</td>
+                            <td>Longitud y página de códigos</td>
+                            <td>NACIONALIDAD</td>
+                            <td>Cast a <code>(DT_STR,50,1252)</code> → <code>nacionalidad_cast</code>.</td>
+                            <td>Homogeneiza el tipo con el destino y evita truncamientos silenciosos.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">edad_</td>
-                            <td>Edades inverosímiles (112, 122, 174 años) <span class="badge bg-warning text-dark">Exactitud</span></td>
-                            <td><code>Derived Column</code> (<code>edad_ &gt; 110 OR edad_ &lt; 0</code>) + <code>Conditional Split</code> → rama "a revisión"</td>
-                            <td>Consistente con el límite biológico 0-110 definido en Etapa 2; evita sesgar la edad promedio.</td>
+                            <td class="fw-bold">R9</td>
+                            <td>Longitud y página de códigos</td>
+                            <td>NOMBRE_CIE10</td>
+                            <td>Cast a <code>(DT_STR,250,1252)</code> → <code>cie10_diagnostico_cast</code>.</td>
+                            <td>Los nombres de diagnóstico son largos; se reservan 250 caracteres.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">nombre_barrio</td>
-                            <td>"SIN INFORMACION" imputado (3.287 filas) <span class="badge bg-secondary">Completitud</span></td>
-                            <td><code>Derived Column</code>: <code>REPLACE("SIN INFORMACION", NULL)</code></td>
-                            <td>Es un placeholder de texto libre, no un valor real.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Datos_de_Vigilancia -->
-    <div class="card shadow-sm mb-4 border-start border-4 border-success">
-        <div class="card-header bg-success text-white fw-bold">
-            <i class="bi bi-file-earmark-bar-graph"></i> Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv <span class="badge bg-light text-dark ms-2">241.746 filas</span>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Campo</th>
-                            <th>Problema</th>
-                            <th>Acción de tratamiento (componente SSIS)</th>
-                            <th>Justificación</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="fw-bold">ANO, COD_MUN_O</td>
-                            <td>Texto con separador de miles ("2,012") en vez de número <span class="badge bg-warning text-dark">Validez</span></td>
-                            <td><code>Derived Column</code> (<code>REPLACE(campo, ",", "")</code>) + <code>Data Conversion</code> a entero (DT_I4)</td>
-                            <td>Necesario para poder tipificar y operar numéricamente sobre el campo.</td>
+                            <td class="fw-bold">R10</td>
+                            <td>Tipos de dato en archivo plano (SIVIGILA)</td>
+                            <td>anio, cod_municipio, municipio, evento, conteo, LETALIDAD POR DENGUE, TASA DE INCIDENCIA DENGUE</td>
+                            <td><strong>Data Conversion</strong>: anio y conteo a entero de 4 bytes; cod_municipio (20), municipio (100), evento (100) y las dos tasas (50) como cadena.</td>
+                            <td>Un CSV entrega todo como texto; se tipifican las variables numéricas y se conservan como texto las tasas para no perder el formato original.</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">Municipio_ocurrencia</td>
-                            <td>"MUNICIPIO DESCONOCIDO" genérico (4.605 filas) <span class="badge bg-secondary">Completitud</span></td>
-                            <td><code>Derived Column</code>: normalizar a NULL explícito</td>
-                            <td>Diferencia claramente "sin dato" de un municipio real.</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold">Departamento_ocurrencia</td>
-                            <td>Categorías no geográficas mezcladas ("EXTERIOR", "PROCEDENCIA DESCONOCIDA") <span class="badge bg-warning text-dark">Validez</span></td>
-                            <td><code>Lookup</code> contra catálogo DANE de departamentos → No Match Output → <code>Conditional Split</code> a "a revisión"</td>
-                            <td>Separa geografía válida de categorías administrativas especiales.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- HDX / Ixodes -->
-    <div class="card shadow-sm mb-4 border-start border-4 border-secondary">
-        <div class="card-header bg-secondary text-white fw-bold">
-            <i class="bi bi-globe-americas"></i> disease_outbreaks_HDX.xlsx <span class="badge bg-light text-dark ms-2">3.566 filas</span> &nbsp;/&nbsp;
-            Public_Use_Ixodes_County_Table_2023.xlsx <span class="badge bg-light text-dark ms-2">7 hojas</span>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Campo</th>
-                            <th>Problema</th>
-                            <th>Acción de tratamiento (componente SSIS)</th>
-                            <th>Justificación</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="fw-bold">who_region, Definition, unsd_region/subregion, iso2</td>
-                            <td>Nulos, bajo volumen (6 a 266 filas) <span class="badge bg-secondary">Completitud</span></td>
-                            <td><code>Conditional Split</code> → "a revisión" si el campo es clave; se deja nulo si es secundario</td>
-                            <td>Volumen bajo, no justifica descartar el registro completo.</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold">Encabezados (7 hojas Ixodes)</td>
-                            <td>Título institucional genera columnas "Unnamed" <span class="badge bg-danger">Validez / Estructura</span></td>
-                            <td><code>Excel Source</code> con fila de inicio correcta por hoja, o <code>Script Component</code> de limpieza previa</td>
-                            <td>Necesario en las 7 hojas para que el Data Flow lea columnas reales.</td>
+                            <td class="fw-bold">R11</td>
+                            <td>Codificación de texto en archivo plano (OMS)</td>
+                            <td>Year, Disease, Country, iso2, iso3, unsd_region, who_region</td>
+                            <td><strong>Data Conversion</strong> a Unicode <code>DT_WSTR</code> (50 o 250 según el campo).</td>
+                            <td>Los nombres de países y regiones pueden incluir caracteres especiales que Unicode conserva.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -238,9 +166,9 @@
     <div class="alert alert-primary d-flex align-items-center" role="alert">
         <i class="bi bi-info-circle-fill me-2 fs-4"></i>
         <div>
-            Todo registro enviado a la rama <strong>"a revisión"</strong> conserva el valor original de la fila
-            más un campo adicional <code>motivo_revision</code>, para garantizar trazabilidad y evitar pérdidas
-            de información sin explicación.
+            Todo registro enviado a <strong>tbl_revision_calidad</strong> conserva el valor original de la
+            fila: como las columnas derivadas se crean como <code>&lt;add as new column&gt;</code>, la
+            columna original nunca se sobrescribe.
         </div>
     </div>
 </div>

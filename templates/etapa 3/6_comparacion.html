@@ -2,112 +2,66 @@
 
 {% block content %}
 <div class="etapa3-content">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="page-title">
-                <i class="bi bi-bar-chart-line-fill"></i> 6. Comparación de Resultados
-            </h1>
-            <p class="lead">
-                Comparación de la calidad de los datos originales frente a los resultados obtenidos en
-                cada una de las tres iteraciones, con indicadores y ejemplos concretos de mejora.
-            </p>
-            <span class="badge bg-warning text-dark mb-3"><i class="bi bi-exclamation-triangle-fill"></i> Sección pendiente de datos reales — reemplaza los valores PENDIENTE con los resultados obtenidos</span>
-            <hr class="my-4">
+    <h1 class="page-title"><i class="bi bi-bar-chart-line-fill"></i> 6. Comparación de Resultados</h1>
+    <p class="text-muted mt-2 mb-4">Comparación de la calidad de los datos originales (staging) frente al resultado del tratamiento aplicado en la Iteración 3 (versión final).</p>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">Destino de los 1.377.630 registros recibidos del perfil clínico</div>
+        <div class="card-body">
+            <div class="progress" style="height: 40px;">
+                <div class="progress-bar bg-success d-flex align-items-center justify-content-center" style="width: 52.97%" role="progressbar">52,97% Aceptados (729.758)</div>
+                <div class="progress-bar bg-warning text-dark d-flex align-items-center justify-content-center" style="width: 47.03%" role="progressbar">47,03% Duplicados (647.865)</div>
+            </div>
+            <p class="small text-muted mt-2 mb-0">A revisión: 7 registros (0,0005%).</p>
         </div>
     </div>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white fw-bold">
-            <i class="bi bi-arrow-left-right"></i> Indicadores: Antes vs. Iteración 1 vs. Iteración 2 vs. Iteración 3
-        </div>
+        <div class="card-header bg-primary text-white fw-bold"><i class="bi bi-arrow-left-right"></i> Indicadores de calidad: antes vs. después</div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0 align-middle text-center">
+                <table class="table table-bordered table-striped mb-0 align-middle">
                     <thead class="table-light">
-                        <tr>
-                            <th class="text-start">Dimensión / Indicador</th>
-                            <th>Antes (Etapa 2)</th>
-                            <th>Iteración 1</th>
-                            <th>Iteración 2</th>
-                            <th>Iteración 3</th>
-                        </tr>
+                        <tr><th>Indicador de calidad</th><th>Datos originales (staging)</th><th>Resultado final</th><th>Mejora</th></tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-start fw-bold">Unicidad (Perfil Epidemiológico)</td>
-                            <td><span class="badge bg-danger">56.55%</span> (42.723 duplicados)</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start fw-bold">Consistencia (Régimen de Afiliación)</td>
-                            <td><span class="badge bg-warning text-dark">18 variantes</span></td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start fw-bold">Exactitud (Variable Edad)</td>
-                            <td><span class="badge bg-warning text-dark">99.99%</span> (atípico = 174)</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start fw-bold">Completitud (SD como pseudo-nulo, sivigila_dengue)</td>
-                            <td><span class="badge bg-danger">92%</span> (cod_mun_d)</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start fw-bold">Validez (ANO / COD_MUN_O como texto)</td>
-                            <td><span class="badge bg-danger">0%</span> tipificado</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
+                        <tr><td class="fw-bold">Registros</td><td>1.377.630</td><td>729.758 aceptados + 7 en revisión</td><td>Base depurada y trazable</td></tr>
+                        <tr><td class="fw-bold">Unicidad — registros duplicados</td><td>647.865 (47,03%)</td><td>0 (0%)</td><td>−100% de duplicados</td></tr>
+                        <tr><td class="fw-bold">Validez — edad fuera de 0–110</td><td>7 (0,001% de los únicos)</td><td>0 en la tabla final</td><td>Atípicos aislados en revisión</td></tr>
+                        <tr><td class="fw-bold">Tasa de aceptación sobre registros únicos</td><td>—</td><td>99,999% (729.758 de 729.765)</td><td>Alta calidad de partida</td></tr>
+                        <tr><td class="fw-bold">Consistencia de tipo — EDAD</td><td>Texto</td><td>Entero de 4 bytes (edad_int)</td><td>Permite cálculo y rangos</td></tr>
+                        <tr><td class="fw-bold">Consistencia de formato — SEXO / RÉGIMEN</td><td>Mayúsculas, espacios y nulos variables</td><td>TRIM + UPPER y reemplazo de nulos</td><td>Categorías unificadas</td></tr>
+                        <tr><td class="fw-bold">Texto con longitud definida</td><td>Sin control</td><td>10 / 20 / 50 / 100 / 250 y code page 1252</td><td>Sin truncamientos silenciosos</td></tr>
+                        <tr><td class="fw-bold">Pérdida sin explicación</td><td>—</td><td>0 registros</td><td>Balance cuadrado en los 3 flujos</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="small text-muted p-3 mb-0">Nota: el indicador de duplicados se calcula como la diferencia entre las filas de entrada y de salida del Sort dentro del mismo lote.</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white fw-bold"><i class="bi bi-arrow-left-right"></i> Antes y después de los datos (ejemplos concretos)</div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0 align-middle">
+                    <thead class="table-light"><tr><th>Regla</th><th>Antes (staging)</th><th>Después (tabla final / revisión)</th></tr></thead>
+                    <tbody>
+                        <tr><td>R4 — Formato de SEXO</td><td>« f » (minúscula con espacios)</td><td>F (mayúscula, sin espacios)</td></tr>
+                        <tr><td>R2/R3 — Nulo en SEXO / RÉGIMEN</td><td>NULL</td><td>Valor de reemplazo definido en la expresión ("NO REPORTADO")</td></tr>
+                        <tr><td>R5 — Tipo de EDAD</td><td>'045' (texto)</td><td>45 (entero)</td></tr>
+                        <tr><td>R6 — Edad atípica</td><td>250</td><td>No entra a la tabla final; va a tbl_revision_calidad con el valor 250</td></tr>
+                        <tr><td>R1 — Duplicados</td><td>Mismo registro repetido n veces</td><td>Una sola fila en la tabla final</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div class="row g-4 mb-4">
-        <div class="col-md-6">
-            <div class="card h-100 border-0 bg-light shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold"><i class="bi bi-check2-circle text-success"></i> Ejemplo concreto: antes</h5>
-                    <p class="card-text text-muted">
-                        PENDIENTE — pega aquí un ejemplo real de fila/registro antes del tratamiento
-                        (ej. una fila con "REGIMEN DE AFILIACION" = "subsidiado" en minúsculas).
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card h-100 border-0 bg-light shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold"><i class="bi bi-check2-circle text-success"></i> Ejemplo concreto: después</h5>
-                    <p class="card-text text-muted">
-                        PENDIENTE — pega aquí la misma fila ya tratada (ej. "REGIMEN DE AFILIACION" = "SUBSIDIADO").
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="card shadow-sm mb-4 border-start border-4 border-secondary">
-        <div class="card-header bg-secondary text-white fw-bold">
-            <i class="bi bi-exclamation-diamond-fill"></i> Problemas pendientes tras el tratamiento
-        </div>
+        <div class="card-header bg-secondary text-white fw-bold"><i class="bi bi-exclamation-diamond-fill"></i> Problemas pendientes</div>
         <div class="card-body">
-            <p class="text-muted mb-0">
-                PENDIENTE — documenta honestamente cualquier problema de calidad que no se pudo resolver
-                por completo en esta etapa (ej. registros enviados a revisión que no se pudieron
-                reclasificar automáticamente), y por qué.
-            </p>
+            <p class="mb-0">Las claves de ordenación del Sort, la incorporación de catálogos con <strong>Lookup</strong> (por ejemplo para homologar municipios o regímenes contra un catálogo externo) y las advertencias de metadatos en los destinos (triángulo amarillo) quedan como el siguiente ciclo de mejora del paquete.</p>
         </div>
     </div>
 </div>

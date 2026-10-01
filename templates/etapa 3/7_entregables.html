@@ -2,28 +2,16 @@
 
 {% block content %}
 <div class="etapa3-content">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="page-title">
-                <i class="bi bi-box-seam-fill"></i> 7. Informe y Video
-            </h1>
-            <p class="lead">
-                Recursos finales de la Etapa 3: informe técnico en PDF y video de demostración
-                al repositorio con los paquetes SSIS, scripts SQL y catálogos necesarios para reproducir
-                el proceso.
-            </p>
-            <hr class="my-4">
-        </div>
-    </div>
+    <h1 class="page-title"><i class="bi bi-box-seam-fill"></i> 7. Informe, Video y Repositorio</h1>
+    <p class="text-muted mt-2 mb-4">Recursos finales de la Etapa 3: informe técnico en PDF, video de demostración y enlace al repositorio con los paquetes SSIS, scripts SQL y catálogos necesarios para reproducir el proceso.</p>
 
     <!-- INFORME PDF -->
-    <div class="card shadow-sm mb-4 border-start border-4 border-danger">
-        <div class="card-header bg-danger text-white fw-bold">
-            <i class="bi bi-file-earmark-pdf-fill"></i> Informe Técnico (PDF)
-        </div>
+    <div class="card border mb-4">
+        <div class="card-header fw-bold"><i class="bi bi-file-earmark-pdf-fill"></i> Informe Técnico (PDF)</div>
         <div class="card-body">
-            <embed src="/static/docs/informe_etapa3.pdf" type="application/pdf" width="100%" height="600px" class="rounded border">
-
+            <div class="ratio mb-3" style="height: 75vh;">
+                <iframe src="/static/docs/informe_etapa3.pdf" title="Vista previa del informe técnico en PDF" class="rounded border"></iframe>
+            </div>
             <a href="/static/docs/informe_etapa3.pdf" class="btn btn-outline-danger" target="_blank">
                 <i class="bi bi-download"></i> Descargar Informe Técnico
             </a>
@@ -31,25 +19,39 @@
     </div>
 
     <!-- VIDEO -->
-    <div class="card shadow-sm mb-4 border-start border-4 border-primary">
-        <div class="card-header bg-primary text-white fw-bold">
-            <i class="bi bi-camera-reels-fill"></i> Video de Demostración
-        </div>
+    <div class="card border mb-4">
+        <div class="card-header fw-bold"><i class="bi bi-camera-reels-fill"></i> Video de Demostración</div>
         <div class="card-body">
             <span class="badge bg-warning text-dark mb-2"><i class="bi bi-exclamation-triangle-fill"></i> Pendiente — reemplaza FILE_ID por el ID real de tu video en Google Drive</span>
             <p class="text-muted">
                 En Google Drive: clic derecho sobre el video → <em>Compartir</em> → cambiar a
                 "Cualquier persona con el enlace" (rol: Lector) → copiar el enlace. De ese enlace,
-                el <code>FILE_ID</code> es la parte entre <code>/d/</code> y <code>/view</code>,
-                por ejemplo: <code>https://drive.google.com/file/d/<strong>FILE_ID</strong>/view</code>.
+                el <code>FILE_ID</code> es la parte entre <code>/d/</code> y <code>/view</code>.
             </p>
             <div class="ratio ratio-16x9">
-                <iframe src="https://drive.google.com/file/d/FILE_ID/preview"
-                        allow="autoplay"
-                        allowfullscreen
-                        class="rounded border">
-                </iframe>
+                <iframe src="https://drive.google.com/file/d/FILE_ID/preview" allow="autoplay" allowfullscreen class="rounded border"></iframe>
             </div>
+        </div>
+    </div>
+
+    <!-- ENLACES -->
+    <div class="card border mb-4">
+        <div class="card-header fw-bold"><i class="bi bi-link-45deg"></i> Enlaces del Proyecto</div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-globe2 text-primary"></i> Aplicación Flask publicada</span>
+                    <a href="https://enfermedades-7kju.onrender.com" target="_blank" class="btn btn-sm btn-outline-primary">Abrir app</a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-github"></i> Repositorio en GitHub (NexoBio-ETV)</span>
+                    <a href="https://github.com/Manmurcia/NexoBio-ETV/tree/main" target="_blank" class="btn btn-sm btn-outline-dark">Ver repo</a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-database-fill-gear"></i> Paquete SSIS (.dtsx), scripts y catálogos</span>
+                    <a href="https://github.com/AssasinGr/ETL_Enfermedades" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-dark">Ver repositorio SSIS</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

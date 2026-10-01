@@ -2,119 +2,59 @@
 
 {% block content %}
 <div class="etapa3-content">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="page-title">
-                <i class="bi bi-2-circle-fill"></i> 4. Iteración 2
-            </h1>
-            <p class="lead">
-                Segunda ejecución del paquete ETL, incorporando los ajustes definidos al cierre de la Iteración 1.
-            </p>
-            <span class="badge bg-warning text-dark mb-3"><i class="bi bi-exclamation-triangle-fill"></i> Sección pendiente de datos reales — reemplaza los valores marcados como PENDIENTE tras ejecutar el paquete</span>
-            <hr class="my-4">
-        </div>
-    </div>
+    <h1 class="page-title"><i class="bi bi-2-circle-fill"></i> 4. Iteración 2</h1>
+    <p class="text-muted mt-2 mb-4">Con los duplicados resueltos, persistían valores de <strong>EDAD</strong> fuera de un rango plausible en la salida aceptada. Se agrega el componente <strong>Derived Column</strong> (que tipifica y limpia los campos) y el <strong>Conditional Split</strong>, con el destino <code>tbl_revision_calidad</code>, de modo que los registros atípicos se separen conservando su valor original.</p>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white fw-bold">
-            <i class="bi bi-table"></i> Conteos de la Iteración 2
-        </div>
-        <div class="card-body p-0">
+        <div class="card-header bg-primary text-white fw-bold"><i class="bi bi-magic"></i> Derived Column</div>
+        <div class="card-body">
+            <p>Calcula columnas nuevas mediante expresiones sobre las columnas de entrada. Todas se crean con la opción <code>&lt;add as new column&gt;</code>, por lo que las columnas originales se conservan. Combina limpieza de nulos, normalización de texto y conversión de tipos en un único paso.</p>
             <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0 align-middle text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="text-start">Archivo</th>
-                            <th>Recibidos</th>
-                            <th>Duplicados</th>
-                            <th>A revisión</th>
-                            <th>Aceptados</th>
-                        </tr>
-                    </thead>
+                <table class="table table-sm table-bordered mb-0">
+                    <thead class="table-light"><tr><th>Columna nueva</th><th>Expresión</th><th>Tipo</th></tr></thead>
                     <tbody>
-                        <tr>
-                            <td class="text-start">PERFIL_EPIDEMIOLOGICO_ANUAL.csv</td>
-                            <td>98.322</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">SALUD.xlsx</td>
-                            <td>63.978</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">sivigila_dengue.csv</td>
-                            <td>53.813</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv</td>
-                            <td>241.746</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">disease_outbreaks_HDX.xlsx</td>
-                            <td>3.566</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">Public_Use_Ixodes_County_Table_2023.xlsx</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
+                        <tr><td>sexo_limpio</td><td>(ISNULL(SEXO) || UPPER(TRIM(SEXO)) == "SD") ? "NO REPORTADO" : UPPER(TRIM(SEXO))</td><td>string [DT_STR,10]</td></tr>
+                        <tr><td>regimen_limpio</td><td>ISNULL(REGIMEN_AFILIACION) ? "NO REPORTADO" : UPPER(TRIM(REGIMEN_AFILIACION))</td><td>string [DT_STR,50]</td></tr>
+                        <tr><td>edad_int</td><td>(DT_I4) EDAD</td><td>four-byte signed integer</td></tr>
+                        <tr><td>cod_cie10_corto</td><td>(DT_STR,10,1252) COD_CIE10</td><td>string</td></tr>
+                        <tr><td>nacionalidad_cast</td><td>(DT_STR,50,1252) NACIONALIDAD</td><td>string</td></tr>
+                        <tr><td>cie10_diagnostico_cast</td><td>(DT_STR,250,1252) NOMBRE_CIE10</td><td>string</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div class="row g-4 mb-4">
-        <div class="col-md-6">
-            <div class="card h-100 border-0 bg-light shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold"><i class="bi bi-search"></i> Hallazgos de la Iteración 2</h5>
-                    <p class="card-text text-muted">
-                        PENDIENTE — describe qué mejoró (o no) respecto a la Iteración 1 tras aplicar los ajustes,
-                        y si aparecieron hallazgos nuevos no vistos en la primera corrida.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card h-100 border-0 bg-light shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold"><i class="bi bi-tools"></i> Ajustes para la Iteración 3</h5>
-                    <p class="card-text text-muted">
-                        PENDIENTE — describe los ajustes finales que se llevarán a la Iteración 3 (la última),
-                        justificados en los hallazgos de esta segunda corrida.
-                    </p>
-                </div>
-            </div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-dark fw-bold"><i class="bi bi-signpost-split"></i> Conditional Split</div>
+        <div class="card-body">
+            <p class="mb-2">Enruta cada fila a una salida según una condición. Las filas que cumplen la regla siguen a la tabla final; las demás, incluidas aquellas con edad nula, caen en la salida por defecto y van a revisión. <strong>Ninguna fila se descarta.</strong></p>
+            <table class="table table-sm table-bordered mb-0">
+                <thead class="table-light"><tr><th>Orden</th><th>Salida</th><th>Condición</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Registros_Validos</td><td><code>edad_int &gt;= 0 &amp;&amp; edad_int &lt;= 110</code></td></tr>
+                    <tr><td>Default</td><td>Registros_Atipicos</td><td>Todo lo que no cumple la condición anterior</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white fw-bold">
-            <i class="bi bi-camera-fill"></i> Evidencia de ejecución — Iteración 2
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-search"></i> Hallazgo</h5>
+                    <p class="card-text text-muted mb-0">De los 729.765 registros ya únicos, solo 7 quedan fuera del rango 0–110 años. Se confirma que separar en una salida por defecto captura también los nulos sin necesidad de una regla adicional.</p>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <p class="text-muted mb-2">PENDIENTE — inserta aquí capturas legibles de la ejecución del paquete (Control Flow y Data Flow en verde, contador de filas por componente).</p>
-            <!--
-            Ejemplo para insertar una captura una vez la tengas en /static/img/:
-            <img src="/static/img/etapa3_iteracion2_ejecucion.png" class="img-fluid rounded border" alt="Ejecución Iteración 2">
-            -->
+        <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-tools"></i> Ajuste para la Iteración 3</h5>
+                    <p class="card-text text-muted mb-0">Falta incorporar los destinos de carga (válidos y revisión) y los dos flujos restantes SIVIGILA y OMS con sus respectivos Data Conversion, para completar el paquete.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

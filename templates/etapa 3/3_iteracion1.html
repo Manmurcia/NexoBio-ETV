@@ -2,120 +2,63 @@
 
 {% block content %}
 <div class="etapa3-content">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="page-title">
-                <i class="bi bi-1-circle-fill"></i> 3. Iteración 1
-            </h1>
-            <p class="lead">
-                Primera ejecución del paquete ETL aplicando las reglas base definidas en la sección 1.
-            </p>
-            <span class="badge bg-warning text-dark mb-3"><i class="bi bi-exclamation-triangle-fill"></i> Sección pendiente de datos reales — reemplaza los valores marcados como PENDIENTE tras ejecutar el paquete</span>
-            <hr class="my-4">
+    <h1 class="page-title"><i class="bi bi-1-circle-fill"></i> 3. Iteración 1</h1>
+    <p class="text-muted mt-2 mb-4">Se configura el <strong>OLE DB Source</strong> para leer desde el staging (no desde el archivo original) y se añade el componente <strong>Sort</strong> inmediatamente después, para cuantificar y eliminar los duplicados del perfil clínico.</p>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold"><i class="bi bi-gear-fill"></i> Configuración — OLE DB Source</div>
+        <div class="card-body p-0">
+            <table class="table table-bordered mb-0">
+                <tbody>
+                    <tr><td class="fw-bold">Administrador de conexiones OLE DB</td><td><code>.\SQLEXPRESS.DB_ENFERMEDADES_ETV</code></td></tr>
+                    <tr><td class="fw-bold">Modo de acceso a datos</td><td>Tabla o vista</td></tr>
+                    <tr><td class="fw-bold">Nombre de la tabla o vista</td><td><code>[dbo].[stg_perfil_clinico]</code></td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white fw-bold">
-            <i class="bi bi-table"></i> Conteos de la Iteración 1
-        </div>
-        <div class="card-body p-0">
+        <div class="card-header bg-primary text-white fw-bold"><i class="bi bi-sort-down"></i> Componente Sort</div>
+        <div class="card-body">
+            <p>Se seleccionan las columnas que definen la clave de ordenación y se activa <strong>"eliminar filas con valores de ordenación duplicados"</strong> (EliminateDuplicates = true).</p>
             <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0 align-middle text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="text-start">Archivo</th>
-                            <th>Recibidos</th>
-                            <th>Duplicados</th>
-                            <th>A revisión</th>
-                            <th>Aceptados</th>
-                        </tr>
-                    </thead>
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light"><tr><th>Columna</th><th>Posición de ordenación</th></tr></thead>
                     <tbody>
-                        <tr>
-                            <td class="text-start">PERFIL_EPIDEMIOLOGICO_ANUAL.csv</td>
-                            <td>98.322</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">SALUD.xlsx</td>
-                            <td>63.978</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">sivigila_dengue.csv</td>
-                            <td>53.813</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv</td>
-                            <td>241.746</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">disease_outbreaks_HDX.xlsx</td>
-                            <td>3.566</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">Public_Use_Ixodes_County_Table_2023.xlsx</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                            <td>PENDIENTE</td>
-                        </tr>
+                        <tr><td>EDAD</td><td>1</td></tr>
+                        <tr><td>SEXO</td><td>2</td></tr>
+                        <tr><td>NACIONALIDAD</td><td>3</td></tr>
+                        <tr><td>REGIMEN_DE_AFILIACION</td><td>4</td></tr>
+                        <tr><td>CODIGO_CIE10</td><td>5</td></tr>
+                        <tr><td>NOMBRE_CIE10</td><td>6</td></tr>
+                        <tr><td>CICLO_DE_VIDA</td><td>7</td></tr>
                     </tbody>
                 </table>
             </div>
+            <div class="alert alert-success mb-0">
+                Con esta configuración el componente pasa de <strong>1.377.630</strong> filas de entrada a
+                <strong>729.765</strong> de salida — se retiran <strong>647.865</strong> filas repetidas.
+            </div>
         </div>
     </div>
 
-    <div class="row g-4 mb-4">
+    <div class="row g-4">
         <div class="col-md-6">
             <div class="card h-100 border-0 bg-light shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold"><i class="bi bi-search"></i> Hallazgos de la Iteración 1</h5>
-                    <p class="card-text text-muted">
-                        PENDIENTE — describe aquí qué se observó al ejecutar el paquete por primera vez
-                        (por ejemplo: si algún campo tuvo más/menos registros afectados de lo proyectado,
-                        errores de conversión de tipo, filas rechazadas por el Lookup, etc.).
-                    </p>
+                    <h5 class="card-title fw-bold"><i class="bi bi-search"></i> Hallazgo</h5>
+                    <p class="card-text text-muted mb-0">Comparar el conteo de entrada y salida permite cuantificar los duplicados (R1) y verificar que la diferencia esté completamente explicada por filas repetidas, sin pérdidas silenciosas.</p>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card h-100 border-0 bg-light shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold"><i class="bi bi-tools"></i> Ajustes para la Iteración 2</h5>
-                    <p class="card-text text-muted">
-                        PENDIENTE — describe qué reglas o componentes se van a ajustar en la siguiente
-                        iteración a partir de los hallazgos anteriores, y por qué.
-                    </p>
+                    <h5 class="card-title fw-bold"><i class="bi bi-tools"></i> Ajuste para la Iteración 2</h5>
+                    <p class="card-text text-muted mb-0">Con los duplicados resueltos, persisten valores de EDAD fuera de un rango plausible en la salida aceptada se requiere separar esos registros antes de cargar a la tabla final.</p>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white fw-bold">
-            <i class="bi bi-camera-fill"></i> Evidencia de ejecución
-        </div>
-        <div class="card-body">
-            <p class="text-muted mb-2">PENDIENTE — inserta aquí capturas legibles de la ejecución del paquete (Control Flow y Data Flow en verde, contador de filas por componente).</p>
-            <!--
-            Ejemplo para insertar una captura una vez la tengas en /static/img/:
-            <img src="/static/img/etapa3_iteracion1_ejecucion.png" class="img-fluid rounded border" alt="Ejecución Iteración 1">
-            -->
         </div>
     </div>
 </div>
