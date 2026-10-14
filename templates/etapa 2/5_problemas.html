@@ -2,232 +2,63 @@
 
 {% block content %}
 <h1 class="page-title">5. Inventario de Problemas Encontrados</h1>
-<p class="text-muted mt-2 mb-4">Problemas identificados mediante perfilamiento con pandas, agrupados por archivo y detallados por variable afectada.</p>
-
+<p class="text-muted mt-2 mb-4">Problemas identificados con <code>scripts/perfilamiento_etapa2.py</code> y <code>scripts/dimensiones_calidad.py</code>, agrupados por archivo. La columna Evidencia indica el archivo del reporte o la instrucción que lo demuestra.</p>
 <h4 class="fw-bold mb-2">PERFIL_EPIDEMIOLOGICO_ANUAL.csv <span class="text-muted small">(98.322 filas)</span></h4>
-<div class="table-responsive mb-4">
-<table class="table table-bordered align-middle">
-    <thead class="table-light">
-        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>(fila completa)</code></td>
-            <td>Duplicidad exacta de filas completas.</td>
-            <td>42.723</td>
-            <td>Unicidad</td>
-            <td><span class="badge bg-danger">Alto</span></td>
-        </tr>
-        <tr>
-            <td><code>REGIMEN DE AFILIACION</code></td>
-            <td>18 valores únicos que en realidad son solo 8 categorías, repetidas en distinta capitalización (ej. "SUBSIDIADO", "Subsidiado", "subsidiado").</td>
-            <td>98.322 (toda la columna)</td>
-            <td>Consistencia</td>
-            <td><span class="badge bg-danger">Alto</span></td>
-        </tr>
-        <tr>
-            <td><code>NACIONALIDAD</code></td>
-            <td>13 valores únicos que corresponden a solo 8 categorías reales por el mismo problema de capitalización (ej. "COLOMBIANO" / "Colombiano").</td>
-            <td>98.322 (toda la columna)</td>
-            <td>Consistencia</td>
-            <td><span class="badge bg-warning text-dark">Medio</span></td>
-        </tr>
-        <tr>
-            <td><code>CICLO DE VIDA</code> / <code>MES</code></td>
-            <td>Columnas desalineadas: "CICLO DE VIDA" contiene en realidad el mes, y "MES" contiene el subgrupo de causas.</td>
-            <td>98.322 (todo el archivo)</td>
-            <td>Validez / Estructura</td>
-            <td><span class="badge bg-danger">Alto</span></td>
-        </tr>
-        <tr>
-            <td><code>CODIGO CIE10</code></td>
-            <td>Valor nulo.</td>
-            <td>1</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-    </tbody>
-</table>
-</div>
-
+<div class="table-responsive mb-4"><table class="table table-bordered align-middle table-sm">
+<thead class="table-light"><tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th><th>Evidencia</th></tr></thead><tbody>
+<tr><td><code>(fila completa)</code></td><td>Filas idénticas en las 10 columnas.</td><td>42.723 (43,45 %)</td><td>Unicidad</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted"><code>df.duplicated().sum()</code> · resumen_global.csv</td></tr>
+        <tr><td><code>(fila completa, tras TRIM + UPPER)</code></td><td>Al estandarizar el texto aparecen 11.801 duplicados adicionales que estaban ocultos por diferencias de mayúsculas/espacios; total real de filas repetidas.</td><td>54.524 (55,45 %)</td><td>Unicidad</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted">dimensiones_calidad.json · tratamiento_etapa2.py</td></tr>
+<tr><td><code>REGIMEN DE AFILIACION</code></td><td>18 formas de escribir 8 categorías reales (SUBSIDIADO / Subsidiado / subsidiado…).</td><td>66.229 filas no canónicas (67,36 %)</td><td>Consistencia</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted">dimensiones_calidad.json · perfil_perfil_epidemiologico_anual.csv (18 únicos)</td></tr>
+<tr><td><code>NACIONALIDAD</code></td><td>13 formas de escribir 8 categorías reales (COLOMBIANO / Colombiano…).</td><td>65.116 filas no canónicas (66,23 %)</td><td>Consistencia</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">dimensiones_calidad.json (13 únicos)</td></tr>
+<tr><td><code>NACIONALIDAD</code></td><td>Leer el CSV como latin1 produce caracteres corruptos ("EspaÃ±ol"); el archivo es UTF-8.</td><td>6 filas (ESPAÑOL)</td><td>Validez</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">El script lee con <code>encoding='utf-8'</code></td></tr>
+<tr><td><code>CICLO DE VIDA / MES</code></td><td>Columnas desalineadas: CICLO DE VIDA trae el mes y MES trae un texto constante.</td><td>98.322 (todo el archivo)</td><td>Validez / Estructura</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted">CICLO DE VIDA: 24 únicos (meses); MES: 1 único</td></tr>
+<tr><td><code>MES, SUBGRUPO CAUSAS, GRAN CAUSA</code></td><td>Variables con un único valor en todas las filas; no aportan información.</td><td>98.322</td><td>Validez</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_perfil_epidemiologico_anual.csv (valores únicos = 1)</td></tr>
+<tr><td><code>CODIGO CIE10</code></td><td>Valor nulo.</td><td>1</td><td>Completitud</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_perfil_epidemiologico_anual.csv</td></tr>
+<tr><td><code>(sin fecha)</code></td><td>El archivo no trae fecha ni año utilizable; no se puede medir actualidad ni estacionalidad.</td><td>98.322</td><td>Actualidad</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">Ausencia de columna temporal</td></tr>
+</tbody></table></div>
 <h4 class="fw-bold mb-2">SALUD.xlsx <span class="text-muted small">(63.978 filas)</span></h4>
-<div class="table-responsive mb-4">
-<table class="table table-bordered align-middle">
-    <thead class="table-light">
-        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>(encabezados)</code></td>
-            <td>Filas iniciales con títulos institucionales desplazan el encabezado real a la fila 12 del Excel.</td>
-            <td>63.978 (todo el archivo si no se corrige)</td>
-            <td>Validez / Estructura</td>
-            <td><span class="badge bg-danger">Alto</span></td>
-        </tr>
-        <tr>
-            <td><code>DATO_NUMERICO</code></td>
-            <td>Valores nulos en el total del archivo.</td>
-            <td>7</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-        <tr>
-            <td><code>DATO_NUMERICO</code> (tasa de incidencia dengue)</td>
-            <td>Valores atípicos muy altos (hasta 18.640 casos por 100.000 hab.) en municipios pequeños — requieren validar si son reales o error de cálculo.</td>
-            <td>19</td>
-            <td>Exactitud</td>
-            <td><span class="badge bg-warning text-dark">Medio</span></td>
-        </tr>
-        <tr>
-            <td><code>CUALITATIVO</code></td>
-            <td>Valores nulos (columna secundaria, no siempre aplica).</td>
-            <td>30.986</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-    </tbody>
-</table>
-</div>
-
+<div class="table-responsive mb-4"><table class="table table-bordered align-middle table-sm">
+<thead class="table-light"><tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th><th>Evidencia</th></tr></thead><tbody>
+<tr><td><code>(encabezados)</code></td><td>11 filas de títulos institucionales desplazan el encabezado real a la fila 12.</td><td>63.978 si no se corrige</td><td>Validez / Estructura</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted">Hoja SALUD, filas 1–11</td></tr>
+<tr><td><code>DATO_NUMERICO</code></td><td>Valores nulos.</td><td>7</td><td>Completitud</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_salud_cundinamarca.csv</td></tr>
+<tr><td><code>DATO_NUMERICO</code></td><td>Indicador de mortalidad infantil ajustada con el decimal perdido (ej. 99009900990099008).</td><td>565</td><td>Exactitud</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted"><code>(DATO_NUMERICO &gt; 1.000.000).sum()</code></td></tr>
+<tr><td><code>DATO_NUMERICO (tasa de incidencia dengue)</code></td><td>Valores superiores a 1.000 por 100.000 hab. (máximo 18.640,78); pueden ser brotes reales o error de cálculo.</td><td>182</td><td>Exactitud</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">dimensiones_calidad.json</td></tr>
+<tr><td><code>CUALITATIVO</code></td><td>Columna secundaria casi vacía.</td><td>30.986 (48,43 %)</td><td>Completitud</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">perfil_salud_cundinamarca.csv</td></tr>
+<tr><td><code>YEAR</code></td><td>Años posteriores a 2024 (archivo "SALUD 2024"); 12 de ellos son imposibles (2027–2038).</td><td>22</td><td>Validez</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted"><code>(YEAR &gt; 2024).sum()</code></td></tr>
+<tr><td><code>COD_DEP / COD_MUN / DEPARTAMENTO</code></td><td>Filas agregadas (no municipales) mezcladas con municipios: 31 "COLOMBIA" (cod 1) y 4 "CUNDINAMARCA" (cod 26).</td><td>35</td><td>Consistencia</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">dimensiones_calidad.json</td></tr>
+</tbody></table></div>
 <h4 class="fw-bold mb-2">sivigila_dengue.csv <span class="text-muted small">(53.813 filas)</span></h4>
-<div class="table-responsive mb-4">
-<table class="table table-bordered align-middle">
-    <thead class="table-light">
-        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>cod_mun_d</code></td>
-            <td>Valor "SD" (sin dato) usado como categoría en vez de nulo real.</td>
-            <td>49.532 (92% de las filas)</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-danger">Alto</span></td>
-        </tr>
-        <tr>
-            <td><code>somnolenci</code>, <code>hem_mucosa</code>, <code>aum_hemato</code>, <code>hipotermia</code></td>
-            <td>Mismo problema de "SD" como pseudo-nulo en varias columnas de síntomas de alarma.</td>
-            <td>~26.650 cada una (~50%)</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-danger">Alto</span></td>
-        </tr>
-        <tr>
-            <td><code>clas_dengue</code>, <code>dolrretroo</code>, <code>erupcionr</code>, <code>hipotensio</code>, <code>hepatomeg</code></td>
-            <td>Mismo problema de "SD" como pseudo-nulo en variables clínicas y de clasificación.</td>
-            <td>~11.590 cada una (~22%)</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-warning text-dark">Medio</span></td>
-        </tr>
-        <tr>
-            <td><code>edad_</code></td>
-            <td>Edades biológicamente inverosímiles (112, 122, 174 años) con <code>uni_med_</code> ya en años.</td>
-            <td>3</td>
-            <td>Exactitud</td>
-            <td><span class="badge bg-warning text-dark">Medio</span></td>
-        </tr>
-        <tr>
-            <td><code>nombre_barrio</code></td>
-            <td>Texto genérico "SIN INFORMACION" imputado en lugar de valor nulo real.</td>
-            <td>3.287</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-warning text-dark">Medio</span></td>
-        </tr>
-        <tr>
-            <td><code>sexo_</code>, <code>tip_cas_</code>, <code>tipo_ss_</code>, <code>uni_med_</code></td>
-            <td>Mismo problema de "SD" como pseudo-nulo, en menor cantidad.</td>
-            <td>1 a 8 filas cada una</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-    </tbody>
-</table>
-</div>
-
+<div class="table-responsive mb-4"><table class="table table-bordered align-middle table-sm">
+<thead class="table-light"><tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th><th>Evidencia</th></tr></thead><tbody>
+<tr><td><code>cod_mun_d</code></td><td>"SD" usado como valor en vez de nulo.</td><td>49.532 (92,04 %)</td><td>Completitud</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted">perfil_sivigila_dengue.csv</td></tr>
+<tr><td><code>somnolenci, hem_mucosa, aum_hemato, hipotermia, caida_plaq, acum_liquievento</code></td><td>"SD" como pseudo-nulo en variables de signos de alarma.</td><td>≈ 26.650 c/u (≈ 49,5 %)</td><td>Completitud</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted">perfil_sivigila_dengue.csv</td></tr>
+<tr><td><code>clas_dengue, dolrretroo, erupcionr, hipotensio, hepatomeg</code></td><td>"SD" como pseudo-nulo en variables clínicas y de clasificación.</td><td>11.588 – 11.955 (≈ 21,5 – 22,2 %)</td><td>Completitud</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">perfil_sivigila_dengue.csv</td></tr>
+<tr><td><code>comuna, nombre_barrio</code></td><td>"SD" / "SIN INFORMACION" en lugar de nulo.</td><td>3.394 y 3.376 (≈ 6,3 %)</td><td>Completitud</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">perfil_sivigila_dengue.csv</td></tr>
+<tr><td><code>desplazami, fiebre, cefalea, malgias, artralgia, dolor_abdo, vomito</code></td><td>"SD" como pseudo-nulo.</td><td>215 – 221 c/u (≈ 0,4 %)</td><td>Completitud</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_sivigila_dengue.csv</td></tr>
+<tr><td><code>sexo_, tip_cas_, tipo_ss_, uni_med_, pac_hos_, cod_dpto_o, cod_mpio_o</code></td><td>"SD" en pocas filas.</td><td>1 – 8 c/u</td><td>Completitud</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_sivigila_dengue.csv</td></tr>
+<tr><td><code>edad_</code></td><td>Edades fuera del rango biológico 0–110 (112, 122 y 174 años) con unidad de medida = años.</td><td>3</td><td>Exactitud</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted"><code>df['edad_'].max() == 174</code> · dimensiones_calidad.json</td></tr>
+<tr><td><code>(toda la tabla)</code></td><td>La completitud se reportaba como 100 % porque "SD" no se contaba como faltante; contando placeholders es 86,50 %.</td><td>276.051 celdas</td><td>Completitud</td><td><span class="badge bg-danger">Alto</span></td><td class="small text-muted">resumen_global.csv (completitud_pct = 86,50)</td></tr>
+</tbody></table></div>
 <h4 class="fw-bold mb-2">Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv <span class="text-muted small">(241.746 filas)</span></h4>
-<div class="table-responsive mb-4">
-<table class="table table-bordered align-middle">
-    <thead class="table-light">
-        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>ANO</code>, <code>COD_MUN_O</code></td>
-            <td>Almacenadas como texto con separador de miles (ej. "2,012", "25,754") en vez de números.</td>
-            <td>241.746 (toda la columna, ambas)</td>
-            <td>Validez</td>
-            <td><span class="badge bg-warning text-dark">Medio</span></td>
-        </tr>
-        <tr>
-            <td><code>Municipio_ocurrencia</code></td>
-            <td>Valor genérico "* [DEPARTAMENTO]. MUNICIPIO DESCONOCIDO" en vez de dato real o nulo.</td>
-            <td>4.605</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-warning text-dark">Medio</span></td>
-        </tr>
-        <tr>
-            <td><code>Departamento_ocurrencia</code></td>
-            <td>Categorías no geográficas mezcladas con departamentos reales ("EXTERIOR", "PROCEDENCIA DESCONOCIDA").</td>
-            <td>Requiere conteo puntual</td>
-            <td>Validez</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-    </tbody>
-</table>
-</div>
-
+<div class="table-responsive mb-4"><table class="table table-bordered align-middle table-sm">
+<thead class="table-light"><tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th><th>Evidencia</th></tr></thead><tbody>
+<tr><td><code>ANO, COD_MUN_O</code></td><td>Almacenadas como texto con separador de miles ("2,012", "25,754").</td><td>241.746 (ambas columnas)</td><td>Validez</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">dimensiones_calidad.json</td></tr>
+<tr><td><code>Municipio_ocurrencia</code></td><td>Valor genérico "… MUNICIPIO DESCONOCIDO" en lugar de dato real o nulo.</td><td>4.605 (1,90 %)</td><td>Completitud</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">dimensiones_calidad.json</td></tr>
+<tr><td><code>Departamento_ocurrencia</code></td><td>Categorías no geográficas mezcladas con departamentos ("EXTERIOR", "PROCEDENCIA DESCONOCIDA").</td><td>1.598</td><td>Validez</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">dimensiones_calidad.json</td></tr>
+</tbody></table></div>
 <h4 class="fw-bold mb-2">disease_outbreaks_HDX.xlsx <span class="text-muted small">(3.566 filas)</span></h4>
-<div class="table-responsive mb-4">
-<table class="table table-bordered align-middle">
-    <thead class="table-light">
-        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>who_region</code></td>
-            <td>Ausencia de código de región para eventos internacionales.</td>
-            <td>266</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-        <tr>
-            <td><code>Definition</code></td>
-            <td>Valores nulos.</td>
-            <td>123</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-        <tr>
-            <td><code>unsd_region</code>, <code>unsd_subregion</code></td>
-            <td>Valores nulos.</td>
-            <td>12 cada una</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-        <tr>
-            <td><code>iso2</code></td>
-            <td>Valores nulos (código de 2 letras del país).</td>
-            <td>6</td>
-            <td>Completitud</td>
-            <td><span class="badge bg-info text-dark">Bajo</span></td>
-        </tr>
-    </tbody>
-</table>
-</div>
-
-<h4 class="fw-bold mb-2">Public_Use_Ixodes_County_Table_2023.xlsx <span class="text-muted small">(7 hojas, una por año)</span></h4>
-<div class="table-responsive mb-4">
-<table class="table table-bordered align-middle">
-    <thead class="table-light">
-        <tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>(encabezados)</code></td>
-            <td>Título institucional ocupa la fila de encabezado en cada una de las 7 hojas, generando columnas "Unnamed" al leer con pandas por defecto.</td>
-            <td>Las 7 hojas (todos los años)</td>
-            <td>Validez / Estructura</td>
-            <td><span class="badge bg-warning text-dark">Medio</span></td>
-        </tr>
-    </tbody>
-</table>
-</div>
+<div class="table-responsive mb-4"><table class="table table-bordered align-middle table-sm">
+<thead class="table-light"><tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th><th>Evidencia</th></tr></thead><tbody>
+<tr><td><code>who_region</code></td><td>Ausencia de región OMS.</td><td>266 (7,46 %)</td><td>Completitud</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_disease_outbreaks_hdx.csv</td></tr>
+<tr><td><code>Definition</code></td><td>Valores nulos.</td><td>123</td><td>Completitud</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_disease_outbreaks_hdx.csv</td></tr>
+<tr><td><code>unsd_region, unsd_subregion</code></td><td>Valores nulos.</td><td>12 c/u</td><td>Completitud</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_disease_outbreaks_hdx.csv</td></tr>
+<tr><td><code>iso2</code></td><td>Valores nulos (código de 2 letras). Ojo: "SD" aquí es Sudán, no un faltante.</td><td>6</td><td>Completitud</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">perfil_disease_outbreaks_hdx.csv</td></tr>
+<tr><td><code>(fila 2)</code></td><td>Fila de etiquetas HXL (#Year+iso3+icd4…) que no es un registro.</td><td>1</td><td>Validez / Estructura</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">Excel fila 2</td></tr>
+</tbody></table></div>
+<h4 class="fw-bold mb-2">Public_Use_Ixodes_County_Table_2023.xlsx <span class="text-muted small">(7 hojas · 21.775 filas)</span></h4>
+<div class="table-responsive mb-4"><table class="table table-bordered align-middle table-sm">
+<thead class="table-light"><tr><th>Variable / Campo</th><th>Problema encontrado</th><th>Registros afectados</th><th>Dimensión</th><th>Impacto</th><th>Evidencia</th></tr></thead><tbody>
+<tr><td><code>(encabezados)</code></td><td>Título institucional (y en 2016 y 1996 una línea extra de cita) antes del encabezado real; leer con pandas por defecto genera columnas "Unnamed".</td><td>7 hojas de datos</td><td>Validez / Estructura</td><td><span class="badge bg-warning text-dark">Medio</span></td><td class="small text-muted">El script detecta la fila <code>FIPSCode</code></td></tr>
+<tr><td><code>(hojas)</code></td><td>El libro tiene 10 hojas: 3 informativas (uso de datos, clasificación, resumen) y 7 de datos, una por año.</td><td>21.775 registros</td><td>Estructura</td><td><span class="badge bg-info text-dark">Bajo</span></td><td class="small text-muted">pd.ExcelFile(...).sheet_names</td></tr>
+</tbody></table></div>
 {% endblock %}

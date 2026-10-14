@@ -1,0 +1,10 @@
+variable,valores_unicos,nulos,pct_nulos,tipo_dato,minimo,maximo,promedio
+COD_EVE,4,0,0.0,codigo numerico,,,
+Nombre_evento,4,0,0.0,texto,,,
+SEMANA,53,0,0.0,entero,1.0,53.0,26.16
+ANO,16,0,0.0,texto,,,
+COD_DPTO_O,35,0,0.0,codigo numerico,,,
+COD_MUN_O,1169,0,0.0,texto,,,
+Departamento_ocurrencia,35,0,0.0,texto,,,
+Municipio_ocurrencia,1056,4605,1.9,texto,,,
+conteo,428,0,0.0,entero,1.0,834.0,5.28

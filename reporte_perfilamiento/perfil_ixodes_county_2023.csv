@@ -1,0 +1,9 @@
+variable,valores_unicos,nulos,pct_nulos,tipo_dato
+FIPSCode,3116,0,0.0,codigo numerico
+State,102,0,0.0,texto
+County,3771,0,0.0,texto
+Ixodes_scapularis_County_Status,4,0,0.0,texto
+Ixodes_scapularis_data_source,10,0,0.0,texto
+Ixodes_pacificus_county_status,3,0,0.0,texto
+Ixodes_pacificus_data_source,4,0,0.0,texto
+anio_hoja,7,0,0.0,texto

@@ -2,227 +2,62 @@
 
 {% block content %}
 <h1 class="page-title">4. Evaluación de Dimensiones de Calidad por Dataset</h1>
-<p class="text-muted mt-2 mb-4">Medición cuantitativa mediante métricas verificables aplicadas a cada variable del dataset consolidado.</p>
-
-<ul class="nav nav-pills mb-4" id="qualityTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="regional-tab" data-bs-toggle="pill" data-bs-target="#regional" type="button" role="tab">1. Regional Cundinamarca</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="nacional-tab" data-bs-toggle="pill" data-bs-target="#nacional" type="button" role="tab">2. Nacional Colombia</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="global-tab" data-bs-toggle="pill" data-bs-target="#global" type="button" role="tab">3. Global Brotes</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="clinico-tab" data-bs-toggle="pill" data-bs-target="#clinico" type="button" role="tab">4. Perfil Clínico</button>
-    </li>
-</ul>
-
-<div class="tab-content" id="qualityTabsContent">
-
-    <div class="tab-pane fade show active" id="regional" role="tabpanel">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">cod_municipio / municipio</h5>
-                        <span class="badge bg-warning text-dark fs-6">88.40% Exactitud</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Municipios Homologados DANE / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Inconsistencia por diferencias de tildes y mayúsculas en los 117 municipios de Cundinamarca.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">anio</h5>
-                        <span class="badge bg-info text-dark fs-6">2007 - 2022</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>Años dentro del periodo de estudio</code></p>
-                    <p class="mb-0 text-secondary">100% de validez temporal, sin registros con años fuera de rango o nulos.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">evento</h5>
-                        <span class="badge bg-success fs-6">100.00% Consistencia</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Eventos en Dominio Permitido / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Categorización perfecta reservada a Dengue, Dengue Grave, Chikungunya y Chagas.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">conteo</h5>
-                        <span class="badge bg-success fs-6">100.00% Validez</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Valores Enteros ≥ 0 / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Todos los valores representan cantidades numéricas de casos notificados válidas.</p>
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">TASA DE INCIDENCIA / LETALIDAD DENGUE</h5>
-                        <span class="badge bg-warning text-dark fs-6">64.20% Completitud</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Indicadores Oficiales No Nulos / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Presenta celdas vacías en municipios y años donde no se registraron brotes o medición oficial de la Gobernación.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane fade" id="nacional" role="tabpanel">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">cod_evento / cod_departamento / cod_municipio</h5>
-                        <span class="badge bg-success fs-6">99.80% Consistencia</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Códigos Alineados a Estándar DANE/SIVIGILA / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Codificación oficial altamente consistente en la estructura nacional.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">semana</h5>
-                        <span class="badge bg-success fs-6">100.00% Validez</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Semanas en Rango [1-53] / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Todas las semanas epidemiológicas se encuentran dentro del estándar estipulado.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">municipio_desconocido</h5>
-                        <span class="badge bg-danger fs-6">5.12% Inexactitud</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Filas con municipio_desconocido = True / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Registros que carecen de ubicación municipal específica a nivel nacional.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">conteo (Nacional)</h5>
-                        <span class="badge bg-success fs-6">99.95% Completitud</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Registros con Casos Válidos / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Mínima presencia de registros sin consolidación de casos.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane fade" id="global" role="tabpanel">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">Disease (13 ETV)</h5>
-                        <span class="badge bg-success fs-6">100.00% Consistencia</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Nombres de Enfermedad Estandarizados / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Nombres homologados de las 13 Enfermedades Transmitidas por Vectores globales.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">Country / iso2 / iso3</h5>
-                        <span class="badge bg-success fs-6">99.40% Validez</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Códigos Homologados ISO 3166 / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Excelente calidad de georreferenciación global por estándar ISO.</p>
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">who_region / unsd_region</h5>
-                        <span class="badge bg-success fs-6">100.00% Completitud</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Celdas con Región Asignada / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Todos los brotes cuentan con la asignación territorial oficial de OMS y UNSD.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane fade" id="clinico" role="tabpanel">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">EDAD</h5>
-                        <span class="badge bg-success fs-6">99.96% Validez</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Edades en Rango [0-100] / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Únicamente 3 registros anómalos o atípicos detectados (112, 122 y 174 años).</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">SEXO</h5>
-                        <span class="badge bg-success fs-6">99.98% Consistencia</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Registros Válidos M/F / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Valores M y F consistentes excepto 1 registro clasificado como 'SD' (Sin Dato).</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">NOMBRE CIE10</h5>
-                        <span class="badge bg-success fs-6">100.00% Exactitud</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Diagnósticos Oficiales CIE-10 / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Diagnósticos clínicos exactos para dengue, chagas, leishmaniasis, malaria y chikungunya.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">mes_real</h5>
-                        <span class="badge bg-warning text-dark fs-6">85.00% Exactitud</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Meses [1-12] Corregidos de "CICLO DE VIDA" / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Se corrigió el error de origen donde la información del mes venía trocada en la columna de ciclo de vida.</p>
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="p-3 border rounded h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold mb-0">NACIONALIDAD / REGIMEN DE AFILIACION</h5>
-                        <span class="badge bg-warning text-dark fs-6">51.60% Completitud</span>
-                    </div>
-                    <p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(Celdas Diligenciadas / Total) * 100</code></p>
-                    <p class="mb-0 text-secondary">Presenta deficiencias significativas por omisión en el diligenciamiento de fichas clínicas secundarias.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<p class="text-muted mt-2 mb-4">Seis dimensiones (completitud, exactitud, consistencia, unicidad, validez y actualidad) medidas con <code>scripts/dimensiones_calidad.py</code>. Cada tarjeta muestra la fórmula, el resultado y el detalle verificable.</p>
+<ul class="nav nav-pills mb-4" role="tablist">
+<li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#dim-sivigila_dengue" type="button">SIVIGILA Dengue</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#dim-perfil_epidemiologico_anual" type="button">Perfil Epidemiológico Anual</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#dim-salud_cundinamarca" type="button">Indicadores de Salud Cundinamarca</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#dim-disease_outbreaks_hdx" type="button">Disease Outbreaks (HDX / OMS)</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#dim-vigilancia_colombia" type="button">Vigilancia en Salud Pública Colombia</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#dim-ixodes_county_2023" type="button">Ixodes County (CDC, 7 hojas)</button></li>
+</ul><div class="tab-content">
+<div class="tab-pane fade show active" id="dim-sivigila_dengue"><div class="row g-3">
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Completitud — <code>toda la tabla</code></h6><span class="badge bg-danger fs-6">86,5%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(1 - celdas faltantes / celdas totales) x 100</code></p><p class="mb-0 text-secondary small">276,051 celdas faltantes de 2,044,894 contando &#x27;SD&#x27; y &#x27;SIN INFORMACION&#x27; como faltantes; sin contarlos solo habria 0 celdas vacias (el 100% anterior)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Completitud — <code>cod_mun_d</code></h6><span class="badge bg-danger fs-6">7,96%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(valores distintos de SD / total) x 100</code></p><p class="mb-0 text-secondary small">49,532 filas con &#x27;SD&#x27;</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Exactitud — <code>edad_</code></h6><span class="badge bg-success fs-6">99,99%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(edades entre 0 y 110 / edades con valor) x 100</code></p><p class="mb-0 text-secondary small">3 edades fuera de rango: [112, 122, 174]</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>sexo_</code></h6><span class="badge bg-success fs-6">99,9981%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(valores M o F / total) x 100</code></p><p class="mb-0 text-secondary small">1 filas con valor distinto de M/F (SD)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Unicidad — <code>fila completa</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas unicas / total) x 100</code></p><p class="mb-0 text-secondary small">0 duplicados exactos</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Actualidad — <code>year_</code></h6><span class="badge bg-info text-dark fs-6">N/A</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>periodo cubierto</code></p><p class="mb-0 text-secondary small">anios 2008 a 2021</p></div></div>
+</div></div>
+<div class="tab-pane fade " id="dim-perfil_epidemiologico_anual"><div class="row g-3">
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Unicidad — <code>fila completa</code></h6><span class="badge bg-danger fs-6">56,55%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas unicas / total) x 100</code></p><p class="mb-0 text-secondary small">42,723 filas duplicadas (43.45%)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Unicidad — <code>fila completa (tras estandarizar texto)</code></h6><span class="badge bg-danger fs-6">44,55%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas unicas despues de TRIM + UPPER / total) x 100</code></p><p class="mb-0 text-secondary small">54,524 filas duplicadas (55.45%): 11,801 adicionales estaban ocultas por diferencias de mayusculas/espacios</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Consistencia — <code>REGIMEN DE AFILIACION</code></h6><span class="badge bg-danger fs-6">32,64%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas ya escritas en forma canonica MAYUSCULA / total) x 100</code></p><p class="mb-0 text-secondary small">18 variantes de escritura para 8 categorias reales; 66,229 filas requieren estandarizacion</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Consistencia — <code>NACIONALIDAD</code></h6><span class="badge bg-danger fs-6">33,77%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas ya escritas en forma canonica MAYUSCULA / total) x 100</code></p><p class="mb-0 text-secondary small">13 variantes de escritura para 8 categorias reales; 65,116 filas requieren estandarizacion</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Exactitud — <code>EDAD</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(edades entre 0 y 110 / total) x 100</code></p><p class="mb-0 text-secondary small">minimo 0, maximo 109, promedio 29.53</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>CICLO DE VIDA</code></h6><span class="badge bg-danger fs-6">0,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas con un ciclo de vida real / total) x 100</code></p><p class="mb-0 text-secondary small">98,322 filas contienen un nombre de mes (columnas CICLO DE VIDA y MES desalineadas)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>SEXO</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(valores M o F / total) x 100</code></p><p class="mb-0 text-secondary small">dominio M/F</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Completitud — <code>CODIGO CIE10</code></h6><span class="badge bg-success fs-6">99,999%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(valores no nulos / total) x 100</code></p><p class="mb-0 text-secondary small">1 nulo</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Actualidad — <code>MES / fecha</code></h6><span class="badge bg-info text-dark fs-6">N/A</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>existe variable temporal util</code></p><p class="mb-0 text-secondary small">el archivo no trae fecha ni anio utilizable (la columna MES es constante); no es posible medir actualidad</p></div></div>
+</div></div>
+<div class="tab-pane fade " id="dim-salud_cundinamarca"><div class="row g-3">
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Completitud — <code>toda la tabla</code></h6><span class="badge bg-warning text-dark fs-6">95,96%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(1 - celdas faltantes / celdas totales) x 100</code></p><p class="mb-0 text-secondary small">30,993 celdas faltantes; CUALITATIVO 30,986, DATO_NUMERICO 7</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Exactitud — <code>DATO_NUMERICO</code></h6><span class="badge bg-success fs-6">99,12%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(valores numericos plausibles &lt;= 1.000.000 / valores numericos) x 100</code></p><p class="mb-0 text-secondary small">565 valores del indicador de mortalidad infantil con el decimal perdido (ej. 99009900990099008)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Exactitud — <code>TASA DE INCIDENCIA DENGUE</code></h6><span class="badge bg-danger fs-6">88,83%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>valores &gt; 1.000 por 100.000 hab.</code></p><p class="mb-0 text-secondary small">182 valores sobre 1.000; maximo 18,640.78</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>YEAR</code></h6><span class="badge bg-success fs-6">99,97%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(anios &lt;= 2024, anio de la publicacion / total) x 100</code></p><p class="mb-0 text-secondary small">22 filas con anio posterior a 2024; 12 con anio imposible (2027-2038)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Consistencia — <code>COD_DEP / COD_MUN</code></h6><span class="badge bg-success fs-6">99,95%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas de nivel municipal / total) x 100</code></p><p class="mb-0 text-secondary small">35 filas son agregados no municipales (COLOMBIA, CUNDINAMARCA cod 26)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Unicidad — <code>fila completa</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas unicas / total) x 100</code></p><p class="mb-0 text-secondary small">0 duplicados exactos</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Actualidad — <code>YEAR</code></h6><span class="badge bg-info text-dark fs-6">N/A</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>periodo cubierto</code></p><p class="mb-0 text-secondary small">2010 a 2024 (valores posteriores se consideran error)</p></div></div>
+</div></div>
+<div class="tab-pane fade " id="dim-disease_outbreaks_hdx"><div class="row g-3">
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Completitud — <code>toda la tabla</code></h6><span class="badge bg-success fs-6">99,31%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(1 - celdas faltantes / celdas totales) x 100</code></p><p class="mb-0 text-secondary small">419 celdas faltantes (who_region 266, Definition 123, unsd_region/subregion 12, iso2 6)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>iso2</code></h6><span class="badge bg-success fs-6">99,83%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(iso2 con 2 letras / total) x 100</code></p><p class="mb-0 text-secondary small">los 6 nulos no cumplen el estandar ISO 3166</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Unicidad — <code>fila completa</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas unicas / total) x 100</code></p><p class="mb-0 text-secondary small">sin duplicados exactos</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Actualidad — <code>Year</code></h6><span class="badge bg-info text-dark fs-6">N/A</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>periodo cubierto</code></p><p class="mb-0 text-secondary small">anios 1996 a 2026</p></div></div>
+</div></div>
+<div class="tab-pane fade " id="dim-vigilancia_colombia"><div class="row g-3">
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>ANO / COD_MUN_O</code></h6><span class="badge bg-danger fs-6">0,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(valores directamente numericos / total) x 100</code></p><p class="mb-0 text-secondary small">241,746 filas con separador de miles (&#x27;2,012&#x27;); tras quitarlo 100.0% es convertible</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Completitud — <code>Municipio_ocurrencia</code></h6><span class="badge bg-success fs-6">98,1%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(municipios reales / total) x 100</code></p><p class="mb-0 text-secondary small">4,605 filas con &#x27;MUNICIPIO DESCONOCIDO&#x27;</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>Departamento_ocurrencia</code></h6><span class="badge bg-success fs-6">99,34%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(departamentos geograficos / total) x 100</code></p><p class="mb-0 text-secondary small">1,598 filas con categorias no geograficas (EXTERIOR, PROCEDENCIA DESCONOCIDA)</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>SEMANA</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(semanas entre 1 y 53 / total) x 100</code></p><p class="mb-0 text-secondary small">rango epidemiologico</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Unicidad — <code>fila completa</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(filas unicas / total) x 100</code></p><p class="mb-0 text-secondary small">sin duplicados exactos</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Actualidad — <code>ANO</code></h6><span class="badge bg-info text-dark fs-6">N/A</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>periodo cubierto</code></p><p class="mb-0 text-secondary small">anios 2007 a 2022</p></div></div>
+</div></div>
+<div class="tab-pane fade " id="dim-ixodes_county_2023"><div class="row g-3">
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Completitud — <code>toda la tabla</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(1 - celdas faltantes / celdas totales) x 100</code></p><p class="mb-0 text-secondary small">sin celdas vacias en las 7 hojas de datos</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Validez — <code>FIPSCode</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(codigos de 5 digitos / total) x 100</code></p><p class="mb-0 text-secondary small">codigo FIPS como texto para conservar ceros iniciales</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Unicidad — <code>FIPSCode + anio_hoja</code></h6><span class="badge bg-success fs-6">100,0%</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>(combinaciones unicas / total) x 100</code></p><p class="mb-0 text-secondary small">un registro por condado y por anio</p></div></div>
+<div class="col-md-6"><div class="p-3 border rounded h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Actualidad — <code>hojas</code></h6><span class="badge bg-info text-dark fs-6">N/A</span></div><p class="mb-1 text-muted small"><strong>Métrica:</strong> <code>anios publicados</code></p><p class="mb-0 text-secondary small">2022, 2021, 2020, 2019, 2018, 2016 y 1996</p></div></div>
+</div></div>
 </div>
 {% endblock %}

@@ -1,0 +1,39 @@
+variable,valores_unicos,nulos,pct_nulos,tipo_dato,minimo,maximo,promedio
+id,53813,0,0.0,codigo numerico,,,
+semana,53,0,0.0,entero,1.0,53.0,25.98
+edad_,103,0,0.0,entero,0.0,174.0,30.88
+uni_med_,4,8,0.01,entero,1.0,4.0,1.01
+sexo_,2,1,0.0,texto,,,
+nombre_barrio,438,3376,6.27,texto,,,
+comuna,23,3394,6.31,texto,,,
+tipo_ss_,6,5,0.01,texto,,,
+cod_ase_,193,0,0.0,texto,,,
+fec_con_,4513,0,0.0,fecha,,,
+ini_sin_,4540,0,0.0,fecha,,,
+tip_cas_,5,1,0.0,entero,1.0,5.0,2.67
+pac_hos_,2,1,0.0,entero,1.0,2.0,1.79
+cod_dpto_r,14,0,0.0,codigo numerico,,,
+cod_mpio_r,44,0,0.0,codigo numerico,,,
+cod_dpto_o,36,1,0.0,codigo numerico,,,
+cod_mpio_o,176,1,0.0,codigo numerico,,,
+desplazami,2,217,0.4,entero,1.0,2.0,1.92
+cod_mun_d,452,49532,92.04,codigo numerico,,,
+clas_dengue,4,11955,22.22,entero,1.0,5.0,1.34
+fiebre,1,221,0.41,entero,1.0,1.0,1.0
+cefalea,2,217,0.4,entero,1.0,2.0,1.17
+dolrretroo,2,11587,21.53,entero,1.0,2.0,1.55
+malgias,2,215,0.4,entero,1.0,2.0,1.13
+artralgia,2,216,0.4,entero,1.0,2.0,1.29
+erupcionr,2,11588,21.53,entero,1.0,2.0,1.56
+dolor_abdo,2,219,0.41,entero,1.0,2.0,1.74
+vomito,2,218,0.41,entero,1.0,2.0,1.78
+somnolenci,2,26653,49.53,entero,1.0,2.0,1.97
+hipotensio,2,11588,21.53,entero,1.0,2.0,1.99
+hepatomeg,2,11588,21.53,entero,1.0,2.0,1.99
+hem_mucosa,2,26651,49.53,entero,1.0,2.0,1.96
+hipotermia,2,26650,49.52,entero,1.0,2.0,2.0
+aum_hemato,2,26651,49.53,entero,1.0,2.0,1.97
+caida_plaq,2,26648,49.52,entero,1.0,2.0,1.82
+acum_liquievento,2,26649,49.52,entero,1.0,2.0,1.99
+evento,1,0,0.0,texto,,,
+year_,14,0,0.0,entero,2008.0,2021.0,2013.58
