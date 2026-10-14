@@ -1,0 +1,22 @@
+=== Consolidación de datos - Proyecto NexoBio ===
+
+[NACIONAL] 241,746 registros guardados en /home/claude/paquete_etapa2/salida/nacional_colombia_etv.csv
+           Eventos: ['CHAGAS', 'CHIKUNGUNYA', 'DENGUE', 'DENGUE GRAVE']
+           Periodo: 2007-2022
+[REGIONAL] Cundinamarca: 14,035 registros (cod_departamento=25)
+[REGIONAL] SALUD 2024 (indicadores ETV Cundinamarca): 2,214 registros guardados en /home/claude/paquete_etapa2/salida/regional_cundinamarca_indicadores.csv
+           Indicadores: ['LETALIDAD POR DENGUE', 'TASA DE INCIDENCIA DENGUE']
+[REGIONAL] Dataset combinado (conteo + indicadores oficiales): 1,640 filas -> /home/claude/paquete_etapa2/salida/regional_cundinamarca_etv.csv
+[GLOBAL] Brotes OMS relacionados a ETV: 520 de 3,566 registros totales -> /home/claude/paquete_etapa2/salida/global_brotes_etv.csv
+         Enfermedades: ['Chikungunya mosquito-borne viral fever', 'Dengue fever, unspecified', 'Leishmaniasis, unspecified', 'Malaria due to Plasmodium falciparum, unspecified', 'Malaria due to Plasmodium vivax with other complications', 'Malaria, unspecified', 'Mosquito-borne viral encephalitis, unspecified', "O'nyong-nyong mosquito-borne viral fever", 'Rift Valley fever', 'Sylvatic yellow fever', 'West Nile virus infection', 'Yellow fever, unspecified', 'Zika virus disease']
+[GLOBAL-VECTOR] CDC ArboNET (Ixodes, EE.UU.): 21,775 registros en 7 años -> /home/claude/paquete_etapa2/salida/global_vector_ticks_us.csv
+[COMPLEMENTARIA] Perfil epidemiológico ETV (columnas corregidas): 8,799 de 98,322 registros -> /home/claude/paquete_etapa2/salida/perfil_clinico_etv.csv
+
+=== Resumen final ===
+Nacional (Colombia):        241,746 registros
+Regional (Cundinamarca):    1,640 registros combinados
+Global (brotes OMS):        520 registros
+Global (vector, EE.UU.):    21,775 registros
+Complementaria (perfil):    8,799 registros
+
+TOTAL general (todas las tablas): 274,480 registros

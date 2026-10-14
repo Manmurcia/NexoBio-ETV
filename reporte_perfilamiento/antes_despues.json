@@ -1,0 +1,67 @@
+{
+  "sivigila_dengue": {
+    "completitud_antes_pct": 86.5,
+    "completitud_despues_pct": 96.01,
+    "columnas_excluidas": [
+      "cod_mun_d",
+      "somnolenci",
+      "hem_mucosa",
+      "hipotermia",
+      "aum_hemato",
+      "caida_plaq",
+      "acum_liquievento"
+    ],
+    "n_columnas_excluidas": 7,
+    "edades_a_revision": 3,
+    "valores_edad_a_revision": [
+      112,
+      122,
+      174
+    ],
+    "exactitud_edad_antes_pct": 99.9944,
+    "exactitud_edad_despues_pct": 100.0,
+    "filas_tabla_final": 53810
+  },
+  "perfil_epidemiologico_anual": {
+    "filas_antes": 98322,
+    "filas_despues": 43798,
+    "duplicados_eliminados": 54524,
+    "duplicados_exactos_sin_estandarizar": 42723,
+    "duplicados_tras_estandarizar": 54524,
+    "unicidad_antes_pct": 56.55,
+    "unicidad_despues_pct": 100.0,
+    "unicidad_antes_estandarizar_pct": 44.55,
+    "regimen_variantes_antes": 18,
+    "regimen_categorias_despues": 8,
+    "regimen_categorias": [
+      "CONTRIBUTIVO",
+      "OTRO",
+      "OTRO OIM",
+      "OTRO PARTICULAR",
+      "PARTICULAR",
+      "SOAT - ECAT",
+      "SUBSIDIADO",
+      "VINCULADO"
+    ],
+    "nacionalidad_variantes_antes": 13,
+    "nacionalidad_categorias_despues": 8,
+    "meses_en_mes_real": 12,
+    "columnas_constantes_eliminadas": 3,
+    "consistencia_regimen_antes_pct": 32.64,
+    "consistencia_regimen_despues_pct": 100.0
+  },
+  "salud_cundinamarca": {
+    "filas_antes": 63978,
+    "filas_no_municipales_separadas": 35,
+    "filas_a_revision": 587,
+    "filas_tabla_final": 63356,
+    "completitud_antes_pct": 95.96,
+    "completitud_despues_pct": 99.999,
+    "columna_excluida": "CUALITATIVO (48,43 % nulos)"
+  },
+  "vigilancia_colombia": {
+    "ano_convertible_pct": 100.0,
+    "cod_mun_convertible_pct": 100.0,
+    "municipios_desconocidos_marcados": 4605
+  }
+}

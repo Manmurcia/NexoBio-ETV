@@ -1,0 +1,13 @@
+variable,valores_unicos,nulos,pct_nulos,tipo_dato,minimo,maximo,promedio
+COD_DEP,3,0,0.0,codigo numerico,,,
+DEPARTAMENTO,2,0,0.0,texto,,,
+COD_MUN,118,0,0.0,codigo numerico,,,
+MUNICIPIO,118,0,0.0,texto,,,
+DIMENSION,1,0,0.0,texto,,,
+SUBCATEGORIA,19,0,0.0,texto,,,
+INDICADOR,136,0,0.0,texto,,,
+DATO_NUMERICO,9035,7,0.01,decimal,0.0,9.9502487562189e+16,297469590577510.25
+CUALITATIVO,57,30986,48.43,texto,,,
+YEAR,29,0,0.0,entero,2010.0,2038.0,2019.24
+FUENTE,25,0,0.0,texto,,,
+UNIDAD_DE_MEDIDA,30,0,0.0,texto,,,

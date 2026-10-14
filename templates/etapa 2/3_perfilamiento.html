@@ -2,99 +2,149 @@
 
 {% block content %}
 <h1 class="page-title">3. Perfilamiento del Conjunto de Datos</h1>
-
-<p>Resumen analítico consolidado sobre 464,553 registros evaluados.</p>
-
-<div class="row text-center mb-4">
-        <div class="col-md-3">
-            <div class="card bg-light p-3 border">
-                <h3 class="text-primary mb-0">464,553</h3>
-                <small class="text-muted">Total Registros Evaluados</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-light p-3 border">
-                <h3 class="text-danger mb-0">42,729</h3>
-                <small class="text-muted">Duplicados Identificados</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-light p-3 border">
-                <h3 class="text-warning mb-0">31,529</h3>
-                <small class="text-muted">Registros con Nulos/Vacíos</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-light p-3 border">
-                <h3 class="text-info mb-0">6</h3>
-                <small class="text-muted">Fuentes / Archivos Analizados</small>
-            </div>
-        </div>
-    </div>
-
-<h4 class="mt-4 mb-3">Resumen Técnico por Dataset</h4>
-<div class="table-responsive mt-4">
-<table class="table table-bordered align-middle">
-    <thead class="table-light">
-        <tr>
-            <th>Archivo</th>
-            <th>Registros</th>
-            <th>Columnas</th>
-            <th>Duplicados Directos</th>
-            <th>Nulos Identificados</th>
-            <th>Anomalías Estadísticas / Atípicos</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>sivigila_dengue.csv</code></td>
-            <td>53,813</td>
-            <td>38</td>
-            <td>0</td>
-            <td>0 (3,376 "SIN INFORMACION")</td>
-            <td>Máx Edad = 174 años (3 registros atípicos > 100)</td>
-        </tr>
-        <tr>
-            <td><code>PERFIL_EPIDEMIOLOGICO_ANUAL.csv</code></td>
-            <td>98,322</td>
-            <td>10</td>
-            <td>42,723</td>
-            <td>1 (CODIGO CIE10)</td>
-            <td>Edad Máx = 109 años. Replicación masiva de registros.</td>
-        </tr>
-        <tr>
-            <td><code>SALUD.xlsx</code></td>
-            <td>63,989</td>
-            <td>12</td>
-            <td>6</td>
-            <td>31,110 (Col CUALITATIVO)</td>
-            <td>Encabezados desalineados por 10 filas de metadatos.</td>
-        </tr>
-        <tr>
-            <td><code>disease_outbreaks_HDX.xlsx</code></td>
-            <td>3,567</td>
-            <td>17</td>
-            <td>0</td>
-            <td>419 (266 en who_region)</td>
-            <td>Variabilidad en códigos ISO2 por región.</td>
-        </tr>
-        <tr>
-            <td><code>Vigilancia_Colombia.csv</code></td>
-            <td>241,746</td>
-            <td>9</td>
-            <td>0</td>
-            <td>0</td>
-            <td>Heterogeneidad en nombres de municipios (Mayúsculas/Tildes).</td>
-        </tr>
-        <tr>
-            <td><code>Ixodes_County_2023.xlsx</code></td>
-            <td>3,116</td>
-            <td>7</td>
-            <td>0</td>
-            <td>0</td>
-            <td>Encabezados integrados en la primera fila. FIPS textual.</td>
-        </tr>
-    </tbody>
-</table>
+<p class="text-muted mt-2 mb-4">Resultados generados por <code>scripts/perfilamiento_etapa2.py</code> sobre 483.200 registros de 6 fuentes. Los valores "SD", "SIN INFORMACION" y "MUNICIPIO DESCONOCIDO" se cuentan como faltantes.</p>
+<div class="row g-3 mb-4">
+<div class="col-6 col-md-3"><div class="p-3 border rounded text-center bg-white"><div class="fs-3 fw-bold text-primary">483.200</div><div class="small text-muted">Registros evaluados</div></div></div>
+<div class="col-6 col-md-3"><div class="p-3 border rounded text-center bg-white"><div class="fs-3 fw-bold text-danger">42.723</div><div class="small text-muted">Duplicados exactos</div></div></div>
+<div class="col-6 col-md-3"><div class="p-3 border rounded text-center bg-white"><div class="fs-3 fw-bold text-warning">312.069</div><div class="small text-muted">Celdas faltantes</div></div></div>
+<div class="col-6 col-md-3"><div class="p-3 border rounded text-center bg-white"><div class="fs-3 fw-bold text-info">6</div><div class="small text-muted">Fuentes analizadas</div></div></div>
+</div>
+<h5 class="fw-bold mb-3">Resumen por dataset</h5><div class="table-responsive mb-4"><table class="table table-bordered align-middle table-sm">
+<thead class="table-light"><tr><th>Archivo</th><th>Registros</th><th>Variables</th><th>Duplicados</th><th>Celdas faltantes</th><th>Completitud</th></tr></thead><tbody>
+<tr><td><strong>SIVIGILA Dengue</strong><br><code class="small">sivigila_dengue.csv</code></td><td>53.813</td><td>38</td><td>0</td><td>276.051</td><td><span class="badge bg-danger">86,50%</span></td></tr>
+<tr><td><strong>Perfil Epidemiológico Anual</strong><br><code class="small">PERFIL_EPIDEMIOLOGICO_ANUAL.csv</code></td><td>98.322</td><td>10</td><td>42.723</td><td>1</td><td><span class="badge bg-success">99,9999%</span></td></tr>
+<tr><td><strong>Indicadores de Salud Cundinamarca</strong><br><code class="small">SALUD.xlsx</code></td><td>63.978</td><td>12</td><td>0</td><td>30.993</td><td><span class="badge bg-warning text-dark">95,96%</span></td></tr>
+<tr><td><strong>Disease Outbreaks (HDX / OMS)</strong><br><code class="small">disease_outbreaks_HDX.xlsx</code></td><td>3.566</td><td>17</td><td>0</td><td>419</td><td><span class="badge bg-success">99,31%</span></td></tr>
+<tr><td><strong>Vigilancia en Salud Pública Colombia</strong><br><code class="small">Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv</code></td><td>241.746</td><td>9</td><td>0</td><td>4.605</td><td><span class="badge bg-success">99,79%</span></td></tr>
+<tr><td><strong>Ixodes County (CDC, 7 hojas)</strong><br><code class="small">Public_Use_Ixodes_County_Table_2023.xlsx</code></td><td>21.775</td><td>8</td><td>0</td><td>0</td><td><span class="badge bg-success">100,00%</span></td></tr>
+</tbody></table></div>
+<h5 class="fw-bold mb-3">Perfilamiento por variable</h5>
+<p class="text-muted small">Para cada variable: tipo de dato inferido, valores únicos, valores nulos (incluye placeholders) y estadísticas mínimo / máximo / promedio cuando la variable es numérica.</p>
+<ul class="nav nav-pills mb-3" role="tablist">
+<li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#perf-sivigila_dengue" type="button">SIVIGILA Dengue</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#perf-perfil_epidemiologico_anual" type="button">Perfil Epidemiológico Anual</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#perf-salud_cundinamarca" type="button">Indicadores de Salud Cundinamarca</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#perf-disease_outbreaks_hdx" type="button">Disease Outbreaks (HDX / OMS)</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#perf-vigilancia_colombia" type="button">Vigilancia en Salud Pública Colombia</button></li>
+<li class="nav-item"><button class="nav-link " data-bs-toggle="pill" data-bs-target="#perf-ixodes_county_2023" type="button">Ixodes County (CDC, 7 hojas)</button></li>
+</ul><div class="tab-content">
+<div class="tab-pane fade show active" id="perf-sivigila_dengue">
+<div class="alert alert-light border small">&#x27;SD&#x27; y &#x27;SIN INFORMACION&#x27; se cuentan como valores faltantes (ver NULL_TOKENS_GLOBAL en el script).</div>
+<div class="table-responsive"><table class="table table-bordered table-sm align-middle"><thead class="table-light"><tr><th>Variable</th><th>Tipo</th><th>Únicos</th><th>Nulos</th><th>% nulos</th><th>Mínimo</th><th>Máximo</th><th>Promedio</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td>codigo numerico</td><td>53.813</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>semana</code></td><td>entero</td><td>53</td><td>0</td><td>0.00%</td><td>1</td><td>53</td><td>25,98</td></tr>
+<tr><td><code>edad_</code></td><td>entero</td><td>103</td><td>0</td><td>0.00%</td><td>0</td><td>174</td><td>30,88</td></tr>
+<tr><td><code>uni_med_</code></td><td>entero</td><td>4</td><td>8</td><td>0.01%</td><td>1</td><td>4</td><td>1,01</td></tr>
+<tr><td><code>sexo_</code></td><td>texto</td><td>2</td><td>1</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class="table-warning"><td><code>nombre_barrio</code></td><td>texto</td><td>438</td><td>3.376</td><td>6.27%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class="table-warning"><td><code>comuna</code></td><td>texto</td><td>23</td><td>3.394</td><td>6.31%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>tipo_ss_</code></td><td>texto</td><td>6</td><td>5</td><td>0.01%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>cod_ase_</code></td><td>texto</td><td>193</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>fec_con_</code></td><td>fecha</td><td>4.513</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>ini_sin_</code></td><td>fecha</td><td>4.540</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>tip_cas_</code></td><td>entero</td><td>5</td><td>1</td><td>0.00%</td><td>1</td><td>5</td><td>2,67</td></tr>
+<tr><td><code>pac_hos_</code></td><td>entero</td><td>2</td><td>1</td><td>0.00%</td><td>1</td><td>2</td><td>1,79</td></tr>
+<tr><td><code>cod_dpto_r</code></td><td>codigo numerico</td><td>14</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>cod_mpio_r</code></td><td>codigo numerico</td><td>44</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>cod_dpto_o</code></td><td>codigo numerico</td><td>36</td><td>1</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>cod_mpio_o</code></td><td>codigo numerico</td><td>176</td><td>1</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>desplazami</code></td><td>entero</td><td>2</td><td>217</td><td>0.40%</td><td>1</td><td>2</td><td>1,92</td></tr>
+<tr class="table-warning"><td><code>cod_mun_d</code></td><td>codigo numerico</td><td>452</td><td>49.532</td><td>92.04%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class="table-warning"><td><code>clas_dengue</code></td><td>entero</td><td>4</td><td>11.955</td><td>22.22%</td><td>1</td><td>5</td><td>1,34</td></tr>
+<tr><td><code>fiebre</code></td><td>entero</td><td>1</td><td>221</td><td>0.41%</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td><code>cefalea</code></td><td>entero</td><td>2</td><td>217</td><td>0.40%</td><td>1</td><td>2</td><td>1,17</td></tr>
+<tr class="table-warning"><td><code>dolrretroo</code></td><td>entero</td><td>2</td><td>11.587</td><td>21.53%</td><td>1</td><td>2</td><td>1,55</td></tr>
+<tr><td><code>malgias</code></td><td>entero</td><td>2</td><td>215</td><td>0.40%</td><td>1</td><td>2</td><td>1,13</td></tr>
+<tr><td><code>artralgia</code></td><td>entero</td><td>2</td><td>216</td><td>0.40%</td><td>1</td><td>2</td><td>1,29</td></tr>
+<tr class="table-warning"><td><code>erupcionr</code></td><td>entero</td><td>2</td><td>11.588</td><td>21.53%</td><td>1</td><td>2</td><td>1,56</td></tr>
+<tr><td><code>dolor_abdo</code></td><td>entero</td><td>2</td><td>219</td><td>0.41%</td><td>1</td><td>2</td><td>1,74</td></tr>
+<tr><td><code>vomito</code></td><td>entero</td><td>2</td><td>218</td><td>0.41%</td><td>1</td><td>2</td><td>1,78</td></tr>
+<tr class="table-warning"><td><code>somnolenci</code></td><td>entero</td><td>2</td><td>26.653</td><td>49.53%</td><td>1</td><td>2</td><td>1,97</td></tr>
+<tr class="table-warning"><td><code>hipotensio</code></td><td>entero</td><td>2</td><td>11.588</td><td>21.53%</td><td>1</td><td>2</td><td>1,99</td></tr>
+<tr class="table-warning"><td><code>hepatomeg</code></td><td>entero</td><td>2</td><td>11.588</td><td>21.53%</td><td>1</td><td>2</td><td>1,99</td></tr>
+<tr class="table-warning"><td><code>hem_mucosa</code></td><td>entero</td><td>2</td><td>26.651</td><td>49.53%</td><td>1</td><td>2</td><td>1,96</td></tr>
+<tr class="table-warning"><td><code>hipotermia</code></td><td>entero</td><td>2</td><td>26.650</td><td>49.52%</td><td>1</td><td>2</td><td>2</td></tr>
+<tr class="table-warning"><td><code>aum_hemato</code></td><td>entero</td><td>2</td><td>26.651</td><td>49.53%</td><td>1</td><td>2</td><td>1,97</td></tr>
+<tr class="table-warning"><td><code>caida_plaq</code></td><td>entero</td><td>2</td><td>26.648</td><td>49.52%</td><td>1</td><td>2</td><td>1,82</td></tr>
+<tr class="table-warning"><td><code>acum_liquievento</code></td><td>entero</td><td>2</td><td>26.649</td><td>49.52%</td><td>1</td><td>2</td><td>1,99</td></tr>
+<tr><td><code>evento</code></td><td>texto</td><td>1</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>year_</code></td><td>entero</td><td>14</td><td>0</td><td>0.00%</td><td>2.008</td><td>2.021</td><td>2.013,58</td></tr>
+</tbody></table></div></div>
+<div class="tab-pane fade " id="perf-perfil_epidemiologico_anual">
+<div class="alert alert-light border small">Los nombres de mes están en la columna CICLO DE VIDA y la columna MES contiene el texto &#x27;ENFERMEDADES INFECCIOSAS Y PARASITARIAS&#x27; en todas las filas (columnas desalineadas).</div>
+<div class="table-responsive"><table class="table table-bordered table-sm align-middle"><thead class="table-light"><tr><th>Variable</th><th>Tipo</th><th>Únicos</th><th>Nulos</th><th>% nulos</th><th>Mínimo</th><th>Máximo</th><th>Promedio</th></tr></thead><tbody>
+<tr><td><code>REGIMEN DE AFILIACION</code></td><td>texto</td><td>18</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>CODIGO CIE10</code></td><td>texto</td><td>624</td><td>1</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>EDAD</code></td><td>entero</td><td>103</td><td>0</td><td>0.00%</td><td>0</td><td>109</td><td>29,53</td></tr>
+<tr><td><code>SEXO</code></td><td>texto</td><td>2</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>NACIONALIDAD</code></td><td>texto</td><td>13</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>NOMBRE CIE10</code></td><td>texto</td><td>617</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>CICLO DE VIDA</code></td><td>texto</td><td>24</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>MES</code></td><td>texto</td><td>1</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>SUBGRUPO CAUSAS DE MORBILIDAD</code></td><td>texto</td><td>1</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>GRAN CAUSA DE MORBILIDAD</code></td><td>texto</td><td>1</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div></div>
+<div class="tab-pane fade " id="perf-salud_cundinamarca">
+<div class="alert alert-light border small">El encabezado real está en la fila 12 del Excel; las 11 filas previas son títulos institucionales y no se cuentan como registros.</div>
+<div class="table-responsive"><table class="table table-bordered table-sm align-middle"><thead class="table-light"><tr><th>Variable</th><th>Tipo</th><th>Únicos</th><th>Nulos</th><th>% nulos</th><th>Mínimo</th><th>Máximo</th><th>Promedio</th></tr></thead><tbody>
+<tr><td><code>COD_DEP</code></td><td>codigo numerico</td><td>3</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>DEPARTAMENTO</code></td><td>texto</td><td>2</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>COD_MUN</code></td><td>codigo numerico</td><td>118</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>MUNICIPIO</code></td><td>texto</td><td>118</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>DIMENSION</code></td><td>texto</td><td>1</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>SUBCATEGORIA</code></td><td>texto</td><td>19</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>INDICADOR</code></td><td>texto</td><td>136</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>DATO_NUMERICO</code></td><td>decimal</td><td>9.035</td><td>7</td><td>0.01%</td><td>0</td><td>9.950e+16</td><td>2.975e+14</td></tr>
+<tr class="table-warning"><td><code>CUALITATIVO</code></td><td>texto</td><td>57</td><td>30.986</td><td>48.43%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>YEAR</code></td><td>entero</td><td>29</td><td>0</td><td>0.00%</td><td>2.010</td><td>2.038</td><td>2.019,24</td></tr>
+<tr><td><code>FUENTE</code></td><td>texto</td><td>25</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>UNIDAD_DE_MEDIDA</code></td><td>texto</td><td>30</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div></div>
+<div class="tab-pane fade " id="perf-disease_outbreaks_hdx">
+<div class="alert alert-light border small">La fila 2 del Excel contiene etiquetas HXL (#Year+iso3+icd4...) y no es un registro; por eso son 3.566 registros y no 3.567.</div>
+<div class="table-responsive"><table class="table table-bordered table-sm align-middle"><thead class="table-light"><tr><th>Variable</th><th>Tipo</th><th>Únicos</th><th>Nulos</th><th>% nulos</th><th>Mínimo</th><th>Máximo</th><th>Promedio</th></tr></thead><tbody>
+<tr><td><code>id_outbreak</code></td><td>texto</td><td>3.566</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Year</code></td><td>entero</td><td>31</td><td>0</td><td>0.00%</td><td>1.996</td><td>2.026</td><td>2.016,55</td></tr>
+<tr><td><code>icd10n</code></td><td>texto</td><td>24</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>icd103n</code></td><td>texto</td><td>59</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>icd104n</code></td><td>texto</td><td>91</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>icd10c</code></td><td>texto</td><td>23</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>icd103c</code></td><td>texto</td><td>58</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>icd104c</code></td><td>texto</td><td>91</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Disease</code></td><td>texto</td><td>92</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Definition</code></td><td>texto</td><td>75</td><td>123</td><td>3.45%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Country</code></td><td>texto</td><td>236</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>iso2</code></td><td>texto</td><td>235</td><td>6</td><td>0.17%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>iso3</code></td><td>texto</td><td>236</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>unsd_region</code></td><td>texto</td><td>5</td><td>12</td><td>0.34%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>unsd_subregion</code></td><td>texto</td><td>17</td><td>12</td><td>0.34%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class="table-warning"><td><code>who_region</code></td><td>texto</td><td>6</td><td>266</td><td>7.46%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>DONs</code></td><td>texto</td><td>1.420</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div></div>
+<div class="tab-pane fade " id="perf-vigilancia_colombia">
+<div class="alert alert-light border small">El municipio &#x27;DESCONOCIDO&#x27; se cuenta como faltante (patrón en la columna Municipio_ocurrencia).</div>
+<div class="table-responsive"><table class="table table-bordered table-sm align-middle"><thead class="table-light"><tr><th>Variable</th><th>Tipo</th><th>Únicos</th><th>Nulos</th><th>% nulos</th><th>Mínimo</th><th>Máximo</th><th>Promedio</th></tr></thead><tbody>
+<tr><td><code>COD_EVE</code></td><td>codigo numerico</td><td>4</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Nombre_evento</code></td><td>texto</td><td>4</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>SEMANA</code></td><td>entero</td><td>53</td><td>0</td><td>0.00%</td><td>1</td><td>53</td><td>26,16</td></tr>
+<tr><td><code>ANO</code></td><td>texto</td><td>16</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>COD_DPTO_O</code></td><td>codigo numerico</td><td>35</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>COD_MUN_O</code></td><td>texto</td><td>1.169</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Departamento_ocurrencia</code></td><td>texto</td><td>35</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Municipio_ocurrencia</code></td><td>texto</td><td>1.056</td><td>4.605</td><td>1.90%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>conteo</code></td><td>entero</td><td>428</td><td>0</td><td>0.00%</td><td>1</td><td>834</td><td>5,28</td></tr>
+</tbody></table></div></div>
+<div class="tab-pane fade " id="perf-ixodes_county_2023">
+<div class="alert alert-light border small">Las 7 hojas de datos (2022, 2021, 2020, 2019, 2018, 2016 y 1996) se concatenaron; &#x27;anio_hoja&#x27; es una columna agregada para identificar la hoja, por eso aparecen 8 columnas (7 originales + 1).</div>
+<div class="table-responsive"><table class="table table-bordered table-sm align-middle"><thead class="table-light"><tr><th>Variable</th><th>Tipo</th><th>Únicos</th><th>Nulos</th><th>% nulos</th><th>Mínimo</th><th>Máximo</th><th>Promedio</th></tr></thead><tbody>
+<tr><td><code>FIPSCode</code></td><td>codigo numerico</td><td>3.116</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>State</code></td><td>texto</td><td>102</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>County</code></td><td>texto</td><td>3.771</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Ixodes_scapularis_County_Status</code></td><td>texto</td><td>4</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Ixodes_scapularis_data_source</code></td><td>texto</td><td>10</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Ixodes_pacificus_county_status</code></td><td>texto</td><td>3</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>Ixodes_pacificus_data_source</code></td><td>texto</td><td>4</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><code>anio_hoja</code></td><td>texto</td><td>7</td><td>0</td><td>0.00%</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div></div>
 </div>
 {% endblock %}

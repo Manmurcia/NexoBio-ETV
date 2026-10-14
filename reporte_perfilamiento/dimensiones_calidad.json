@@ -1,0 +1,266 @@
+{
+  "sivigila_dengue": [
+    {
+      "dimension": "Completitud",
+      "variable": "toda la tabla",
+      "formula": "(1 - celdas faltantes / celdas totales) x 100",
+      "resultado_pct": 86.5,
+      "detalle": "276,051 celdas faltantes de 2,044,894 contando 'SD' y 'SIN INFORMACION' como faltantes; sin contarlos solo habria 0 celdas vacias (el 100% anterior)"
+    },
+    {
+      "dimension": "Completitud",
+      "variable": "cod_mun_d",
+      "formula": "(valores distintos de SD / total) x 100",
+      "resultado_pct": 7.96,
+      "detalle": "49,532 filas con 'SD'"
+    },
+    {
+      "dimension": "Exactitud",
+      "variable": "edad_",
+      "formula": "(edades entre 0 y 110 / edades con valor) x 100",
+      "resultado_pct": 99.99,
+      "detalle": "3 edades fuera de rango: [112, 122, 174]"
+    },
+    {
+      "dimension": "Validez",
+      "variable": "sexo_",
+      "formula": "(valores M o F / total) x 100",
+      "resultado_pct": 99.9981,
+      "detalle": "1 filas con valor distinto de M/F (SD)"
+    },
+    {
+      "dimension": "Unicidad",
+      "variable": "fila completa",
+      "formula": "(filas unicas / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "0 duplicados exactos"
+    },
+    {
+      "dimension": "Actualidad",
+      "variable": "year_",
+      "formula": "periodo cubierto",
+      "resultado_pct": null,
+      "detalle": "anios 2008 a 2021"
+    }
+  ],
+  "perfil_epidemiologico_anual": [
+    {
+      "dimension": "Unicidad",
+      "variable": "fila completa",
+      "formula": "(filas unicas / total) x 100",
+      "resultado_pct": 56.55,
+      "detalle": "42,723 filas duplicadas (43.45%)"
+    },
+    {
+      "dimension": "Unicidad",
+      "variable": "fila completa (tras estandarizar texto)",
+      "formula": "(filas unicas despues de TRIM + UPPER / total) x 100",
+      "resultado_pct": 44.55,
+      "detalle": "54,524 filas duplicadas (55.45%): 11,801 adicionales estaban ocultas por diferencias de mayusculas/espacios"
+    },
+    {
+      "dimension": "Consistencia",
+      "variable": "REGIMEN DE AFILIACION",
+      "formula": "(filas ya escritas en forma canonica MAYUSCULA / total) x 100",
+      "resultado_pct": 32.64,
+      "detalle": "18 variantes de escritura para 8 categorias reales; 66,229 filas requieren estandarizacion"
+    },
+    {
+      "dimension": "Consistencia",
+      "variable": "NACIONALIDAD",
+      "formula": "(filas ya escritas en forma canonica MAYUSCULA / total) x 100",
+      "resultado_pct": 33.77,
+      "detalle": "13 variantes de escritura para 8 categorias reales; 65,116 filas requieren estandarizacion"
+    },
+    {
+      "dimension": "Exactitud",
+      "variable": "EDAD",
+      "formula": "(edades entre 0 y 110 / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "minimo 0, maximo 109, promedio 29.53"
+    },
+    {
+      "dimension": "Validez",
+      "variable": "CICLO DE VIDA",
+      "formula": "(filas con un ciclo de vida real / total) x 100",
+      "resultado_pct": 0.0,
+      "detalle": "98,322 filas contienen un nombre de mes (columnas CICLO DE VIDA y MES desalineadas)"
+    },
+    {
+      "dimension": "Validez",
+      "variable": "SEXO",
+      "formula": "(valores M o F / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "dominio M/F"
+    },
+    {
+      "dimension": "Completitud",
+      "variable": "CODIGO CIE10",
+      "formula": "(valores no nulos / total) x 100",
+      "resultado_pct": 99.999,
+      "detalle": "1 nulo"
+    },
+    {
+      "dimension": "Actualidad",
+      "variable": "MES / fecha",
+      "formula": "existe variable temporal util",
+      "resultado_pct": null,
+      "detalle": "el archivo no trae fecha ni anio utilizable (la columna MES es constante); no es posible medir actualidad"
+    }
+  ],
+  "salud_cundinamarca": [
+    {
+      "dimension": "Completitud",
+      "variable": "toda la tabla",
+      "formula": "(1 - celdas faltantes / celdas totales) x 100",
+      "resultado_pct": 95.96,
+      "detalle": "30,993 celdas faltantes; CUALITATIVO 30,986, DATO_NUMERICO 7"
+    },
+    {
+      "dimension": "Exactitud",
+      "variable": "DATO_NUMERICO",
+      "formula": "(valores numericos plausibles <= 1.000.000 / valores numericos) x 100",
+      "resultado_pct": 99.12,
+      "detalle": "565 valores del indicador de mortalidad infantil con el decimal perdido (ej. 99009900990099008)"
+    },
+    {
+      "dimension": "Exactitud",
+      "variable": "TASA DE INCIDENCIA DENGUE",
+      "formula": "valores > 1.000 por 100.000 hab.",
+      "resultado_pct": 88.83,
+      "detalle": "182 valores sobre 1.000; maximo 18,640.78"
+    },
+    {
+      "dimension": "Validez",
+      "variable": "YEAR",
+      "formula": "(anios <= 2024, anio de la publicacion / total) x 100",
+      "resultado_pct": 99.97,
+      "detalle": "22 filas con anio posterior a 2024; 12 con anio imposible (2027-2038)"
+    },
+    {
+      "dimension": "Consistencia",
+      "variable": "COD_DEP / COD_MUN",
+      "formula": "(filas de nivel municipal / total) x 100",
+      "resultado_pct": 99.95,
+      "detalle": "35 filas son agregados no municipales (COLOMBIA, CUNDINAMARCA cod 26)"
+    },
+    {
+      "dimension": "Unicidad",
+      "variable": "fila completa",
+      "formula": "(filas unicas / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "0 duplicados exactos"
+    },
+    {
+      "dimension": "Actualidad",
+      "variable": "YEAR",
+      "formula": "periodo cubierto",
+      "resultado_pct": null,
+      "detalle": "2010 a 2024 (valores posteriores se consideran error)"
+    }
+  ],
+  "disease_outbreaks_hdx": [
+    {
+      "dimension": "Completitud",
+      "variable": "toda la tabla",
+      "formula": "(1 - celdas faltantes / celdas totales) x 100",
+      "resultado_pct": 99.31,
+      "detalle": "419 celdas faltantes (who_region 266, Definition 123, unsd_region/subregion 12, iso2 6)"
+    },
+    {
+      "dimension": "Validez",
+      "variable": "iso2",
+      "formula": "(iso2 con 2 letras / total) x 100",
+      "resultado_pct": 99.83,
+      "detalle": "los 6 nulos no cumplen el estandar ISO 3166"
+    },
+    {
+      "dimension": "Unicidad",
+      "variable": "fila completa",
+      "formula": "(filas unicas / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "sin duplicados exactos"
+    },
+    {
+      "dimension": "Actualidad",
+      "variable": "Year",
+      "formula": "periodo cubierto",
+      "resultado_pct": null,
+      "detalle": "anios 1996 a 2026"
+    }
+  ],
+  "vigilancia_colombia": [
+    {
+      "dimension": "Validez",
+      "variable": "ANO / COD_MUN_O",
+      "formula": "(valores directamente numericos / total) x 100",
+      "resultado_pct": 0.0,
+      "detalle": "241,746 filas con separador de miles ('2,012'); tras quitarlo 100.0% es convertible"
+    },
+    {
+      "dimension": "Completitud",
+      "variable": "Municipio_ocurrencia",
+      "formula": "(municipios reales / total) x 100",
+      "resultado_pct": 98.1,
+      "detalle": "4,605 filas con 'MUNICIPIO DESCONOCIDO'"
+    },
+    {
+      "dimension": "Validez",
+      "variable": "Departamento_ocurrencia",
+      "formula": "(departamentos geograficos / total) x 100",
+      "resultado_pct": 99.34,
+      "detalle": "1,598 filas con categorias no geograficas (EXTERIOR, PROCEDENCIA DESCONOCIDA)"
+    },
+    {
+      "dimension": "Validez",
+      "variable": "SEMANA",
+      "formula": "(semanas entre 1 y 53 / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "rango epidemiologico"
+    },
+    {
+      "dimension": "Unicidad",
+      "variable": "fila completa",
+      "formula": "(filas unicas / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "sin duplicados exactos"
+    },
+    {
+      "dimension": "Actualidad",
+      "variable": "ANO",
+      "formula": "periodo cubierto",
+      "resultado_pct": null,
+      "detalle": "anios 2007 a 2022"
+    }
+  ],
+  "ixodes_county_2023": [
+    {
+      "dimension": "Completitud",
+      "variable": "toda la tabla",
+      "formula": "(1 - celdas faltantes / celdas totales) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "sin celdas vacias en las 7 hojas de datos"
+    },
+    {
+      "dimension": "Validez",
+      "variable": "FIPSCode",
+      "formula": "(codigos de 5 digitos / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "codigo FIPS como texto para conservar ceros iniciales"
+    },
+    {
+      "dimension": "Unicidad",
+      "variable": "FIPSCode + anio_hoja",
+      "formula": "(combinaciones unicas / total) x 100",
+      "resultado_pct": 100.0,
+      "detalle": "un registro por condado y por anio"
+    },
+    {
+      "dimension": "Actualidad",
+      "variable": "hojas",
+      "formula": "anios publicados",
+      "resultado_pct": null,
+      "detalle": "2022, 2021, 2020, 2019, 2018, 2016 y 1996"
+    }
+  ]
+}

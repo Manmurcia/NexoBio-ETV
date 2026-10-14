@@ -2,77 +2,79 @@
 
 {% block content %}
 <h1 class="page-title">1. Descripción y Propósito del Conjunto de Datos</h1>
-<p class="text-muted mt-2 mb-4">Consolidación estratégica y monitoreo de la Vigilancia Epidémica y Epidemiológica integral.</p>
+<p class="text-muted mt-2 mb-4">Consolidación estratégica y monitoreo de la vigilancia epidemiológica de enfermedades transmitidas por vectores (ETV).</p>
 
 <div class="card border mb-4">
     <div class="card-body">
         <h4 class="fw-bold text-primary mb-2">Propósito Estratégico</h4>
         <p class="mb-0 text-secondary">
-            El propósito unificado de este repositorio de datos es integrar, estructurar y estandarizar la
-            información sobre morbilidad, vigilancia de eventos epidemiológicos (SIVIGILA - Dengue) y brotes
-            epidémicos a nivel territorial y global. El sistema permite evaluar la calidad de la información
-            para la toma de decisiones informadas en salud pública.
+            Integrar, estructurar y estandarizar la información sobre morbilidad, vigilancia de eventos
+            epidemiológicos (SIVIGILA - Dengue) y brotes epidémicos a nivel regional (Cundinamarca), nacional
+            (Colombia) y global, para responder la pregunta principal del proyecto: comparar la incidencia,
+            distribución y estacionalidad de las principales ETV en esas tres escalas. Los usuarios son el equipo
+            del proyecto y, en etapas posteriores, los modelos de minería de datos (asociación, clustering, predicción).
         </p>
     </div>
 </div>
 
 <h4 class="fw-bold mb-3">Fuentes de Datos Evaluadas</h4>
+<p class="text-muted small">Conteos generados con <code>scripts/perfilamiento_etapa2.py</code> (sin contar títulos, encabezados ni filas de etiquetas). Los archivos originales están incluidos en la carpeta <code>data/</code> del repositorio.</p>
 
 <div class="table-responsive">
     <table class="table table-bordered align-middle table-hover">
         <thead class="table-light">
-            <tr>
-                <th>Origen / Dataset</th>
-                <th>Registros</th>
-                <th>Columnas</th>
-                <th>Variables Clave</th>
-                <th>Uso Esperado</th>
-            </tr>
+            <tr><th>Origen / Dataset</th><th>Registros</th><th>Variables</th><th>Variables clave</th><th>Uso esperado</th><th>Acceso</th></tr>
         </thead>
         <tbody>
             <tr>
-                <td><strong>SIVIGILA Dengue</strong></td>
-                <td><span class="badge bg-primary">53,813</span></td>
-                <td><span class="badge bg-secondary">38</span></td>
-                <td><code>id, edad_, sexo_, fec_con_, comuna, nombre_barrio</code></td>
+                <td><strong>SIVIGILA Dengue</strong><br><span class="small text-muted">INS · CSV</span></td>
+                <td><span class="badge bg-primary">53.813</span></td><td><span class="badge bg-secondary">38</span></td>
+                <td><code>id, edad_, sexo_, fec_con_, comuna, nombre_barrio, cod_mun_d</code></td>
                 <td>Análisis espacio-temporal de brotes de dengue a nivel micro-territorial.</td>
+                <td><a href="https://portalsivigila.ins.gov.co/Paginas/Buscador.aspx" target="_blank" rel="noopener">Buscador de microdatos SIVIGILA</a></td>
             </tr>
             <tr>
-                <td><strong>Perfil Epidemiológico Anual</strong></td>
-                <td><span class="badge bg-primary">98,322</span></td>
-                <td><span class="badge bg-secondary">10</span></td>
-                <td><code>REGIMEN DE AFILIACION, CODIGO CIE10, EDAD, SEXO</code></td>
+                <td><strong>Perfil Epidemiológico Anual</strong><br><span class="small text-muted">Cundinamarca · CSV</span></td>
+                <td><span class="badge bg-primary">98.322</span></td><td><span class="badge bg-secondary">10</span></td>
+                <td><code>REGIMEN DE AFILIACION, CODIGO CIE10, EDAD, SEXO, NACIONALIDAD</code></td>
                 <td>Caracterización demográfica de la atención en salud regional.</td>
+                <td>Archivo en <code>data/</code> del repositorio</td>
             </tr>
             <tr>
-                <td><strong>Salud Cundinamarca (SALUD.xlsx)</strong></td>
-                <td><span class="badge bg-primary">63,989</span></td>
-                <td><span class="badge bg-secondary">12</span></td>
+                <td><strong>Indicadores de Salud Cundinamarca (SALUD.xlsx)</strong><br><span class="small text-muted">Gobernación · XLSX</span></td>
+                <td><span class="badge bg-primary">63.978</span></td><td><span class="badge bg-secondary">12</span></td>
                 <td><code>COD_MUN, MUNICIPIO, INDICADOR, DATO_NUMERICO, YEAR</code></td>
-                <td>Evaluación de indicadores de infraestructura y programas de salud local.</td>
+                <td>Evaluación de indicadores de salud municipal (incluye tasa de incidencia y letalidad de dengue).</td>
+                <td>Archivo en <code>data/</code> del repositorio</td>
             </tr>
             <tr>
-                <td><strong>Disease Outbreaks (HDX)</strong></td>
-                <td><span class="badge bg-primary">3,567</span></td>
-                <td><span class="badge bg-secondary">17</span></td>
+                <td><strong>Disease Outbreaks (HDX)</strong><br><span class="small text-muted">OMS / HDX · XLSX</span></td>
+                <td><span class="badge bg-primary">3.566</span></td><td><span class="badge bg-secondary">17</span></td>
                 <td><code>id_outbreak, Disease, icd10c, Year, who_region</code></td>
                 <td>Monitoreo internacional de brotes epidémicos históricos.</td>
+                <td><a href="https://data.humdata.org/dataset/global-pandemic-and-epidemic-outbreaks" target="_blank" rel="noopener">HDX · Global pandemic and epidemic outbreaks</a></td>
             </tr>
             <tr>
-                <td><strong>Vigilancia Salud Pública Colombia</strong></td>
-                <td><span class="badge bg-primary">241,746</span></td>
-                <td><span class="badge bg-secondary">9</span></td>
-                <td><code>COD_EVE, Nombre_evento, SEMANA, ANO, Municipio_ocurrencia</code></td>
+                <td><strong>Vigilancia en Salud Pública Colombia</strong><br><span class="small text-muted">INS · CSV</span></td>
+                <td><span class="badge bg-primary">241.746</span></td><td><span class="badge bg-secondary">9</span></td>
+                <td><code>COD_EVE, Nombre_evento, SEMANA, ANO, Municipio_ocurrencia, conteo</code></td>
                 <td>Consolidado nacional de conteo de eventos de salud pública.</td>
+                <td><a href="https://portalsivigila.ins.gov.co/" target="_blank" rel="noopener">Portal SIVIGILA (INS)</a> · archivo en <code>data/</code></td>
             </tr>
             <tr>
-                <td><strong>Vigilancia Ixodes (Vectores CDC)</strong></td>
-                <td><span class="badge bg-primary">3,116</span></td>
-                <td><span class="badge bg-secondary">7</span></td>
+                <td><strong>Vigilancia Ixodes (Vectores CDC)</strong><br><span class="small text-muted">CDC ArboNET · XLSX, 7 hojas</span></td>
+                <td><span class="badge bg-primary">21.775</span></td><td><span class="badge bg-secondary">7 (+1 agregada)</span></td>
                 <td><code>FIPSCode, State, County, Ixodes_scapularis_County_Status</code></td>
                 <td>Monitoreo de vectores transmisores de Lyme y otras zoonosis.</td>
+                <td><a href="https://www.cdc.gov/ticks/surveillance/TickSurveillanceData.html" target="_blank" rel="noopener">CDC · Tick Surveillance Data</a></td>
             </tr>
         </tbody>
     </table>
+</div>
+
+<div class="alert alert-light border small">
+    <strong>Nota de conteos:</strong> en entregas anteriores aparecían cifras distintas (SALUD 63.979 / 63.989; HDX 3.567; Ixodes 3.116).
+    Se unificaron: SALUD tiene 63.990 filas de Excel menos 11 de títulos y 1 de encabezado = 63.978 registros; HDX excluye la fila de
+    etiquetas HXL (3.566); y Ixodes tiene 7 hojas de datos (una por año) con 21.775 registros en total — 3.116 corresponde solo a una hoja.
 </div>
 {% endblock %}

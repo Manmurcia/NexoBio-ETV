@@ -1,0 +1,11 @@
+variable,valores_unicos,nulos,pct_nulos,tipo_dato,minimo,maximo,promedio
+REGIMEN DE AFILIACION,18,0,0.0,texto,,,
+CODIGO CIE10,624,1,0.0,texto,,,
+EDAD,103,0,0.0,entero,0.0,109.0,29.53
+SEXO,2,0,0.0,texto,,,
+NACIONALIDAD,13,0,0.0,texto,,,
+NOMBRE CIE10,617,0,0.0,texto,,,
+CICLO DE VIDA,24,0,0.0,texto,,,
+MES,1,0,0.0,texto,,,
+SUBGRUPO CAUSAS DE MORBILIDAD,1,0,0.0,texto,,,
+GRAN CAUSA DE MORBILIDAD,1,0,0.0,texto,,,
