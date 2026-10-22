@@ -41,6 +41,16 @@ RUTAS_ETAPA3 = {
     'entregables': '7_entregables.html',
 }
 
+# RUTAS DE LA ETAPA 4
+# CONOCIMIENTO EVIDENTE (POWER BI)
+
+RUTAS_ETAPA4 = {
+    'proposito': '1_proposito.html',
+    'preguntas': '2_preguntas.html',
+    'informe': '3_informe.html',
+    'conocimientos': '4_conocimientos.html',
+}
+
 # PÁGINA DE INICIO
 
 @app.route('/')
@@ -100,6 +110,22 @@ def etapa3_seccion(seccion):
 
     return render_template(
         f'etapa 3/{plantilla}',
+        slug_activo=seccion
+    )
+
+# RUTAS DE LA ETAPA 4
+
+
+@app.route('/etapa4/<seccion>')
+def etapa4_seccion(seccion):
+
+    plantilla = RUTAS_ETAPA4.get(seccion)
+
+    if not plantilla:
+        abort(404)
+
+    return render_template(
+        f'etapa 4/{plantilla}',
         slug_activo=seccion
     )
 

@@ -2,57 +2,113 @@
 
 {% block content %}
 <h1 class="page-title">2. Las cuatro preguntas de análisis</h1>
-<p class="text-muted mt-2 mb-4">Cada pregunta se desarrolla en una página del informe de Power BI, con tres indicadores, tres visualizaciones y dos segmentadores. Las cifras provienen de <code>scripts/etapa4_contenido.py</code> y coinciden con las medidas DAX del repositorio.</p>
-<div class="card shadow-sm mb-4"><div class="card-header bg-primary text-white fw-bold">Tablero 1 · Composición de la población</div><div class="card-body">
-<h5 class="fw-bold">¿Quiénes enferman de dengue? Perfil de los casos notificados en Medellín</h5><p class="lead fs-6">¿Cómo se compone la población de casos de dengue notificados en Medellín según sexo, grupo de edad, régimen de afiliación y clasificación clínica, y cuáles son los grupos predominantes y minoritarios?</p>
-<p class="small text-muted mb-2"><strong>Datos:</strong> <code>fact_dengue_medellin</code> · <strong>Periodo:</strong> 2008–2021 · <strong>Registros:</strong> 53.810<br><strong>Unidad de análisis:</strong> un caso de dengue notificado en Medellín (registro individual del SIVIGILA; no es una persona única: una persona puede notificarse más de una vez)</p>
-<div class="row g-3 mb-3">
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">53.810</div><div class="small fw-bold">Casos notificados</div><div class="small text-muted">Conteo de casos (DAX: COUNTROWS).</div></div></div>
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">28 años</div><div class="small fw-bold">Edad mediana</div><div class="small text-muted">Mediana de la edad en años de los casos con edad válida.</div></div></div>
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">50,87 %</div><div class="small fw-bold">% de mujeres</div><div class="small text-muted">Denominador: casos con sexo informado (53.809).</div></div></div>
+<p class="text-muted mt-2 mb-4">
+    Cada pregunta se desarrolla en una página del informe de Power BI, con tres indicadores, tres visualizaciones, dos segmentadores,
+    tres conocimientos evidentes, una limitación y una decisión sustentada en los datos. Los conocimientos completos están en
+    <a href="{{ url_for('etapa4_seccion', seccion='conocimientos') }}">la sección 4</a>.
+</p>
+
+<!-- ======================= TABLERO 1 ======================= -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Tablero 1 · Composición de la población</div>
+    <div class="card-body">
+        <h5 class="fw-bold">¿Qué se notifica en Cundinamarca y qué peso tienen las enfermedades transmitidas por vectores?</h5>
+        <p class="lead fs-6">¿Cómo se compone la notificación de eventos de salud pública en Cundinamarca entre 2007 y 2022, cuáles son los eventos predominantes y minoritarios y qué parte corresponde a las enfermedades transmitidas por vectores (ETV)?</p>
+        <p class="small text-muted mb-2"><strong>Datos:</strong> <code>Datos_de_Vigilancia_Colombia_Limpio.csv</code> (107.645 filas, 298.690 casos, 42 eventos, 116 municipios) · <strong>Periodo:</strong> 2007–2022<br>
+        <strong>Unidad de análisis:</strong> cantidad agregada: casos notificados por evento, municipio, semana epidemiológica y año (cada fila es un conteo, no un caso individual).<br>
+        <strong>Variables:</strong> <code>nombre_evento</code> (evento de vigilancia), <code>grupo_evento</code> (ETV u otras, clasificación del equipo), <code>municipio_ocurrencia</code>, <code>ano</code>, <code>conteo</code> (casos).</p>
+        <div class="row g-3 mb-3">
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">298.690</div><div class="small fw-bold">Casos notificados</div><div class="small text-muted">Suma de <code>conteo</code> para la selección actual.</div></div></div>
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">42</div><div class="small fw-bold">Eventos notificados</div><div class="small text-muted">Eventos distintos con casos en la selección.</div></div></div>
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">16,87 %</div><div class="small fw-bold">% de casos ETV</div><div class="small text-muted">Casos ETV / casos notificados (50.396 de 298.690).</div></div></div>
+        </div>
+        <p class="mb-1"><strong>Visualizaciones e interpretación:</strong></p>
+        <ul class="small">
+            <li><strong>Barras: Top 10 eventos por % de casos (color por grupo).</strong> Agresiones por animales potencialmente transmisores de rabia (40,83 %), varicela (28,68 %) y dengue (12,19 %) reúnen 81,7 % de los casos; 31 de los 42 eventos pesan menos de 1 %. Dengue es la única ETV entre los tres primeros. Denominador: todos los casos de la selección.</li>
+            <li><strong>Columnas: % de casos ETV por año.</strong> El peso de las ETV oscila entre 3,9 % (2022) y 31,1 % (2010) y sube en los años epidémicos de dengue (2010, 2015, 2016 ≈ 31 %). Denominador: casos notificados de cada año.</li>
+            <li><strong>Barras: % dentro de las ETV por evento.</strong> Dengue aporta 72,23 % de los casos ETV; zika 10,52 %, chikungunya 7,92 % y leishmaniasis cutánea 6,05 %. Denominador: casos ETV (50.396).</li>
+        </ul>
+        <p class="small mb-1"><strong>Segmentadores:</strong> Año y Municipio de ocurrencia.</p>
+        <p class="small mb-1"><strong>Limitación:</strong> son casos notificados, no tasas por población, y los eventos no entraron a la vigilancia al mismo tiempo (22 de los 42 ya se notificaban en 2007), por lo que los años iniciales no son comparables con los recientes.</p>
+        <p class="small mb-0"><strong>Decisión sustentada en los datos:</strong> concentrar la prevención y el control vectorial de Cundinamarca en el dengue (72 % de las ETV) y usar el porcentaje de casos ETV como señal de alerta cuando se acerque al 30 % de las notificaciones del año.</p>
+    </div>
 </div>
-<p class="mb-1"><strong>Visualizaciones:</strong></p><ul class="small"><li><strong>Columnas: % de casos por grupo de edad.</strong> Muestra qué grupos concentran los casos. El grupo 25-44 años es el mayor y 0-4 años el menor; los grupos de 15 a 59 años suman más de dos terceras partes.</li><li><strong>Barras: % de casos por régimen de afiliación.</strong> Casi tres de cada cuatro casos están en el régimen contributivo; los demás regímenes son minoritarios.</li><li><strong>Barras 100 %: clasificación clínica.</strong> Dos tercios de los casos clasificados no tienen signos de alarma; los graves son minoría. Los casos sin clasificación se muestran aparte porque son faltantes, no una clase clínica.</li></ul>
-<p class="small mb-1"><strong>Segmentadores:</strong> Año, Sexo</p>
-<p class="small mb-1"><strong>Limitación:</strong> Los 53.810 registros son casos notificados, no personas únicas, y corresponden a Medellín (97,0 % con municipio de ocurrencia Medellín; el resto, otros municipios, casi todos de Antioquia); 66,2 % de los casos son de 2010 y 2016 (años epidémicos) y 2020–2021 tienen pocos registros, por lo que el perfil total refleja sobre todo esos dos años.</p>
-<p class="small mb-0"><strong>Decisión sustentada en los datos:</strong> Dirigir la comunicación preventiva y la atención a la población de 15 a 59 años y a los afiliados al régimen contributivo (a través de EPS y empresas), que concentran la mayoría de los casos; mantener vigilancia diferenciada para menores de 5 años y mayores de 60.</p>
-</div></div>
-<div class="card shadow-sm mb-4"><div class="card-header bg-primary text-white fw-bold">Tablero 2 · Comparación de territorios</div><div class="card-body">
-<h5 class="fw-bold">¿Dónde se concentran los casos? Comparación de departamentos y municipios de Colombia</h5><p class="lead fs-6">¿Cómo se concentran los casos notificados de dengue, dengue grave, chikungunya y Chagas entre departamentos y municipios de Colombia, qué lugar ocupa Cundinamarca y en qué departamentos pesa más el dengue grave?</p>
-<p class="small text-muted mb-2"><strong>Datos:</strong> <code>fact_vigilancia_nacional + dim_departamento</code> · <strong>Periodo:</strong> 2007–2022 · <strong>Registros:</strong> 241.746<br><strong>Unidad de análisis:</strong> cantidad agregada: casos notificados por evento, municipio de ocurrencia, semana epidemiológica y año (cada registro es un conteo, no un caso individual)</p>
-<div class="row g-3 mb-3">
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">1.273.374</div><div class="small fw-bold">Casos notificados</div><div class="small text-muted">Suma de conteo en departamentos reales (sin Exterior ni Procedencia desconocida).</div></div></div>
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">47,74 %</div><div class="small fw-bold">% en los 5 departamentos con más casos</div><div class="small text-muted">Denominador: casos en departamentos reales (1.273.374).</div></div></div>
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">3,69 %</div><div class="small fw-bold">% de dengue grave</div><div class="small text-muted">Dengue grave / (Dengue + Dengue grave) en departamentos reales.</div></div></div>
+
+<!-- ======================= TABLERO 2 ======================= -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Tablero 2 · Comparación de territorios</div>
+    <div class="card-body">
+        <h5 class="fw-bold">¿Dónde se concentran los casos de ETV y dónde pesa más el dengue grave?</h5>
+        <p class="lead fs-6">¿Cómo se concentran los casos de dengue, dengue grave, chikungunya y chagas entre los departamentos de Colombia, qué lugar ocupa Cundinamarca y, dentro de Cundinamarca, cómo difieren los municipios en casos y tasa de incidencia de dengue?</p>
+        <p class="small text-muted mb-2"><strong>Datos:</strong> <code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code> (237.141 filas, 1.269.342 casos) y <code>Regional_Cundinamarca_ETV_Limpio.csv</code> (1.608 filas, 112 municipios, 41.556 casos) · <strong>Periodo:</strong> 2007–2022<br>
+        <strong>Unidad de análisis:</strong> cantidad agregada: casos notificados por evento, municipio, semana y año (Colombia) y por evento, municipio y año (Cundinamarca).<br>
+        <strong>Variables:</strong> <code>departamento_ocurrencia</code>, <code>nombre_evento</code>, <code>conteo</code>; en Cundinamarca <code>municipio</code>, <code>evento</code>, <code>conteo</code> y <code>tasa_incidencia</code>.</p>
+        <div class="row g-3 mb-3">
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">1.265.731</div><div class="small fw-bold">Casos en departamentos</div><div class="small text-muted">Excluye «Exterior» y «Procedencia desconocida» (3.611 casos).</div></div></div>
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">47,79 %</div><div class="small fw-bold">% en los 5 departamentos con más casos</div><div class="small text-muted">Denominador: casos en departamentos (1.265.731).</div></div></div>
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">3,67 %</div><div class="small fw-bold">% de dengue grave</div><div class="small text-muted">Dengue grave / (dengue + dengue grave) en departamentos.</div></div></div>
+        </div>
+        <p class="mb-1"><strong>Visualizaciones e interpretación:</strong></p>
+        <ul class="small">
+            <li><strong>Barras horizontales: Top 10 departamentos por casos.</strong> Valle del Cauca (15,16 %), Santander (9,78 %), Antioquia (8,12 %), Tolima (8,04 %) y Meta (6,68 %) suman 47,79 %. Cundinamarca ocupa el puesto 11 (3,28 %).</li>
+            <li><strong>Columnas: % de dengue grave por departamento (≥ 10.000 casos de dengue).</strong> Entre los 21 departamentos comparables, el dengue grave va de 0,57 % (Quindío) a 8,88 % (Santander): 15,6 veces. Esta visualización ignora el segmentador de Evento por diseño.</li>
+            <li><strong>Dispersión: casos de dengue (X) frente a tasa promedio de incidencia (Y) por municipio de Cundinamarca.</strong> Girardot tiene la mayor cantidad de casos (6.760) pero una tasa media de 439 por 100.000, mientras Topaipí (2.554) y Nilo (2.439) tienen las tasas más altas. Solo incluye filas con tasa informada; ignora el segmentador de Evento.</li>
+        </ul>
+        <p class="small mb-1"><strong>Segmentadores:</strong> Año y Evento.</p>
+        <p class="small mb-1"><strong>Limitación:</strong> los conteos de departamentos no están divididos por población; las tasas de Cundinamarca faltan en la mitad de las filas (0,0 es faltante) y no se pudieron reproducir a partir de los casos, por lo que deben validarse con la Gobernación.</p>
+        <p class="small mb-0"><strong>Decisión sustentada en los datos:</strong> priorizar los recursos de control vectorial en los cinco departamentos que reúnen casi la mitad de los casos, revisar con Santander y Huila los criterios de clasificación del dengue grave y, en Cundinamarca, complementar el ranking de casos (Girardot, Nilo, Fusagasugá) con las tasas de los municipios pequeños cuando estén validadas.</p>
+    </div>
 </div>
-<p class="mb-1"><strong>Visualizaciones:</strong></p><ul class="small"><li><strong>Barras horizontales: Top 10 departamentos por casos.</strong> Valle del Cauca encabeza la lista y los primeros cinco departamentos reúnen casi la mitad de los casos.</li><li><strong>Columnas: % de dengue grave por departamento (con ≥ 10.000 casos de dengue).</strong> La proporción de dengue grave varía mucho entre departamentos comparables: es alta en Santander y Huila y baja en Quindío y Antioquia.</li><li><strong>Barras: Top 10 municipios por casos.</strong> Cali concentra por sí sola casi una décima parte de los casos del país; Medellín, Cúcuta, Ibagué, Bucaramanga y Villavicencio siguen.</li></ul>
-<p class="small mb-1"><strong>Segmentadores:</strong> Año, Evento</p>
-<p class="small mb-1"><strong>Limitación:</strong> Los conteos no están divididos por población, así que muestran dónde se acumulan los casos, no dónde el riesgo individual es mayor; además el dengue grave cambió de definición durante el periodo y no se puede separar ese efecto con estos datos.</p>
-<p class="small mb-0"><strong>Decisión sustentada en los datos:</strong> Priorizar los recursos de control vectorial y de preparación hospitalaria en los cinco departamentos que concentran casi la mitad de los casos (empezando por Valle del Cauca y sus ciudades), y revisar con Santander y Huila los criterios de clasificación y atención del dengue grave.</p>
-</div></div>
-<div class="card shadow-sm mb-4"><div class="card-header bg-primary text-white fw-bold">Tablero 3 · Comportamiento temporal</div><div class="card-body">
-<h5 class="fw-bold">¿Cómo cambia el dengue en el tiempo? Ciclos epidémicos, estacionalidad y gravedad</h5><p class="lead fs-6">¿Cómo han variado los casos notificados entre 2007 y 2022 (aumentos, descensos, picos y mínimos), existe estacionalidad por semana epidemiológica y cómo cambió la proporción de dengue grave?</p>
-<p class="small text-muted mb-2"><strong>Datos:</strong> <code>fact_vigilancia_nacional</code> · <strong>Periodo:</strong> 2007–2022 · <strong>Registros:</strong> 241.746<br><strong>Unidad de análisis:</strong> cantidad agregada: casos notificados por evento, municipio, semana epidemiológica y año</p>
-<div class="row g-3 mb-3">
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">1.277.171</div><div class="small fw-bold">Casos notificados</div><div class="small text-muted">Suma de conteo para la selección actual.</div></div></div>
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">2010</div><div class="small fw-bold">Año con más casos</div><div class="small text-muted">Año de mayor suma de conteo (156.977 casos con todos los eventos).</div></div></div>
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">79.823</div><div class="small fw-bold">Promedio anual de casos</div><div class="small text-muted">Suma de conteo / número de años con datos.</div></div></div>
+
+<!-- ======================= TABLERO 3 ======================= -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Tablero 3 · Comportamiento temporal</div>
+    <div class="card-body">
+        <h5 class="fw-bold">¿Cómo cambian las ETV en el tiempo?</h5>
+        <p class="lead fs-6">¿Cómo han variado los casos de ETV en Colombia entre 2007 y 2022 (aumentos, descensos, picos y mínimos), existe estacionalidad por semana epidemiológica y cómo cambió la proporción de dengue grave?</p>
+        <p class="small text-muted mb-2"><strong>Datos:</strong> <code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code> · <strong>Periodo:</strong> 2007–2022 (todos los años con 52 o 53 semanas epidemiológicas, por lo que son comparables)<br>
+        <strong>Unidad de análisis:</strong> cantidad agregada: casos notificados por evento, municipio, semana y año.<br>
+        <strong>Variables:</strong> <code>ano</code>, <code>semana</code> (se usan las semanas 1–52 para estacionalidad), <code>nombre_evento</code>, <code>conteo</code>, <code>departamento_ocurrencia</code>.</p>
+        <div class="row g-3 mb-3">
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">1.269.342</div><div class="small fw-bold">Casos notificados</div><div class="small text-muted">Suma de <code>conteo</code> para la selección.</div></div></div>
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">2010</div><div class="small fw-bold">Año con más casos</div><div class="small text-muted">155.605 casos con los cuatro eventos.</div></div></div>
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">79.334</div><div class="small fw-bold">Promedio anual de casos</div><div class="small text-muted">Casos / años con datos (16).</div></div></div>
+        </div>
+        <p class="mb-1"><strong>Visualizaciones e interpretación:</strong></p>
+        <ul class="small">
+            <li><strong>Columnas apiladas: casos por año y evento.</strong> Años muy altos (2010, 2013–2016 y 2019) alternan con años bajos; chikungunya aparece en 2014 (pico en 2015: 43.432 casos) y chagas en 2012. Los años sin un evento no son ceros: el evento aún no se notificaba.</li>
+            <li><strong>Línea: % promedio del total anual por semana (dengue, semanas 1–52).</strong> La curva es casi plana: entre 1,68 % (semana 12) y 2,13 % (semana 49). Cada año se normaliza a 100 % antes de promediar para que los años epidémicos no dominen.</li>
+            <li><strong>Línea: % de dengue grave por año.</strong> Cae de 16,44 % (2007) a 0,89 % (2016) y se mantiene entre 0,9 % y 2,0 % desde entonces. Ignora el segmentador de Evento por diseño.</li>
+        </ul>
+        <p class="small mb-1"><strong>Segmentadores:</strong> Evento y Departamento.</p>
+        <p class="small mb-1"><strong>Limitación:</strong> las series no están ajustadas por población ni por cambios de cobertura o de definición de caso, y 2020 coincide con la pandemia de COVID-19, que pudo reducir la notificación; esas explicaciones son hipótesis que los datos no comprueban.</p>
+        <p class="small mb-0"><strong>Decisión sustentada en los datos:</strong> planear la capacidad de respuesta por ciclos epidémicos y no por calendario: activar alertas cuando los casos de un año superen el promedio histórico (79.334) y sostener la vigilancia durante todo el año porque no hay una temporada baja clara.</p>
+    </div>
 </div>
-<p class="mb-1"><strong>Visualizaciones:</strong></p><ul class="small"><li><strong>Columnas apiladas: casos por año y evento.</strong> La serie alterna años muy altos (2010, 2013–2016, 2019) con años bajos; chikungunya aparece desde 2014 y Chagas desde 2012.</li><li><strong>Línea: % promedio del total anual por semana epidemiológica (dengue).</strong> La curva es casi plana: ninguna época del año concentra de forma clara los casos.</li><li><strong>Línea: % de dengue grave por año.</strong> El porcentaje de dengue grave cae de forma marcada desde 2007 y se estabiliza cerca del 1–2 % a partir de 2016.</li></ul>
-<p class="small mb-1"><strong>Segmentadores:</strong> Evento, Departamento</p>
-<p class="small mb-1"><strong>Limitación:</strong> Las series no están ajustadas por población ni por cambios en la vigilancia (nuevos eventos, definiciones y cobertura), y 2020–2021 coinciden con la pandemia de COVID-19, que pudo reducir la notificación; esas explicaciones son hipótesis que estos datos no comprueban.</p>
-<p class="small mb-0"><strong>Decisión sustentada en los datos:</strong> Planear la capacidad de respuesta por ciclos epidémicos y no por calendario: activar alertas cuando los casos de un año superen el promedio histórico, y sostener la vigilancia durante todo el año porque no hay temporada baja clara.</p>
-</div></div>
-<div class="card shadow-sm mb-4"><div class="card-header bg-primary text-white fw-bold">Tablero 4 · Análisis multivariado</div><div class="card-body">
-<h5 class="fw-bold">¿Quiénes se hospitalizan? Edad, régimen y sexo en los casos de dengue de Medellín</h5><p class="lead fs-6">¿Qué combinaciones de grupo de edad, régimen de afiliación y sexo concentran una mayor proporción de casos hospitalizados, y qué combinaciones o territorios resultan inusuales?</p>
-<p class="small text-muted mb-2"><strong>Datos:</strong> <code>fact_dengue_medellin</code> · <strong>Periodo:</strong> 2008–2021 · <strong>Registros:</strong> 53.810<br><strong>Unidad de análisis:</strong> un caso de dengue notificado (registro individual del SIVIGILA)</p>
-<div class="row g-3 mb-3">
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">20,98 %</div><div class="small fw-bold">% de casos hospitalizados</div><div class="small text-muted">Denominador: casos con dato de hospitalización (53.809).</div></div></div>
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">11.287</div><div class="small fw-bold">Casos hospitalizados</div><div class="small text-muted">Casos con hospitalizado = Si.</div></div></div>
-<div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">11,7 pp</div><div class="small fw-bold">Brecha subsidiado – contributivo</div><div class="small text-muted">Diferencia en puntos porcentuales entre las tasas de hospitalización de ambos regímenes.</div></div></div>
+
+<!-- ======================= TABLERO 4 ======================= -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Tablero 4 · Análisis multivariado</div>
+    <div class="card-body">
+        <h5 class="fw-bold">¿Dónde y cuándo pesan más las ETV entre los brotes globales?</h5>
+        <p class="lead fs-6">¿Cómo se combinan la región de la OMS, el periodo y el grupo de enfermedad en los brotes reportados entre 1996 y 2025, qué peso tienen las ETV en cada combinación y qué combinaciones son inusuales?</p>
+        <p class="small text-muted mb-2"><strong>Datos:</strong> <code>Disease_Outbreaks_HDX_Limpio.xlsx</code> (3.568 brotes; 3.451 hasta 2025, porque 2026 es un año incompleto y se excluye) · <strong>Periodo:</strong> 1996–2025<br>
+        <strong>Unidad de análisis:</strong> un brote reportado a la OMS en un país y año (no es un caso individual: cada fila es un brote).<br>
+        <strong>Variables:</strong> <code>who_region</code>, <code>year</code> (agrupado en 1996–2008, 2009–2019 y 2020–2025), <code>icd103n</code> (enfermedad CIE-10, de la que se derivan <code>es_etv</code> y <code>grupo_enfermedad</code>) y <code>country</code>.</p>
+        <div class="row g-3 mb-3">
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">3.451</div><div class="small fw-bold">Brotes registrados</div><div class="small text-muted">Brotes de 1996 a 2025 en la selección.</div></div></div>
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">549</div><div class="small fw-bold">Brotes ETV</div><div class="small text-muted">Brotes de enfermedades transmitidas por vectores.</div></div></div>
+            <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-4 fw-bold text-primary">15,91 %</div><div class="small fw-bold">% de brotes ETV</div><div class="small text-muted">Brotes ETV / brotes de la selección.</div></div></div>
+        </div>
+        <p class="mb-1"><strong>Visualizaciones e interpretación:</strong></p>
+        <ul class="small">
+            <li><strong>Matriz: % de brotes ETV por región (filas) y periodo (columnas), con formato condicional.</strong> La Región de las Américas es la más alta en los tres periodos (39,8 %, 30,7 %, 28,5 %) y Europa la más baja (3,5 %, 12,9 %, 0,7 %). Las celdas con menos de 50 brotes (por ejemplo, Sudeste Asiático en 1996–2008) se leen con cautela.</li>
+            <li><strong>Barras 100 %: composición por región según el grupo de enfermedad.</strong> En las Américas las ETV son 30,7 % de los brotes; en África predominan «otras» (35,4 %) y el cólera pesa 16,1 %, el más alto de todas las regiones; en Europa y el Pacífico Occidental pesan más COVID-19 (42,5 % y 36,5 %) e influenza (24,4 % y 33,5 %).</li>
+            <li><strong>Columnas apiladas: brotes por año y grupo de enfermedad.</strong> Se ve el pico de 2009 (207 brotes, 93,2 % de influenza y respiratorias) y el aumento desde 2020 por COVID-19 (419 brotes en 2022, 230 de COVID-19).</li>
+        </ul>
+        <p class="small mb-1"><strong>Segmentadores:</strong> Periodo y Región de la OMS.</p>
+        <p class="small mb-1"><strong>Limitación:</strong> cuenta brotes reportados, no casos, y depende de lo que cada país reporta; 264 brotes (7,65 %) no tienen región OMS y se muestran como «Sin región»; la clasificación ETV de los 60 diagnósticos CIE-10 la define el equipo.</p>
+        <p class="small mb-0"><strong>Decisión sustentada en los datos:</strong> priorizar la cooperación y la vigilancia de ETV a escala de las Américas y mantener la capacidad de respuesta a ETV aun en periodos de emergencia por otras enfermedades, porque el número de brotes ETV por año se multiplicó por 4,5 desde 2020.</p>
+    </div>
 </div>
-<p class="mb-1"><strong>Visualizaciones:</strong></p><ul class="small"><li><strong>Matriz: % de hospitalizados por grupo de edad (filas) y régimen (columnas), con formato condicional.</strong> La proporción de hospitalizados sube en los extremos de edad y es más alta en subsidiado que en contributivo en todas las edades.</li><li><strong>Columnas agrupadas: % de hospitalizados por grupo de edad y sexo.</strong> Mujeres y hombres tienen proporciones casi iguales dentro de cada grupo: el sexo discrimina poco; la edad discrimina mucho.</li><li><strong>Dispersión: casos (X) frente a % hospitalizado (Y) por comuna.</strong> Comunas con un número similar de casos tienen proporciones de hospitalización muy distintas, lo que señala diferencias entre territorios.</li></ul>
-<p class="small mb-1"><strong>Segmentadores:</strong> Año, Tipo de caso</p>
-<p class="small mb-1"><strong>Limitación:</strong> Hospitalizado no equivale a gravedad clínica (influyen la disponibilidad de camas, el criterio médico y la cobertura del aseguramiento) y las asociaciones observadas no prueban causalidad; además la mezcla de edades y años distintos entre grupos puede explicar parte de las diferencias.</p>
-<p class="small mb-0"><strong>Decisión sustentada en los datos:</strong> Establecer un seguimiento clínico prioritario (consulta temprana y signos de alarma) para menores de 5 años, mayores de 60 y afiliados al régimen subsidiado, y revisar con las comunas de mayor proporción de hospitalización cómo se deriva y se atiende a los pacientes.</p>
-</div></div>
 {% endblock %}
