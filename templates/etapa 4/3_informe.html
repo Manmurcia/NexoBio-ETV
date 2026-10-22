@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{# ============ EDITAR AQUÍ después de publicar el informe en Power BI ============ #}
+{% set powerbi_embed = "" %}    {# URL de inserción: https://app.powerbi.com/view?r=... (Publicar en la web) #}
+{% set powerbi_enlace = "" %}   {# Enlace para abrir el informe: https://app.powerbi.com/... #}
+{# ================================================================================= #}
+
+<h1 class="page-title">3. Informe interactivo de Power BI</h1>
+<p class="text-muted mt-2 mb-4">Cuatro páginas, una por pregunta, con segmentadores que filtran los indicadores y las visualizaciones.
+Fuente: INS · SIVIGILA. Periodo: vigilancia nacional 2007–2022; casos de dengue de Medellín 2008–2021.</p>
+
+{% if powerbi_embed %}
+<div class="ratio ratio-16x9 border rounded mb-3">
+    <iframe title="NexoBio - Conocimiento evidente" src="{{ powerbi_embed }}" allowfullscreen="true" loading="lazy"></iframe>
+</div>
+{% else %}
+<div class="alert alert-warning">
+    <strong>El informe aún no está publicado.</strong> Publícalo siguiendo <code>powerbi/GUIA_CONSTRUCCION_POWERBI.md</code> y pega la URL en las variables
+    <code>powerbi_embed</code> / <code>powerbi_enlace</code> al inicio de este archivo.
+</div>
+{% endif %}
+
+{% if powerbi_enlace %}
+<p><a class="btn btn-primary" href="{{ powerbi_enlace }}" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i> Abrir el informe en Power BI</a></p>
+{% endif %}
+
+<div class="card border mb-4"><div class="card-body">
+    <h5 class="fw-bold">Cómo acceder si el informe no se ve incrustado</h5>
+    <ol class="mb-0">
+        <li>Abre el enlace anterior. Si Power BI pide iniciar sesión, usa la cuenta institucional con la que se compartió el informe.</li>
+        <li>Si el administrador de la organización bloquea la publicación web, el informe se comparte por enlace o con el correo del docente.</li>
+        <li>El archivo <code>.pbix</code> y las instrucciones para abrirlo y actualizarlo están en la carpeta <code>powerbi/</code> del repositorio.</li>
+    </ol>
+</div></div>
+
+<h5 class="fw-bold mb-3">Contenido del informe</h5>
+<div class="row g-3">
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 1 · Composición.</strong> Perfil de los casos de dengue en Medellín por edad, régimen y clasificación.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 2 · Territorios.</strong> Concentración de casos por departamento y municipio; peso del dengue grave.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 3 · Tiempo.</strong> Ciclos epidémicos 2007–2022, estacionalidad semanal y proporción de dengue grave.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 4 · Multivariado.</strong> Hospitalización según edad, régimen y sexo; casos y comunas inusuales.</div></div>
+</div>
+{% endblock %}
