@@ -27,20 +27,22 @@
 <p><a class="btn btn-primary" href="{{ powerbi_enlace }}" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i> Abrir el informe en Power BI</a></p>
 {% endif %}
 
-<div class="card border mb-4"><div class="card-body">
-    <h5 class="fw-bold">Cómo acceder si el informe no se ve incrustado</h5>
-    <ol class="mb-0">
-        <li>Abre el enlace anterior. Si Power BI pide iniciar sesión, usa la cuenta institucional con la que se compartió el informe.</li>
-        <li>Si el administrador de la organización bloquea la publicación en la web, el informe se comparte por enlace o con el correo del docente.</li>
-        <li>El archivo <code>.pbix</code> y las instrucciones para abrirlo y actualizarlo están en la carpeta <code>powerbi/</code> del repositorio.</li>
-    </ol>
-</div></div>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Cómo acceder si el informe no se ve incrustado</div>
+    <div class="card-body">
+        <ol class="mb-0">
+            <li>Abre el enlace anterior. Si Power BI pide iniciar sesión, usa la cuenta institucional con la que se compartió el informe.</li>
+            <li>Si el administrador de la organización bloquea la publicación en la web, el informe se comparte por enlace o con el correo del docente.</li>
+            <li>El archivo <code>.pbix</code> y las instrucciones para abrirlo y actualizarlo están en la carpeta <code>powerbi/</code> del repositorio.</li>
+        </ol>
+    </div>
+</div>
 
 <h5 class="fw-bold mb-3">Contenido del informe</h5>
 <div class="row g-3">
-    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 1 · Composición.</strong> Qué eventos se notifican en Cundinamarca y qué peso tienen las ETV.</div></div>
-    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 2 · Territorios.</strong> Concentración de casos por departamento y comparación de municipios de Cundinamarca; peso del dengue grave.</div></div>
-    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 3 · Tiempo.</strong> Ciclos epidémicos 2007–2022, estacionalidad semanal y proporción de dengue grave.</div></div>
-    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 4 · Multivariado.</strong> Peso de las ETV en los brotes globales según región de la OMS, periodo y grupo de enfermedad.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 1 Composición.</strong> Qué eventos se notifican en Cundinamarca y qué peso tienen las ETV.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 2 Territorios.</strong> Concentración de casos por departamento y comparación de municipios de Cundinamarca; peso del dengue grave.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 3 Tiempo.</strong> Ciclos epidémicos 2007–2022, estacionalidad semanal y proporción de dengue grave.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 4 Multivariado.</strong> Peso de las ETV en los brotes globales según región de la OMS, periodo y grupo de enfermedad.</div></div>
 </div>
 {% endblock %}
