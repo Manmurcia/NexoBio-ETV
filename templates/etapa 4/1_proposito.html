@@ -1,0 +1,102 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">1. Conocimiento evidente: propósito y datos analizados</h1>
+<p class="text-muted mt-2 mb-4">
+    Análisis exploratorio de los datos resultantes del ETL de la Etapa 3 para identificar conocimientos evidentes mediante indicadores,
+    comparaciones y visualizaciones, presentados en un informe interactivo de Power BI
+    (<a href="{{ url_for('etapa4_seccion', seccion='informe') }}">ver informe</a>).
+</p>
+
+<div class="card border-primary mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Propósito de la etapa</div>
+    <div class="card-body">
+        <p class="mb-0">
+            Responder, con cifras verificables, cuatro preguntas sobre las enfermedades transmitidas por vectores (ETV) en tres escalas:
+            <strong>qué se notifica en Cundinamarca</strong> y qué peso tienen las ETV (composición),
+            <strong>dónde se concentran los casos</strong> en Colombia y en los municipios de Cundinamarca (territorios),
+            <strong>cómo cambian en el tiempo</strong> (ciclos, estacionalidad y gravedad) y
+            <strong>dónde y cuándo pesan más las ETV entre los brotes globales</strong> reportados a la OMS (análisis multivariado).
+        </p>
+    </div>
+</div>
+
+<h5 class="fw-bold mb-3">Datos, fuente y periodo analizado</h5>
+<p class="text-muted small">
+    Los cuatro archivos son el resultado del proceso ETL de la <a href="{{ url_for('etapa3_seccion', seccion='reglas-tratamiento') }}">Etapa 3</a> y están en la carpeta
+    <code>powerbi/datos/</code> del repositorio.
+</p>
+<div class="table-responsive mb-4">
+    <table class="table table-bordered align-middle table-sm">
+        <thead class="table-light">
+            <tr><th>Archivo</th><th>Qué contiene</th><th>Unidad de análisis</th><th>Registros disponibles</th><th>Periodo</th><th>Fuente</th><th>Tablero</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>Datos_de_Vigilancia_Colombia_Limpio.csv</code></td>
+                <td>Vigilancia de <strong>Cundinamarca</strong>: 42 eventos de salud pública en 116 municipios (el nombre del archivo dice «Colombia», pero solo incluye este departamento).</td>
+                <td>Cantidad agregada: casos por evento, municipio, semana y año</td>
+                <td>107.645 filas · 298.690 casos</td>
+                <td>2007–2022</td>
+                <td>INS · SIVIGILA (<a href="https://portalsivigila.ins.gov.co/" target="_blank" rel="noopener">portal</a>)</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code></td>
+                <td>Dengue, dengue grave, chikungunya y chagas en todo Colombia, por municipio de ocurrencia.</td>
+                <td>Cantidad agregada: casos por evento, municipio, semana y año</td>
+                <td>237.141 filas · 1.269.342 casos</td>
+                <td>2007–2022</td>
+                <td>INS · SIVIGILA (<a href="https://portalsivigila.ins.gov.co/" target="_blank" rel="noopener">portal</a>)</td>
+                <td>2 y 3</td>
+            </tr>
+            <tr>
+                <td><code>Regional_Cundinamarca_ETV_Limpio.csv</code></td>
+                <td>Casos de los cuatro eventos ETV por municipio de Cundinamarca y año, con la tasa de incidencia y la letalidad de dengue reportadas.</td>
+                <td>Cantidad agregada: casos por evento, municipio y año</td>
+                <td>1.608 filas · 112 municipios · 41.556 casos</td>
+                <td>2007–2022</td>
+                <td>Gobernación de Cundinamarca (indicadores de salud municipal) e INS</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td><code>Disease_Outbreaks_HDX_Limpio.xlsx</code></td>
+                <td>Brotes de enfermedades reportados a la OMS en todo el mundo, con enfermedad CIE-10, país y región.</td>
+                <td>Un brote reportado en un país y año</td>
+                <td>3.568 brotes (3.451 hasta 2025)</td>
+                <td>1996–2025 (2026 incompleto, excluido)</td>
+                <td>OMS / HDX (<a href="https://data.humdata.org/dataset/global-pandemic-and-epidemic-outbreaks" target="_blank" rel="noopener">Global pandemic and epidemic outbreaks</a>)</td>
+                <td>4</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<p class="small text-muted">
+    Además se usan cuatro tablas de apoyo hechas por el equipo (<code>clasificacion_evento_vigilancia.csv</code>, <code>clasificacion_enfermedad_hdx.csv</code>,
+    <code>dim_departamento.csv</code>, <code>dim_anio.csv</code> y <code>dim_evento_etv.csv</code>) para clasificar eventos y enfermedades como ETV, nombrar departamentos y filtrar por año y evento.
+</p>
+
+<h5 class="fw-bold mb-3">Tratamiento aplicado antes del análisis</h5>
+<ul>
+    <li><strong>Vigilancia de Colombia:</strong> el ETL eliminó los 4.605 registros con «municipio desconocido» (241.746 → 237.141 filas; 7.829 casos, 0,61 % del total).</li>
+    <li><strong>Regional de Cundinamarca:</strong> el ETL pasó de 1.640 a 1.608 filas al retirar 32 registros del código departamental 25000 (municipio desconocido; 874 casos).</li>
+    <li><strong>Brotes de la OMS:</strong> el ETL redujo el archivo de 17 a 10 columnas, conservó el identificador único de cada brote y añadió el año depurado (<code>year_clean</code>, igual a <code>year</code> en todas las filas).</li>
+    <li><strong>Para el análisis:</strong> los casos de «Exterior» y «Procedencia desconocida» (3.611) se excluyen de los rankings de departamentos; el año 2026 se excluye por incompleto; los valores 0,0 de la tasa de incidencia se tratan como faltantes y los brotes sin región OMS se muestran como «Sin región».</li>
+    <li><strong>Verificación:</strong> no hay claves duplicadas ni registros huérfanos entre las tablas (se comprueba con <code>scripts/verificar_etapa4.py</code>).</li>
+</ul>
+
+<h5 class="fw-bold mb-3">Problemas de calidad que todavía pueden afectar los resultados</h5>
+<ul>
+    <li>Los conteos de casos no están divididos por población: no son tasas de incidencia.</li>
+    <li>La tasa de incidencia de dengue falta (0,0) en 525 de las 1.040 filas de dengue (todo 2007–2010) y no se pudo reproducir con los casos del archivo.</li>
+    <li>Los eventos entraron a la vigilancia en años distintos: en Cundinamarca solo 22 de 42 se notificaban en 2007; chikungunya y chagas empiezan en 2014 y 2012. Los años previos son «sin vigilancia», no cero casos.</li>
+    <li>La definición de dengue grave pudo cambiar durante el periodo, lo que afecta la comparación entre años.</li>
+    <li>264 brotes de la OMS (7,65 %) no tienen región asignada y la clasificación ETV de eventos y enfermedades la define el equipo.</li>
+    <li>El archivo de Cundinamarca no tiene su fuente original en la carpeta <code>data/</code> del repositorio (solo está el archivo ya tratado).</li>
+</ul>
+
+<div class="alert alert-light border small">
+    <strong>Alcance:</strong> los microdatos individuales de dengue (<code>sivigila_dengue.csv</code>) y el perfil clínico no se usan en esta etapa porque el análisis se hace sobre
+    los archivos resultantes del ETL de la Etapa 3.
+</div>
+{% endblock %}

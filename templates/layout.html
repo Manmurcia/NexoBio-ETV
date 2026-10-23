@@ -69,12 +69,24 @@
                             <li><a class="dropdown-item {% if slug_activo == 'entregables' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='entregables') }}">7. Informe y Video</a></li>
                         </ul>
                     </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Etapa 4
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropEtapa4">
+                            <li><a class="dropdown-item {% if slug_activo == 'proposito' %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='proposito') }}">1. Propósito y datos</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'preguntas' and request.path.startswith('/etapa4') %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='preguntas') }}">2. Las cuatro preguntas</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'informe' %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='informe') }}">3. Informe de Power BI</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'conocimientos' %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='conocimientos') }}">4. Doce conocimientos evidentes</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <main class="container my-5 flex-grow-1">
+    <main class="{% if slug_activo == 'informe' and request.path.startswith('/etapa4') %}container-fluid powerbi-main{% else %}container{% endif %} my-5 flex-grow-1">
         <div class="card-custom">
             {% block content %}{% endblock %}
         </div>

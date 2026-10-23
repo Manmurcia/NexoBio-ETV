@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{# ============ EDITAR AQUÍ después de publicar el informe en Power BI ============ #}
+{% set powerbi_embed = "https://app.powerbi.com/view?r=eyJrIjoiODRhN2I4OGQtZWIyMy00MTk2LThhNTMtYzQzODRkYWU5ZjE0IiwidCI6IjA3ZGE2N2EwLTFmNDMtNGU4Yy05NzdmLTVmODhiNjQ3MGVlNiIsImMiOjR9" %}
+{# ================================================================================= #}
+
+<h1 class="page-title">3. Informe interactivo de Power BI</h1>
+<p class="text-muted mt-2 mb-4">
+    Cuatro páginas, una por pregunta, con segmentadores que filtran los indicadores y las visualizaciones.
+    Fuente: INS · SIVIGILA, Gobernación de Cundinamarca y OMS (HDX). Periodo: vigilancia 2007–2022; brotes globales 1996–2025.
+</p>
+
+<div class="powerbi-report ratio ratio-16x9 border rounded shadow-sm mb-3">
+    <iframe
+        title="Informe interactivo de vigilancia epidemiológica - Power BI"
+        src="{{ powerbi_embed }}"
+        allowfullscreen="true"
+        loading="lazy">
+    </iframe>
+</div>
+
+<p><a class="btn btn-primary" href="{{ powerbi_embed }}" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i> Abrir el informe en Power BI</a></p>
+
+<h5 class="fw-bold mb-3">Contenido del informe</h5>
+<div class="row g-3">
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 1 Composición.</strong> Qué eventos se notifican en Cundinamarca y qué peso tienen las ETV.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 2 Territorios.</strong> Concentración de casos por departamento y comparación de municipios de Cundinamarca; peso del dengue grave.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 3 Tiempo.</strong> Ciclos epidémicos 2007–2022, estacionalidad semanal y proporción de dengue grave.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100"><strong>Página 4 Multivariado.</strong> Peso de las ETV en los brotes globales según región de la OMS, periodo y grupo de enfermedad.</div></div>
+</div>
+{% endblock %}

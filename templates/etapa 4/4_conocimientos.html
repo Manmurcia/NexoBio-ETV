@@ -1,0 +1,230 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">4. Los doce conocimientos evidentes</h1>
+<p class="text-muted mt-2 mb-4">
+    Cada tablero presenta tres conocimientos documentados con ocho elementos: pregunta, variables, procedimiento, evidencia, hallazgo,
+    interpretación, utilidad y limitación. Las explicaciones que no se pueden comprobar con los datos se presentan como hipótesis.
+    Las cifras se pueden verificar con <code>python scripts/verificar_etapa4.py</code>.
+</p>
+
+<div class="etapa4-conocimientos">
+
+<!-- ======================= TABLERO 1 ======================= -->
+<h5 class="fw-bold mt-4 mb-2">Tablero 1 Composición notificación de eventos en Cundinamarca (2007–2022)</h5>
+
+<div class="accordion" id="acc-tablero-1">
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k1-1"><span class="badge bg-primary me-2">1.1</span>Tres eventos concentran 8 de cada 10 casos notificados</button></h2>
+    <div id="k1-1" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-1"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Qué eventos dominan la notificación de salud pública en Cundinamarca?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>nombre_evento</code>, <code>conteo</code> (casos notificados).</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Se sumó <code>conteo</code> por evento y se dividió entre el total de los 42 eventos del archivo (298.690 casos), sin filtros de año ni municipio.</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 1, visualización «Top 10 eventos por % de casos»; medida <code>[% de casos por evento]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>Agresiones por animales potencialmente transmisores de rabia: 121.959 casos (40,83 %); varicela individual: 85.655 (28,68 %); dengue: 36.402 (12,19 %). Los tres suman 81,7 %. Parotiditis sigue con 2,96 % y 31 de los 42 eventos pesan menos de 1 %.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>La notificación está dominada por pocos eventos de gran volumen. Que un evento sea frecuente no significa que sea el más grave; también puede reflejar que es fácil de identificar y notificar (hipótesis).</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Orienta dónde concentrar la capacidad de vigilancia y atención, sin descuidar eventos con pocos casos pero que exigen respuesta inmediata (por ejemplo, rabia humana con 3 casos).</td></tr>
+            <tr><th class="table-light">Limitación</th><td>Son casos notificados, no tasas por población. Además los eventos no entraron a la vigilancia al mismo tiempo (22 de los 42 ya se notificaban en 2007), así que el acumulado mezcla periodos con cobertura distinta.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k1-2"><span class="badge bg-primary me-2">1.2</span>Las ETV son 1 de cada 6 casos y casi tres cuartas partes son dengue</button></h2>
+    <div id="k1-2" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-1"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Qué peso tienen las enfermedades transmitidas por vectores (ETV) dentro de lo que se notifica y cómo se reparten entre ellas?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>nombre_evento</code>, <code>grupo_evento</code> (clasificación ETV / otras creada por el equipo), <code>conteo</code>.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Los 42 eventos se clasificaron en ETV (15 eventos: dengue, dengue grave, mortalidad por dengue, chikungunya, zika, chagas, tres tipos de leishmaniasis y seis de malaria) y otras. Se calculó el porcentaje de casos ETV sobre el total y el aporte de cada evento sobre el total ETV (50.396 casos).</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 1, tarjeta <code>[% de casos ETV]</code> y visualización «% dentro de las ETV por evento»; medida <code>[% ETV por evento]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>Las ETV suman 50.396 casos, el 16,87 % de los 298.690. Dentro de ellas: dengue 72,23 % (36.402), zika 10,52 % (5.300), chikungunya 7,92 % (3.990), leishmaniasis cutánea 6,05 % (3.049) y dengue grave 2,04 % (1.028); malaria y chagas son marginales (menos de 1 % cada una).</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>Las ETV no son la mayoría de lo que se notifica, pero son un bloque relevante y el dengue es casi todo. Zika y chikungunya tienen un peso comparable al de las demás ETV juntas, lo que muestra que las ETV emergentes cambian la composición.</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Justifica concentrar las acciones de control vectorial y de comunicación en dengue, y mantener vigilancia específica de zika y chikungunya.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>La clasificación ETV la define el equipo (no viene del dato) y algunos eventos incluidos tienen muy pocos casos. Los porcentajes son sobre casos notificados, no sobre población.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k1-3"><span class="badge bg-primary me-2">1.3</span>El peso de las ETV cambia de 3,9 % a 31,1 % según el año</button></h2>
+    <div id="k1-3" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-1"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Es estable el peso de las ETV en la notificación o cambia de un año a otro?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>ano</code>, <code>nombre_evento</code>, <code>grupo_evento</code>, <code>conteo</code>.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Para cada año se dividieron los casos ETV entre todos los casos notificados ese año (el denominador cambia con cada año).</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 1, visualización «% de casos ETV por año»; medida <code>[% casos ETV]</code> con el año en el eje.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>Máximos: 31,1 % (2010), 30,9 % (2015) y 30,6 % (2016). Mínimos: 3,9 % (2022), 6,2 % (2011), 7,5 % (2018) y 7,6 % (2017). En 2007 es 26,9 %, pero con solo 1.530 casos notificados en total.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>Las ETV pesan mucho en los años epidémicos de dengue (2010, 2015 y 2016, que también destacan a escala nacional) y poco en los demás. El valor de 2007 no es comparable: ese año se notificaban pocos eventos, por lo que cualquier evento pesa más.</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>El porcentaje de casos ETV puede servir como señal de alerta temprana: cuando supera cerca del 30 % de las notificaciones del año, la carga de dengue es excepcional.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>El porcentaje depende también de cuántos otros eventos se notifican cada año (cambios de cobertura), no solo de las ETV; no equivale a incidencia.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+</div>
+
+<!-- ======================= TABLERO 2 ======================= -->
+<h5 class="fw-bold mt-4 mb-2">Tablero 2 Territorios departamentos de Colombia y municipios de Cundinamarca</h5>
+
+<div class="accordion" id="acc-tablero-2">
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k2-1"><span class="badge bg-primary me-2">2.1</span>Cinco departamentos reúnen casi la mitad de los casos de ETV del país</button></h2>
+    <div id="k2-1" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-2"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Qué tan concentrados están los casos de dengue, dengue grave, chikungunya y chagas entre departamentos y qué lugar ocupa Cundinamarca?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>departamento_ocurrencia</code> (<code>dim_departamento</code>), <code>conteo</code>, <code>es_departamento</code>.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Se sumó <code>conteo</code> por departamento excluyendo «Exterior» y «Procedencia desconocida» (3.611 casos, que no son departamentos) y se dividió entre los 1.265.731 casos restantes.</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 2, visualización «Top 10 departamentos»; tarjeta <code>[% casos en los 5 departamentos con más casos]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>Valle del Cauca 191.886 casos (15,16 %), Santander 123.840 (9,78 %), Antioquia 102.819 (8,12 %), Tolima 101.821 (8,04 %) y Meta 84.527 (6,68 %): suman 47,79 %. Los diez primeros reúnen 72,41 % entre 33 departamentos. Cundinamarca ocupa el puesto 11 con 41.556 casos (3,28 %); Bogotá D.C. apenas registra 529.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>Los casos se acumulan en pocos departamentos de clima cálido. Cundinamarca, el foco regional del proyecto, está en una posición intermedia-alta con poco más del 3 % de los casos. El bajo número de Bogotá es coherente con su altitud (hipótesis).</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Permite asignar recursos de control vectorial y preparación hospitalaria según la concentración de casos.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>Son conteos sin dividir por población: muestran dónde se acumulan los casos, no dónde el riesgo individual es mayor.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k2-2"><span class="badge bg-primary me-2">2.2</span>El dengue grave pesa hasta 15,6 veces más en unos departamentos que en otros</button></h2>
+    <div id="k2-2" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-2"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿En qué departamentos pesa más el dengue grave sobre el total de dengue notificado?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>nombre_evento</code>, <code>departamento_ocurrencia</code>, <code>conteo</code>.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Para los 21 departamentos con al menos 10.000 casos de dengue se calculó dengue grave / (dengue + dengue grave) y se comparó con el valor nacional; el umbral evita porcentajes inestables en departamentos pequeños.</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 2, visualización «% de dengue grave por departamento»; tarjeta <code>[% de dengue grave (departamentos)]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>A escala nacional el dengue grave es 3,67 % del dengue. Los mayores: Santander 8,88 % (119.114 casos de dengue), Huila 7,67 % (68.038) y Norte de Santander 5,95 % (70.576). Los menores: Putumayo 1,94 %, Antioquia 1,63 % y Quindío 0,57 % (28.981). La razón entre el mayor y el menor es de 15,6 veces.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>La gravedad notificada no es homogénea entre territorios. Diferencias en el criterio de clasificación, en el acceso a diagnóstico o en la edad de los casos son explicaciones posibles, pero los datos no permiten comprobar ninguna.</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Identifica dónde conviene revisar los criterios de clasificación y la atención temprana del dengue.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>El porcentaje agrega 16 años en los que cambió la definición de dengue grave (ver conocimiento 3.3); no se puede separar ese efecto con estos datos.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k2-3"><span class="badge bg-primary me-2">2.3</span>En Cundinamarca, los municipios con más casos de dengue no son los de mayor tasa reportada</button></h2>
+    <div id="k2-3" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-2"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Los municipios de Cundinamarca con más casos de dengue son también los de mayor tasa de incidencia?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>municipio</code>, <code>evento</code>, <code>conteo</code>, <code>tasa_incidencia</code> (tasa de incidencia de dengue reportada), <code>anio</code>.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Se usaron solo las filas del evento DENGUE (una por municipio y año; la tasa se repite en las filas de los otros eventos y duplicaría el promedio). Se sumaron los casos y se promedió la tasa solo en las filas con tasa mayor que 0: el valor 0,0 se trata como faltante, no como «cero casos», porque aparece con casos positivos en 525 de las 1.040 filas (las 238 de 2007–2010 y 287 de las 802 de 2011–2022).</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 2, dispersión «casos de dengue (X) frente a tasa promedio (Y) por municipio»; medidas <code>[Casos de dengue por municipio]</code> y <code>[Tasa promedio de incidencia (con dato)]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>Girardot acumula 6.760 casos (18,6 % de los 36.402 de dengue de Cundinamarca; los diez primeros municipios suman 68,2 % entre 111), pero su tasa promedio es 439 por 100.000 y ocupa el puesto 35 de 60 municipios con dato. Las tasas promedio más altas son las de Topaipí (2.554, con 124 casos en 6 años con dato), Nilo (2.439), Vergara (2.162) y Bituima (1.914). Nilo es el único que combina muchos casos (3.601) y tasa alta.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>Los casos y las tasas cuentan historias distintas: los municipios grandes acumulan casos y los pequeños muestran tasas altas con pocos casos, probablemente por su poca población (hipótesis).</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Usar los casos para asignar recursos y las tasas para detectar municipios pequeños con carga relativa alta.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>La mitad de las filas no tiene tasa. Además la tasa no se pudo reproducir con los casos del archivo: en Vergara 2016, 287 casos y una tasa de 18.640,78 implicarían unos 1.540 habitantes. Las tasas deben validarse con la Gobernación antes de usarlas para decidir.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+</div>
+
+<!-- ======================= TABLERO 3 ======================= -->
+<h5 class="fw-bold mt-4 mb-2">Tablero 3 Comportamiento temporal ETV en Colombia (2007–2022)</h5>
+
+<div class="accordion" id="acc-tablero-3">
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k3-1"><span class="badge bg-primary me-2">3.1</span>Seis años epidémicos concentran el 62,0 % de los casos</button></h2>
+    <div id="k3-1" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-3"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Cuándo ocurrieron los picos y los mínimos y qué tan grandes fueron los cambios?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>ano</code>, <code>conteo</code> (todos los eventos).</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Se sumó <code>conteo</code> por año (todos tienen 52 o 53 semanas epidemiológicas con datos, por lo que son comparables), se calculó el promedio anual y se identificaron los años por encima del promedio y las variaciones entre años.</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 3, visualización «Casos por año y evento»; tarjetas <code>[Año con más casos]</code> y <code>[Promedio anual de casos]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>El promedio anual es 79.334 casos. El máximo fue 2010 (155.605) y el mínimo 2017 (26.360): 5,9 veces menos. Seis años superan el promedio (2010, 2013, 2014, 2015, 2016 y 2019) y reúnen el 62,0 % de los casos. De 2016 a 2017 los casos cayeron 76,6 %; de 2019 a 2020, 38,3 %, y en 2022 seguían 46,3 % por debajo de 2019.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>El comportamiento es cíclico: periodos epidémicos seguidos de descensos fuertes. La caída de 2020 coincide con la pandemia de COVID-19, pero que ese sea el motivo es solo una hipótesis.</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Permite preparar capacidad hospitalaria y de control vectorial para los años de alta transmisión.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>Los años no están ajustados por población ni por cambios de cobertura; chikungunya y chagas empiezan a notificarse en 2014 y 2012, por lo que los años anteriores son «sin vigilancia», no cero casos.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k3-2"><span class="badge bg-primary me-2">3.2</span>El dengue no muestra una estacionalidad nacional marcada</button></h2>
+    <div id="k3-2" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-3"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Existe una época del año con más casos de dengue?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>semana</code> (1–52), <code>ano</code>, <code>conteo</code> del evento DENGUE.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Para cada año se calculó el porcentaje de casos de cada semana sobre el total del año (así los años epidémicos no dominan) y se promedió entre los 16 años. La semana 53, que solo existe en 2008, 2014 y 2020, se excluyó. También se sumaron bloques de 13 semanas.</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 3, visualización «% promedio del total anual por semana (dengue)»; medida <code>[% del total anual por semana (dengue, promedio)]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>El peso semanal promedio solo oscila entre 1,68 % (semana 12) y 2,13 % (semana 49). Los cuatro bloques de 13 semanas aportan 25,2 %, 25,3 %, 23,7 % y 25,8 %. La semana con más casos cambia de un año a otro: hay 12 semanas pico distintas en 16 años.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>A escala nacional el dengue ocurre durante todo el año; el patrón dominante son los ciclos de varios años y no la estacionalidad. Las diferencias de clima entre regiones podrían compensarse al sumar todo el país (hipótesis).</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Respalda mantener la vigilancia y el control vectorial de forma permanente en lugar de concentrarlos en una temporada.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>Se analiza el agregado nacional; a escala departamental o municipal podría haber estacionalidad (el segmentador de departamento permite explorarla) que aquí no se observa.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k3-3"><span class="badge bg-primary me-2">3.3</span>La proporción de dengue grave cayó de 16,44 % a cerca de 1–2 %</button></h2>
+    <div id="k3-3" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-3"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Cómo ha cambiado el peso del dengue grave a lo largo del tiempo?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>ano</code>, <code>nombre_evento</code>, <code>conteo</code>.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Por año se calculó dengue grave / (dengue + dengue grave).</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 3, visualización «% de dengue grave por año»; medida <code>[% de dengue grave por año]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>En 2007 el dengue grave fue 16,44 % del dengue notificado (11,57 % en 2008 y 13,57 % en 2009); bajó a 6,19 % en 2010, a 0,89 % en 2016 (el mínimo) y desde entonces se mueve entre 0,93 % y 2,00 % (2022: 2,00 %).</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>La caída entre 2009 y 2012 es demasiado brusca para atribuirla solo a una mejora clínica; podría deberse a un cambio en la clasificación de los casos, pero eso es una hipótesis que estos datos no demuestran.</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Advierte que no deben compararse años anteriores y posteriores a 2010 sin ajustar por la definición de caso.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>El archivo no trae la definición de caso aplicada cada año; la serie combina posibles cambios de clasificación con cambios reales de gravedad.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+</div>
+
+<!-- ======================= TABLERO 4 ======================= -->
+<h5 class="fw-bold mt-4 mb-2">Tablero 4 Análisis multivariado brotes globales reportados a la OMS (1996–2025)</h5>
+
+<div class="accordion" id="acc-tablero-4">
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k4-1"><span class="badge bg-primary me-2">4.1</span>Las Américas tienen la mayor proporción de brotes por ETV; Europa, la menor</button></h2>
+    <div id="k4-1" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-4"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Cómo varía el peso de las ETV entre regiones de la OMS y periodos?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>who_region</code>, <code>icd103n</code> (enfermedad CIE-10, clasificada como ETV o no), <code>year</code> (agrupado en periodos).</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Se clasificaron los 60 diagnósticos CIE-10 del archivo (11 de ellos ETV: dengue, fiebre amarilla, otras fiebres virales transmitidas por mosquitos o artrópodos, encefalitis transmitida por mosquitos, malaria, leishmaniasis, peste y tifus). Se calculó brotes ETV / brotes de la región entre 1996 y 2025; 2026 se excluyó por ser un año incompleto (117 brotes).</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 4, matriz «% de brotes ETV por región y periodo» y barras 100 % por región; medida <code>[% brotes ETV]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>Región de las Américas 30,7 % (570 brotes), Sudeste Asiático 18,8 %, África 18,0 %, Pacífico Occidental 11,1 %, Mediterráneo Oriental 9,2 % y Europa 3,6 % (717 brotes); el global es 15,91 %. Las Américas superan 8 veces el peso de Europa, y se mantienen como la región más alta en los tres periodos (39,8 %, 30,7 % y 28,5 %).</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>El patrón es coherente con la presencia de vectores en zonas tropicales (hipótesis). Para el proyecto, las Américas son la región donde las ETV pesan más entre los brotes reportados.</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Respalda priorizar la cooperación y la vigilancia de ETV a escala de las Américas.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>Cuenta brotes reportados, no casos; depende de qué reporta cada país a la OMS. Las celdas con menos de 50 brotes (por ejemplo, Sudeste Asiático en 1996–2008) deben leerse con cautela.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k4-2"><span class="badge bg-primary me-2">4.2</span>Los brotes ETV por año se multiplicaron por 4,5 desde 2020, aunque su peso relativo bajó</button></h2>
+    <div id="k4-2" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-4"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Cómo cambió el número de brotes ETV y su peso entre periodos?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>year</code> (periodos 1996–2008, 2009–2019 y 2020–2025), <code>icd103n</code> (ETV o no), <code>grupo_enfermedad</code>.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Se contaron los brotes y los brotes ETV por periodo y se calculó el porcentaje ETV. Como los periodos duran 13, 11 y 6 años, el número de brotes también se expresó por año.</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 4, matriz por periodo y columnas apiladas por año; medidas <code>[Brotes ETV]</code> y <code>[% brotes ETV]</code>.</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>Brotes ETV: 122 (1996–2008), 123 (2009–2019) y 304 (2020–2025), es decir 9,4, 11,2 y 50,7 por año: 4,5 veces más que en 2009–2019. Su peso baja de 17,1 % a 16,5 % y 15,3 % porque los brotes totales pasan de 714 y 744 a 1.993, de los cuales 1.132 (56,8 %) son COVID-19. Sin COVID-19, las ETV serían 35,3 % de los brotes de 2020–2025.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>El porcentaje casi constante esconde un aumento en el número de brotes ETV. Parte del aumento puede deberse a que se reporta más (hipótesis); los datos no permiten separar reporte de ocurrencia real.</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Indica que la capacidad de respuesta a ETV debe mantenerse aun cuando otra emergencia domine la atención.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>Se comparan periodos de duración distinta y el contenido del archivo puede cambiar con la fuente; el 2026 (incompleto) no está incluido.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#k4-3"><span class="badge bg-primary me-2">4.3</span>Casos inusuales: el pico de 2009 y los brotes sin región asignada</button></h2>
+    <div id="k4-3" class="accordion-collapse collapse" data-bs-parent="#acc-tablero-4"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td>¿Qué años o grupos se salen del patrón y se pueden explicar con los propios datos?</td></tr>
+            <tr><th class="table-light">Variables</th><td><code>year</code>, <code>grupo_enfermedad</code>, <code>who_region</code>, <code>country</code>.</td></tr>
+            <tr><th class="table-light">Procedimiento</th><td>Se buscaron los años con más brotes y se revisó su composición por grupo; se contaron los brotes sin región OMS y se revisaron los países. Los valores se revisaron antes de clasificarlos como errores.</td></tr>
+            <tr><th class="table-light">Evidencia</th><td>Tablero 4, columnas apiladas por año y grupo, y barras 100 % por región («Sin región»).</td></tr>
+            <tr><th class="table-light">Hallazgo</th><td>2009 tiene 207 brotes, frente a 29–95 en los demás años hasta 2019, y 193 (93,2 %) son de influenza y respiratorias. El máximo es 2022 con 419 brotes (230 de COVID-19). Además, 264 brotes (7,65 %) no tienen región OMS: 210 son de 2020–2025 y corresponden a territorios como Hong Kong, Guayana Francesa, Nueva Caledonia y Reunión; en ese grupo COVID-19 pesa 57,6 %.</td></tr>
+            <tr><th class="table-light">Interpretación</th><td>No son errores de captura: el pico de 2009 coincide con la pandemia de influenza de ese año y los «sin región» son territorios que probablemente no están asignados a una región OMS (hipótesis). Se conservan y se muestran como «Sin región».</td></tr>
+            <tr><th class="table-light">Utilidad</th><td>Evita interpretar un pico puntual como tendencia y advierte que las comparaciones por región excluyen cerca del 8 % de los brotes.</td></tr>
+            <tr><th class="table-light">Limitación</th><td>No se puede comprobar con estos datos la causa de cada pico ni la razón de los territorios sin región.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+</div>
+
+</div>
+{% endblock %}
