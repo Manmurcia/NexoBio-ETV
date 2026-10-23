@@ -1,0 +1,36 @@
+cod_dpto_o,departamento_ocurrencia,nombre_mostrar,es_departamento
+0,PROCEDENCIA DESCONOCIDA,Procedencia desconocida,No
+1,EXTERIOR,Exterior,No
+5,ANTIOQUIA,Antioquia,Si
+8,ATLANTICO,Atlántico,Si
+11,BOGOTA,Bogotá D.C.,Si
+13,BOLIVAR,Bolívar,Si
+15,BOYACA,Boyacá,Si
+17,CALDAS,Caldas,Si
+18,CAQUETA,Caquetá,Si
+19,CAUCA,Cauca,Si
+20,CESAR,Cesar,Si
+23,CORDOBA,Córdoba,Si
+25,CUNDINAMARCA,Cundinamarca,Si
+27,CHOCO,Chocó,Si
+41,HUILA,Huila,Si
+44,GUAJIRA,La Guajira,Si
+47,MAGDALENA,Magdalena,Si
+50,META,Meta,Si
+52,NARIÑO,Nariño,Si
+54,NORTE SANTANDER,Norte de Santander,Si
+63,QUINDIO,Quindío,Si
+66,RISARALDA,Risaralda,Si
+68,SANTANDER,Santander,Si
+70,SUCRE,Sucre,Si
+73,TOLIMA,Tolima,Si
+76,VALLE,Valle del Cauca,Si
+81,ARAUCA,Arauca,Si
+85,CASANARE,Casanare,Si
+86,PUTUMAYO,Putumayo,Si
+88,SAN ANDRES,San Andrés y Providencia,Si
+91,AMAZONAS,Amazonas,Si
+94,GUAINIA,Guainía,Si
+95,GUAVIARE,Guaviare,Si
+97,VAUPES,Vaupés,Si
+99,VICHADA,Vichada,Si

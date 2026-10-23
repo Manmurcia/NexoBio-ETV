@@ -2,8 +2,7 @@
 
 {% block content %}
 {# ============ EDITAR AQUÍ después de publicar el informe en Power BI ============ #}
-{% set powerbi_embed = "" %}    {# URL de inserción: https://app.powerbi.com/view?r=... (Publicar en la web) #}
-{% set powerbi_enlace = "" %}   {# Enlace para abrir el informe: https://app.powerbi.com/... #}
+{% set powerbi_embed = "https://app.powerbi.com/view?r=eyJrIjoiODRhN2I4OGQtZWIyMy00MTk2LThhNTMtYzQzODRkYWU5ZjE0IiwidCI6IjA3ZGE2N2EwLTFmNDMtNGU4Yy05NzdmLTVmODhiNjQ3MGVlNiIsImMiOjR9" %}
 {# ================================================================================= #}
 
 <h1 class="page-title">3. Informe interactivo de Power BI</h1>
@@ -12,31 +11,16 @@
     Fuente: INS · SIVIGILA, Gobernación de Cundinamarca y OMS (HDX). Periodo: vigilancia 2007–2022; brotes globales 1996–2025.
 </p>
 
-{% if powerbi_embed %}
-<div class="ratio ratio-16x9 border rounded mb-3">
-    <iframe title="NexoBio - Conocimiento evidente" src="{{ powerbi_embed }}" allowfullscreen="true" loading="lazy"></iframe>
+<div class="powerbi-report ratio ratio-16x9 border rounded shadow-sm mb-3">
+    <iframe
+        title="Informe interactivo de vigilancia epidemiológica - Power BI"
+        src="{{ powerbi_embed }}"
+        allowfullscreen="true"
+        loading="lazy">
+    </iframe>
 </div>
-{% else %}
-<div class="alert alert-warning">
-    <strong>El informe aún no está publicado.</strong> Publícalo siguiendo <code>powerbi/GUIA_CONSTRUCCION_POWERBI.md</code> y pega la URL en las variables
-    <code>powerbi_embed</code> y <code>powerbi_enlace</code> al inicio de este archivo.
-</div>
-{% endif %}
 
-{% if powerbi_enlace %}
-<p><a class="btn btn-primary" href="{{ powerbi_enlace }}" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i> Abrir el informe en Power BI</a></p>
-{% endif %}
-
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-primary text-white fw-bold">Cómo acceder si el informe no se ve incrustado</div>
-    <div class="card-body">
-        <ol class="mb-0">
-            <li>Abre el enlace anterior. Si Power BI pide iniciar sesión, usa la cuenta institucional con la que se compartió el informe.</li>
-            <li>Si el administrador de la organización bloquea la publicación en la web, el informe se comparte por enlace o con el correo del docente.</li>
-            <li>El archivo <code>.pbix</code> y las instrucciones para abrirlo y actualizarlo están en la carpeta <code>powerbi/</code> del repositorio.</li>
-        </ol>
-    </div>
-</div>
+<p><a class="btn btn-primary" href="{{ powerbi_embed }}" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i> Abrir el informe en Power BI</a></p>
 
 <h5 class="fw-bold mb-3">Contenido del informe</h5>
 <div class="row g-3">

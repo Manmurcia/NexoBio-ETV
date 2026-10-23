@@ -86,7 +86,7 @@
         </div>
     </nav>
 
-    <main class="container my-5 flex-grow-1">
+    <main class="{% if slug_activo == 'informe' and request.path.startswith('/etapa4') %}container-fluid powerbi-main{% else %}container{% endif %} my-5 flex-grow-1">
         <div class="card-custom">
             {% block content %}{% endblock %}
         </div>
