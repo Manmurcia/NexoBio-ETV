@@ -1,0 +1,61 @@
+icd103n,grupo_enfermedad,es_etv
+Acute bronchitis,Influenza y respiratorias,No
+Acute hepatitis A,Otras,No
+Acute poliomyelitis,Otras,No
+Anthrax,Otras,No
+Arenaviral haemorrhagic fever,Otras,No
+Atypical virus infections of central nervous system,Otras,No
+"Bacterial meningitis, not elsewhere classified",Otras,No
+"Bacterial pneumonia, not elsewhere classified",Influenza y respiratorias,No
+Chlamydia psittaci infection,Otras,No
+Cholera,Cólera y enteropatógenas,No
+Coccidioidomycosis,Otras,No
+Dengue,Transmitidas por vectores (ETV),Si
+Diphtheria,Otras,No
+Dracunculiasis,Otras,No
+Emergency use of U07,COVID-19 y uso de emergencia,No
+Gonococcal infection,Otras,No
+Inflammatory polyneuropathy,Otras,No
+Influenza due to identified seasonal influenza virus,Influenza y respiratorias,No
+Influenza due to identified zoonotic or pandemic influenza virus,Influenza y respiratorias,No
+Leishmaniasis,Transmitidas por vectores (ETV),Si
+Leptospirosis,Otras,No
+Listeriosis,Otras,No
+Measles,Otras,No
+Meningococcal infection,Otras,No
+Monkeypox,Otras,No
+Mosquito-borne viral encephalitis,Transmitidas por vectores (ETV),Si
+Other acute viral hepatitis,Otras,No
+Other and unspecified infectious diseases,Otras,No
+"Other arthropod-borne viral fevers, not elsewhere classified",Transmitidas por vectores (ETV),Si
+"Other bacterial diseases, not elsewhere classified",Otras,No
+"Other bacterial foodborne intoxications, not elsewhere classified",Cólera y enteropatógenas,No
+Other gastroenteritis and colitis of infectious and unspecified origin,Cólera y enteropatógenas,No
+Other mosquito-borne viral fevers,Transmitidas por vectores (ETV),Si
+Other salmonella infections,Cólera y enteropatógenas,No
+Other specified bacterial agents as the cause of diseases classified to other chapters,Otras,No
+"Other viral diseases, not elsewhere classified",Otras,No
+"Other viral haemorrhagic fevers, not elsewhere classified",Otras,No
+"Other viral infections characterized by skin and mucous membrane lesions, not elsewhere classified",Otras,No
+Plague,Transmitidas por vectores (ETV),Si
+Plasmodium falciparum malaria,Transmitidas por vectores (ETV),Si
+Plasmodium vivax malaria,Transmitidas por vectores (ETV),Si
+"Pneumonia, organism unspecified",Influenza y respiratorias,No
+Provisional assignment of new diseases of uncertain etiology or emergency use,COVID-19 y uso de emergencia,No
+Rabies,Otras,No
+"Respiratory tuberculosis, bacteriologically and histologically confirmed",Otras,No
+Scarlet fever,Otras,No
+Severe acute respiratory syndrome [SARS],Influenza y respiratorias,No
+Shigellosis,Cólera y enteropatógenas,No
+Streptococcal sepsis,Otras,No
+Tularaemia,Otras,No
+Typhoid and paratyphoid fevers,Cólera y enteropatógenas,No
+Typhus fever,Transmitidas por vectores (ETV),Si
+Unspecified human immunodeficiency virus [HIV] disease,Otras,No
+Unspecified malaria,Transmitidas por vectores (ETV),Si
+Unspecified viral haemorrhagic fever,Otras,No
+Viral infection of unspecified site,Otras,No
+Viral meningitis,Otras,No
+"Viral pneumonia, not elsewhere classified",Influenza y respiratorias,No
+Whooping cough,Otras,No
+Yellow fever,Transmitidas por vectores (ETV),Si

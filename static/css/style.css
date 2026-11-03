@@ -139,3 +139,23 @@ body {
 .etapa3-content .card.border-start {
     border-left-color: #0284c7 !important;
 }
+
+.powerbi-main {
+    max-width: 1800px;
+}
+
+.powerbi-main > .card-custom {
+    padding: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+.powerbi-report {
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.powerbi-report iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}

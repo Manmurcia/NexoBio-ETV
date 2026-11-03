@@ -113,6 +113,9 @@ def etapa3_seccion(seccion):
         slug_activo=seccion
     )
 
+# RUTAS DE LA ETAPA 4
+
+
 @app.route('/etapa4/<seccion>')
 def etapa4_seccion(seccion):
 
