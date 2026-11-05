@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -100,36 +99,17 @@
                         </a>
 
                         <ul class="dropdown-menu" aria-labelledby="dropEtapa5">
-                            <li>
-                                <a class="dropdown-item {% if slug_activo == 'olap-proposito' %}active{% endif %}"
-                                   href="{{ url_for('olap.seccion', seccion='proposito') }}">
-                                    1. Propósito
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if slug_activo == 'olap-modelo' %}active{% endif %}"
-                                   href="{{ url_for('olap.seccion', seccion='modelo') }}">
-                                    2. Modelo
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if slug_activo == 'olap-validaciones' %}active{% endif %}"
-                                   href="{{ url_for('olap.seccion', seccion='validaciones') }}">
-                                    3. Validaciones
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if slug_activo == 'olap-operaciones' %}active{% endif %}"
-                                   href="{{ url_for('olap.seccion', seccion='operaciones') }}">
-                                    4. Operaciones
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if slug_activo == 'olap-conocimientos' %}active{% endif %}"
-                                   href="{{ url_for('olap.seccion', seccion='conocimientos') }}">
-                                    5. Conocimientos
-                                </a>
-                            </li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-proposito' %}active{% endif %}" href="{{ url_for('olap.seccion', seccion='proposito') }}">1. Propósito</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-modelo' %}active{% endif %}" href="{{ url_for('olap.seccion', seccion='modelo') }}">2. Modelo</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-validaciones' %}active{% endif %}" href="{{ url_for('olap.seccion', seccion='validaciones') }}">3. Validaciones</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-operaciones' %}active{% endif %}" href="{{ url_for('olap.seccion', seccion='operaciones') }}">4. Operaciones</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-concentracion' %}active{% endif %}" href="{{ url_for('olap.vista', vista='concentracion') }}">Análisis 1. Concentración territorial</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-ciclos' %}active{% endif %}" href="{{ url_for('olap.vista', vista='ciclos') }}">Análisis 2. Ciclos epidémicos</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-estacionalidad' %}active{% endif %}" href="{{ url_for('olap.vista', vista='estacionalidad') }}">Análisis 3. Estacionalidad</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-gravedad' %}active{% endif %}" href="{{ url_for('olap.vista', vista='gravedad') }}">Análisis 4. Gravedad del dengue</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-conocimientos' %}active{% endif %}" href="{{ url_for('olap.seccion', seccion='conocimientos') }}">5. Conocimientos</a></li>
                         </ul>
                     </li>
 
@@ -152,4 +132,3 @@
 
 </body>
 </html>
-```
