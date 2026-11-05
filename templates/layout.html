@@ -1,22 +1,25 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enfermedades - Entregables</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body class="d-flex flex-column min-vh-100">
 
     <nav class="navbar navbar-expand-lg navbar-custom px-4">
         <div class="container-fluid justify-content-start">
+
             <a class="navbar-brand brand-container me-3" href="{{ url_for('inicio') }}">
                 <img src="/static/img/logo.png" alt="Logo Proyecto" class="brand-logo">
                 <span class="brand-title">Proyecto: Enfermedades</span>
             </a>
-            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -24,10 +27,12 @@
             <div class="collapse navbar-collapse flex-grow-0 ms-3" id="navbarNav">
                 <ul class="navbar-nav me-auto">
 
+                    <!-- ETAPA 1 -->
                     <li class="nav-item dropdown">
                         <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Etapa 1
                         </a>
+
                         <ul class="dropdown-menu" aria-labelledby="dropEtapa1">
                             <li><a class="dropdown-item {% if slug_activo == 'problema' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='problema') }}">1. Problema y Contexto</a></li>
                             <li><a class="dropdown-item {% if slug_activo == 'preguntas' %}active{% endif %}" href="{{ url_for('etapa1_seccion', seccion='preguntas') }}">2. Pregunta Principal y Secundarias</a></li>
@@ -40,10 +45,12 @@
                         </ul>
                     </li>
 
+                    <!-- ETAPA 2 -->
                     <li class="nav-item dropdown">
                         <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Etapa 2
                         </a>
+
                         <ul class="dropdown-menu" aria-labelledby="dropEtapa2">
                             <li><a class="dropdown-item {% if slug_activo == 'descripcion-datos' %}active{% endif %}" href="{{ url_for('etapa2_seccion', seccion='descripcion-datos') }}">1. Descripción de Datos</a></li>
                             <li><a class="dropdown-item {% if slug_activo == 'requisitos-calidad' %}active{% endif %}" href="{{ url_for('etapa2_seccion', seccion='requisitos-calidad') }}">2. Requisitos de Calidad</a></li>
@@ -55,10 +62,12 @@
                         </ul>
                     </li>
 
+                    <!-- ETAPA 3 -->
                     <li class="nav-item dropdown">
                         <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Etapa 3
                         </a>
+
                         <ul class="dropdown-menu" aria-labelledby="dropEtapa3">
                             <li><a class="dropdown-item {% if slug_activo == 'reglas-tratamiento' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='reglas-tratamiento') }}">1. Diagnóstico y Reglas de Tratamiento</a></li>
                             <li><a class="dropdown-item {% if slug_activo == 'diseno-etl' %}active{% endif %}" href="{{ url_for('etapa3_seccion', seccion='diseno-etl') }}">2. Diseño del Paquete ETL (SSIS)</a></li>
@@ -70,17 +79,60 @@
                         </ul>
                     </li>
 
+                    <!-- ETAPA 4 -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa4" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Etapa 4
                         </a>
+
                         <ul class="dropdown-menu" aria-labelledby="dropEtapa4">
-                            <li><a class="dropdown-item {% if slug_activo == 'proposito' %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='proposito') }}">1. Propósito y datos</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'proposito' and request.path.startswith('/etapa4') %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='proposito') }}">1. Propósito y datos</a></li>
                             <li><a class="dropdown-item {% if slug_activo == 'preguntas' and request.path.startswith('/etapa4') %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='preguntas') }}">2. Las cuatro preguntas</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'informe' %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='informe') }}">3. Informe de Power BI</a></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'conocimientos' %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='conocimientos') }}">4. Doce conocimientos evidentes</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'informe' and request.path.startswith('/etapa4') %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='informe') }}">3. Informe de Power BI</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'conocimientos' and request.path.startswith('/etapa4') %}active{% endif %}" href="{{ url_for('etapa4_seccion', seccion='conocimientos') }}">4. Doce conocimientos evidentes</a></li>
                         </ul>
                     </li>
+
+                    <!-- ETAPA 5 -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa5" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Etapa 5
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropEtapa5">
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'olap-proposito' %}active{% endif %}"
+                                   href="{{ url_for('olap.seccion', seccion='proposito') }}">
+                                    1. Propósito
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'olap-modelo' %}active{% endif %}"
+                                   href="{{ url_for('olap.seccion', seccion='modelo') }}">
+                                    2. Modelo
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'olap-validaciones' %}active{% endif %}"
+                                   href="{{ url_for('olap.seccion', seccion='validaciones') }}">
+                                    3. Validaciones
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'olap-operaciones' %}active{% endif %}"
+                                   href="{{ url_for('olap.seccion', seccion='operaciones') }}">
+                                    4. Operaciones
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if slug_activo == 'olap-conocimientos' %}active{% endif %}"
+                                   href="{{ url_for('olap.seccion', seccion='conocimientos') }}">
+                                    5. Conocimientos
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -97,5 +149,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
+```

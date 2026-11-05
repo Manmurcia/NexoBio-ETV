@@ -1,0 +1,213 @@
+{% extends 'layout.html' %}
+{% from 'etapa 5/_macros.html' import ficha, franja_fuente %}
+
+{% block content %}
+<h1 class="page-title">{{ meta.titulo }}</h1>
+{{ franja_fuente(cobertura) }}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Pregunta de análisis</div>
+    <div class="card-body">
+        <h5 class="fw-bold">{{ meta.pregunta }}</h5>
+        <dl class="row small mb-2">
+            <dt class="col-md-3">Dimensiones</dt><dd class="col-md-9">{{ meta.dimensiones }}</dd>
+            <dt class="col-md-3">Medidas</dt><dd class="col-md-9">{{ meta.medidas }}</dd>
+            <dt class="col-md-3">Jerarquías</dt><dd class="col-md-9">{{ meta.jerarquias }}</dd>
+            <dt class="col-md-3">Operaciones</dt><dd class="col-md-9">{{ meta.operaciones }}</dd>
+            <dt class="col-md-3">Cómo profundiza la Etapa 4</dt><dd class="col-md-9 mb-0">{{ meta.profundiza }}</dd>
+        </dl>
+    </div>
+</div>
+
+{% if controles is defined %}
+<form method="get" class="card shadow-sm mb-3" aria-label="Filtros y controles">
+    <div class="card-header bg-light fw-bold">Filtros y operaciones multidimensionales</div>
+    <div class="card-body">
+        <p class="small text-muted mb-3">{{ controles.ayuda }}</p>
+        <div class="row g-3 align-items-end">
+            {% for sel in controles.selects %}
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-bold mb-1" for="f-{{ sel.name }}">{{ sel.label }}</label>
+                <select class="form-select form-select-sm" id="f-{{ sel.name }}" name="{{ sel.name }}">
+                    {% for o in sel.opts %}<option value="{{ o.v }}" {% if o.sel %}selected{% endif %}>{{ o.t }}</option>{% endfor %}
+                </select>
+            </div>
+            {% endfor %}
+            {% if controles.nivel is defined %}
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-bold mb-1" for="f-nivel">{{ controles.nivel.label }}</label>
+                <select class="form-select form-select-sm" id="f-nivel" name="nivel">
+                    {% for o in controles.nivel.opts %}<option value="{{ o.v }}" {% if o.sel %}selected{% endif %}>{{ o.t }}</option>{% endfor %}
+                </select>
+            </div>
+            {% endif %}
+            {% for sel in controles.niveles or [] %}
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-bold mb-1" for="f-{{ sel.name }}">{{ sel.label }}</label>
+                <select class="form-select form-select-sm" id="f-{{ sel.name }}" name="{{ sel.name }}">
+                    {% for o in sel.opts %}<option value="{{ o.v }}" {% if o.sel %}selected{% endif %}>{{ o.t }}</option>{% endfor %}
+                </select>
+            </div>
+            {% endfor %}
+            {% if controles.modo %}
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-bold mb-1" for="f-modo">Valores de la matriz</label>
+                <select class="form-select form-select-sm" id="f-modo" name="modo">
+                    {% for o in controles.modo.opts %}<option value="{{ o.v }}" {% if o.sel %}selected{% endif %}>{{ o.t }}</option>{% endfor %}
+                </select>
+            </div>
+            {% endif %}
+            <div class="col-md-4 col-lg-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="f-pivot" name="pivot" value="1" {% if controles.pivot %}checked{% endif %}>
+                    <label class="form-check-label small fw-bold" for="f-pivot">Pivot: intercambiar filas y columnas</label>
+                </div>
+            </div>
+            {% for k, v in controles.ocultos.items() %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endfor %}
+            <div class="col-12 d-flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary btn-sm">Aplicar</button>
+                <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('olap.vista', vista=vid) }}">Restablecer</a>
+                {% if controles.botones is defined %}
+                    {% if controles.botones.drill %}<a class="btn btn-outline-primary btn-sm" href="{{ url_for('olap.vista', vista=vid, **controles.botones.drill) }}">↓ Drill-down</a>{% endif %}
+                    {% if controles.botones.roll %}<a class="btn btn-outline-primary btn-sm" href="{{ url_for('olap.vista', vista=vid, **controles.botones.roll) }}">↑ Roll-up</a>{% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</form>
+<div class="alert alert-info small py-2 mb-4" role="status">
+    <strong>Selección activa:</strong>
+    {% if seleccion %}{% for etq, val in seleccion %}<span class="badge text-bg-primary me-1">{{ etq }}: {{ val }}</span>{% endfor %}{% else %}sin filtros (todos los valores){% endif %}
+    <br><strong>Operaciones activas:</strong> {{ operaciones|join(' · ') }}
+</div>
+{% endif %}
+
+{% if sin_datos %}
+<div class="alert alert-warning">La combinación de filtros no tiene datos. <a href="{{ url_for('olap.vista', vista=vid) }}">Restablecer la vista</a>.</div>
+{% else %}
+
+<h2 class="h5 fw-bold mt-4">Indicadores</h2>
+<div class="row g-3 mb-4">
+    {% for i in indicadores %}
+    <div class="col-md-4">
+        <div class="p-3 border rounded text-center bg-white h-100">
+            <div class="fs-3 fw-bold text-primary">{{ i.valor }}</div>
+            <div class="small fw-bold">{{ i.titulo }}</div>
+            <div class="small text-muted">{{ i.nota }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h2 class="h5 fw-bold">Visualizaciones</h2>
+<div class="row g-3 mb-4">
+    {% for g in graficas %}
+    <div class="col-lg-6">
+        <div class="border rounded p-3 bg-white h-100">
+            <div class="small fw-bold mb-2">{{ g.titulo }}</div>
+            <div style="position:relative;height:{{ 420 if g.horizontal else 320 }}px"><canvas id="{{ g.id }}" role="img" aria-label="{{ g.titulo }}"></canvas></div>
+            <div class="small text-muted mt-2">{{ g.nota }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h2 class="h5 fw-bold">Matriz de resultados</h2>
+<div class="border rounded p-3 bg-white mb-4">
+    <div class="fw-bold small mb-1">{{ matriz.titulo }}</div>
+    <div class="small text-muted mb-2">{{ matriz.denominador }}</div>
+    {% set hay_total = matriz.filas and matriz.filas[0].total != '' %}
+    {% set hay_pie = matriz.pie|select|list|length > 0 %}
+    <div style="overflow-x:auto">
+    <table class="table table-sm table-bordered align-middle small mb-1 text-end" style="min-width:560px">
+        <thead class="table-light">
+            <tr><th class="text-start" style="position:sticky;left:0;background:#f8f9fa">Filas \ columnas: {{ matriz.etq_cols }}</th>
+                {% for c in matriz.columnas %}<th>{{ c }}</th>{% endfor %}
+                {% if hay_total %}<th>{{ matriz.total_titulo or 'Total' }}</th>{% endif %}</tr>
+        </thead>
+        <tbody>
+        {% for f in matriz.filas %}
+            <tr{% if f.es_resto %} class="text-muted fst-italic"{% endif %}>
+                <th class="text-start fw-normal" style="position:sticky;left:0;background:#fff">
+                    {% if f.link %}<a href="{{ url_for('olap.vista', vista=vid, **f.link) }}" title="Drill-down: descender un nivel dentro de esta unidad">{{ f.etiqueta }} ↓</a>{% else %}{{ f.etiqueta }}{% endif %}
+                </th>
+                {% for c in f.celdas %}<td style="{{ c.style }}" {% if c.title %}title="{{ c.title }}"{% endif %}>{{ c.txt }}</td>{% endfor %}
+                {% if hay_total %}<td class="fw-bold">{{ f.total }}</td>{% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+        {% if hay_pie %}
+        <tfoot class="table-light"><tr><th class="text-start">{{ matriz.pie_etiqueta or 'Total' }}</th>
+            {% for p in matriz.pie %}<th>{{ p }}</th>{% endfor %}
+            {% if hay_total %}<th>{{ matriz.gran_total }}</th>{% endif %}</tr></tfoot>
+        {% endif %}
+    </table>
+    </div>
+    {% if matriz.leyenda %}<div class="small text-muted">{{ matriz.leyenda }}</div>{% endif %}
+    {% if matriz.ocultas %}<div class="small text-muted">Se muestran las filas de mayor valor; el resto se resume en la última fila «Resto».</div>{% endif %}
+    {% if matriz.ocultas_den %}<div class="small text-muted">{{ matriz.ocultas_den }} unidades se ocultan por no alcanzar el mínimo de casos del filtro.</div>{% endif %}
+    {% if matriz.cols_ocultas %}<div class="small text-muted">Se muestran las {{ matriz.columnas|length }} columnas de mayor valor ({{ matriz.cols_ocultas }} ocultas).</div>{% endif %}
+        <div class="small text-muted">Los nombres con ↓ son enlaces de drill-down.</div>
+</div>
+
+<div class="alert alert-light border small mb-4">
+    <strong>Lectura de la selección:</strong> {{ lectura }}
+</div>
+{% endif %}
+
+<h2 class="h5 fw-bold mt-4">Conocimientos multidimensionales</h2>
+{% for k in conocimientos %}{{ ficha(k, vid) }}{% endfor %}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100 small"><strong>Limitación del análisis.</strong><br>{{ meta.limitacion }}</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100 small"><strong>Decisión sustentada en los datos.</strong><br>{{ meta.decision }}</div></div>
+</div>
+
+<div class="d-flex justify-content-between">
+    {% if anterior %}<a class="btn btn-outline-primary btn-sm" href="{{ url_for('olap.vista', vista=anterior) }}">← {{ metas[anterior].menu }}</a>{% else %}<span></span>{% endif %}
+    {% if siguiente %}<a class="btn btn-outline-primary btn-sm" href="{{ url_for('olap.vista', vista=siguiente) }}">{{ metas[siguiente].menu }} →</a>
+    {% else %}<a class="btn btn-outline-primary btn-sm" href="{{ url_for('olap.seccion', seccion='conocimientos') }}">Conocimientos y conclusiones →</a>{% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if graficas is defined and not sin_datos %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const GRAFICAS = {{ graficas|tojson }};
+const fmt = new Intl.NumberFormat('es-CO', {maximumFractionDigits: 2});
+GRAFICAS.forEach(g => {
+  const el = document.getElementById(g.id);
+  if (!el) return;
+  const horizontal = !!g.horizontal;
+  const datasets = g.datasets.map((d, i) => {
+    if (g.tipo === 'line') {
+      return {label: d.label, data: d.data, borderColor: d.color, backgroundColor: d.color,
+              borderDash: d.dash ? [6, 4] : [], borderWidth: d.dash ? 2.5 : 2, pointRadius: g.labels.length > 30 ? 0 : 3,
+              tension: 0.25, spanGaps: true, fill: false};
+    }
+    const cols = d.primer_color ? d.data.map((_, j) => j === 0 ? d.primer_color : d.color) : d.color;
+    return {label: d.label, data: d.data, backgroundColor: cols, borderRadius: 3};
+  });
+  new Chart(el, {
+    type: g.tipo,
+    data: {labels: g.labels, datasets: datasets},
+    options: {
+      indexAxis: horizontal ? 'y' : 'x', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {display: datasets.length > 1, position: 'bottom'},
+        tooltip: {callbacks: {label: c => {
+          let t = c.dataset.label + ': ' + fmt.format(horizontal ? c.parsed.x : c.parsed.y);
+          if (g.tooltip_pct) t += ' (' + fmt.format(g.tooltip_pct[c.dataIndex]) + ' % de la selección)';
+          return t; }}}
+      },
+      scales: {
+        [horizontal ? 'x' : 'y']: {beginAtZero: true, max: g.ymax || undefined, title: {display: !!g.ytitle, text: g.ytitle || ''}},
+        [horizontal ? 'y' : 'x']: {title: {display: !!g.xtitle, text: g.xtitle || ''}, ticks: {autoSkip: g.tipo === 'line', maxTicksLimit: 26}}
+      }
+    }
+  });
+});
+</script>
+{% endif %}
+{% endblock %}
