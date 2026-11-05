@@ -3,7 +3,7 @@
 {% block content %}
 <h1 class="page-title">4. Operaciones multidimensionales</h1>
 {{ franja_fuente(cob) }}
-<p>Las cinco operaciones se ejecutan sobre el modelo estrella y recalculan las medidas con una consulta SQL nueva en cada cambio de nivel o de filtro (cambiar solo el tipo de gráfica no cuenta como operación). Los resultados de esta página se calculan en vivo; la consulta mostrada es la que genera la aplicación, con sus parámetros.</p>
+<p>Las cinco operaciones de esta sección se ejecutan en vivo sobre la carga operativa de SIVIGILA Colombia, no sobre el modelo multifuente de referencia. Cada cambio de nivel o filtro genera una consulta SQL nueva; cambiar solo el tipo de gráfica no cuenta como operación.</p>
 <div class="d-flex flex-wrap gap-2 mb-4">
     {% for o in ops %}<a class="btn btn-outline-primary btn-sm" href="#{{ o.id }}">{{ o.icono }} {{ o.nombre }}</a>{% endfor %}
 </div>
@@ -23,12 +23,21 @@
     </div>
 </div>
 {% endfor %}
-<h2 class="h5 fw-bold">Dónde está cada operación en las vistas</h2>
+<h2 class="h5 fw-bold">Dónde está cada operación en las vistas SIVIGILA actuales</h2>
 <div class="table-responsive"><table class="table table-bordered table-sm small">
 <thead class="table-light"><tr><th>Vista</th><th>Drill-down / roll-up</th><th>Slice</th><th>Dice</th><th>Pivot</th></tr></thead><tbody>
 <tr><td>Análisis 1</td><td>Botones y enlaces ↓ región → departamento → municipio</td><td>Filtro de evento</td><td>Evento + periodo + región</td><td>Casilla «Pivot»</td></tr>
 <tr><td>Análisis 2</td><td>Nivel de territorio y de tiempo (periodo ↔ año)</td><td>Filtro de tipo de año</td><td>Evento + región + tipo de año</td><td>Casilla «Pivot»</td></tr>
 <tr><td>Análisis 3</td><td>Trimestre ↔ semana; región ↔ departamento</td><td>Filtro de región</td><td>Evento + periodo + región</td><td>Casilla «Pivot»</td></tr>
 <tr><td>Análisis 4</td><td>Periodo ↔ año; región ↔ departamento</td><td>Filtro de periodo</td><td>Región + periodo</td><td>Casilla «Pivot»</td></tr>
+</tbody></table></div>
+<h2 class="h5 fw-bold mt-4">Jerarquías del modelo multifuente de referencia</h2>
+<p class="small">Cuando se integren las fuentes de ese modelo, estas serán las rutas de drill-down y roll-up. Los filtros (slice/dice) y el pivote podrán aplicarse a las dimensiones compatibles, recalculando cada medida en su unidad correspondiente.</p>
+<div class="table-responsive"><table class="table table-bordered table-sm small">
+<thead class="table-light"><tr><th>Dimensión</th><th>Jerarquía de análisis</th><th>Medidas relacionadas</th></tr></thead><tbody>
+<tr><td>Tiempo</td><td>Periodo → Año → Trimestre epidemiológico → Semana (0 = registro anual)</td><td>Casos o brotes, según la fuente y el nivel temporal disponible</td></tr>
+<tr><td>Territorio</td><td>Ámbito → Región → Área → Localidad; Colombia (región natural → departamento → municipio) o Mundo (región OMS → país)</td><td>Casos o brotes, sin mezclar unidades</td></tr>
+<tr><td>Evento</td><td>Grupo → Enfermedad → Evento</td><td>Casos o brotes por catálogo y cobertura</td></tr>
+<tr><td>Fuente</td><td>Escala → Fuente</td><td>Casos notificados y brotes reportados por separado</td></tr>
 </tbody></table></div>
 {% endblock %}

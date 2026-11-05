@@ -3,7 +3,7 @@
 {% block content %}
 <h1 class="page-title">5. Conocimientos, limitaciones y conclusiones</h1>
 {{ franja_fuente(cob) }}
-<p>Ocho conocimientos multidimensionales, dos por vista. Cada uno indica la selección (filtros, niveles y operaciones) con la que se obtiene y enlaza a la vista para reproducirla. Las cifras se recalculan con <code>scripts/olap/verificar_conocimientos.py</code>.</p>
+<p>Estos ocho conocimientos se calcularon exclusivamente con el conjunto SIVIGILA Colombia actualmente cargado. Cada ficha indica la selección para reproducirla en las vistas operativas; sus cifras no representan el modelo multifuente objetivo ni deben generalizarse a CIE-10 OMS o brotes globales. Las cifras SIVIGILA se recalculan con <code>scripts/olap/verificar_conocimientos.py</code>.</p>
 {% for vid in orden %}
 <h2 class="h5 fw-bold mt-4"><a class="text-decoration-none" href="{{ url_for('olap.vista', vista=vid) }}">{{ metas[vid].titulo }}</a></h2>
 {% for k in conocimientos[vid] %}{{ ficha(k, vid) }}{% endfor %}
@@ -21,6 +21,6 @@
     <li><strong>El ciclo epidémico nacional es la suma de ciclos locales desfasados.</strong> Los 33 departamentos alcanzan su pico en 10 años distintos y desde 2021 el Caribe concentra la mitad de los casos mientras la región Andina cae a 18,5 %.</li>
     <li><strong>La ausencia de estacionalidad nacional esconde estaciones regionales opuestas.</strong> El Caribe pica hacia la semana 46 y la Orinoquía hacia la 21; Cundinamarca varía solo 4,2 puntos porcentuales entre trimestres.</li>
     <li><strong>El mapa de la gravedad cambió.</strong> En 2007–2010 la región Andina tenía 2,1 veces el porcentaje de dengue grave del Caribe; en 2017–2022 el Caribe tiene casi el doble. La caída ocurre en años distintos según el departamento (2008–2012), lo que refuerza la hipótesis de cambios en la clasificación sin demostrarla.</li>
-    <li><strong>Alcance.</strong> Los hallazgos describen casos notificados y asociaciones observadas, no incidencia por población ni causalidad; las explicaciones sin respaldo en los datos se presentan como hipótesis. La incorporación de población por departamento (DANE) permitiría calcular tasas y es el siguiente paso natural.</li>
+    <li><strong>Alcance.</strong> Estos hallazgos describen casos SIVIGILA notificados y asociaciones observadas, no incidencia por población ni causalidad; tampoco representan las fuentes globales o CIE-10 del modelo objetivo. Las explicaciones sin respaldo en los datos se presentan como hipótesis. La carga multifuente y la incorporación de población por departamento (DANE) permitirían ampliar el análisis y calcular tasas.</li>
 </ul>
 {% endblock %}

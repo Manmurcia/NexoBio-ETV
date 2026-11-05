@@ -1,8 +1,9 @@
 {% extends 'layout.html' %}
 {% from 'etapa 5/_macros.html' import franja_fuente %}
 {% block content %}
-<h1 class="page-title">3. Carga y validaciones del modelo</h1>
+<h1 class="page-title">3. Carga y validaciones del análisis SIVIGILA</h1>
 {{ franja_fuente(cob) }}
+<div class="alert alert-info small">Estas comprobaciones validan la carga operativa de SIVIGILA Colombia que alimenta las vistas interactivas. No son una validación de la carga del modelo multifuente de referencia; esa integración aún no está implementada.</div>
 {% if not val %}
 <div class="alert alert-warning">Aún no se ha ejecutado la carga. Ejecute <code>python scripts/olap/cargar_modelo.py</code>.</div>
 {% else %}
@@ -16,7 +17,7 @@
 </tbody></table></div>
 {% endfor %}
 <h2 class="h6 fw-bold mt-4">Explicación de diferencias</h2>
-<p class="small">No hay diferencias entre el modelo y los datos de origen. Las únicas cifras que difieren entre fuentes son las de la Etapa 4 que incluyen «Exterior» y «Procedencia desconocida» (1.269.342 casos) frente a las que usa este análisis para los territorios (1.265.731); la comprobación de contraste con la Etapa 4 usa la misma base de 1.265.731 casos y coincide.</p>
+<p class="small">No hay diferencias entre la carga operativa SIVIGILA y sus datos de origen. Las únicas cifras que difieren entre fuentes son las de la Etapa 4 que incluyen «Exterior» y «Procedencia desconocida» (1.269.342 casos) frente a las que usa este análisis para los territorios (1.265.731); la comprobación de contraste con la Etapa 4 usa la misma base de 1.265.731 casos y coincide.</p>
 <p class="small">Además, el script <code>scripts/olap/verificar_conocimientos.py</code> recalcula con consultas al modelo las cifras citadas en los ocho conocimientos (121 comprobaciones) y falla si alguna cambia.</p>
 {% endif %}
 {% endblock %}

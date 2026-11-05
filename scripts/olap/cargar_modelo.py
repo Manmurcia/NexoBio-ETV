@@ -33,7 +33,7 @@ def localizar_datos():
 
 DATOS = localizar_datos()
 DB = os.path.join(RAIZ, "olap", "nexobio_olap.db")
-SQL = os.path.join(RAIZ, "scripts", "olap", "crear_modelo.sql")
+SQL = os.path.join(RAIZ, "scripts", "olap", "crear_modelo_sivigila.sql")
 VALIDACIONES = os.path.join(RAIZ, "olap", "validaciones.json")
 
 # --- Region natural por codigo DANE de departamento (clasificacion geografica estandar) ----------

@@ -1,72 +1,90 @@
-# Modelo estrella NexoBio-ETV (Etapa 5)
+# Modelo estrella NexoBio-ETV (diseño multifuente)
 
-Diagrama: `static/img/olap_estrella.svg` (el mismo que muestra la aplicación en *Análisis multidimensional → Modelo estrella*).
+El esquema de referencia de la etapa 5 está definido en [`scripts/olap/crear_modelo.sql`](../../scripts/olap/crear_modelo.sql) y representado en [`static/img/olap_estrella.svg`](../../static/img/olap_estrella.svg). Contiene una tabla de hechos y cuatro dimensiones compartidas por las fuentes.
+
+> **Estado de implementación:** el esquema multifuente es el modelo objetivo. Las vistas interactivas y sus validaciones todavía usan el modelo operativo SIVIGILA de `scripts/olap/crear_modelo_sivigila.sql`, cargado desde el CSV colombiano. No deben interpretarse como resultados de CIE-10 OMS ni de brotes globales.
 
 ```mermaid
 erDiagram
-    dim_evento      ||--o{ fact_notificacion : evento_key
-    dim_territorio  ||--o{ fact_notificacion : territorio_key
-    dim_anio        ||--o{ fact_notificacion : anio_key
-    dim_semana      ||--o{ fact_notificacion : semana_key
+    dim_tiempo ||--o{ fact_notificacion : tiempo_key
+    dim_territorio ||--o{ fact_notificacion : territorio_key
+    dim_evento ||--o{ fact_notificacion : evento_key
+    dim_fuente ||--o{ fact_notificacion : fuente_key
     fact_notificacion {
-        int evento_key PK_FK
-        int territorio_key PK_FK
-        int anio_key PK_FK
-        int semana_key PK_FK
+        int notificacion_id PK
+        int tiempo_key FK
+        int territorio_key FK
+        int evento_key FK
+        int fuente_key FK
+        text id_brote
         int casos
+        int brotes
     }
 ```
 
-**Tabla de hechos `fact_notificacion`.** Un registro = casos notificados de **un evento, en un municipio, en una semana epidemiológica de un año** (237.141 registros, 1.269.342 casos). Unidad de análisis: cantidad agregada de casos notificados (no personas).
+## Granularidad y medidas
+
+`fact_notificacion` registra una observación de un evento, territorio, periodo y fuente. Para SIVIGILA, el grano es evento × municipio × semana epidemiológica × año; para los brotes OMS, evento × país × año, con `semana = 0`. `id_brote` es una dimensión degenerada: identifica el brote y es una cadena vacía para registros de vigilancia. La clave primaria es `notificacion_id`; una restricción `UNIQUE` evita duplicar la combinación fuente, tiempo, territorio, evento e identificador del brote.
+
+| Medida | Cálculo | Uso |
+|---|---|---|
+| Casos notificados | `SUM(casos)` | Aditiva para filas de casos. |
+| Brotes reportados | `SUM(brotes)` | Aditiva para filas de brotes; cada fila aporta 1. |
+| Registros | `COUNT(*)` | Cuenta observaciones, no personas ni casos. |
+
+`casos` y `brotes` son excluyentes por registro. No se deben sumar juntos ni comparar como si compartieran unidad. Los porcentajes se calculan sobre sus numeradores y denominadores, nunca sumando porcentajes de grupos.
 
 ## Diccionario de datos
 
-| Tabla | Campo | Tipo | Clave | Descripción |
+| Tabla | Campo | Tipo | Clave / regla | Descripción |
 |---|---|---|---|---|
-| fact_notificacion | evento_key | INTEGER | PK, FK → dim_evento | Evento notificado |
-| | territorio_key | INTEGER | PK, FK → dim_territorio | Municipio de ocurrencia |
-| | anio_key | INTEGER | PK, FK → dim_anio | Año |
-| | semana_key | INTEGER | PK, FK → dim_semana | Semana epidemiológica |
-| | casos | INTEGER (> 0) | | Casos notificados (`conteo` del archivo tratado) |
-| dim_evento | evento_key | INTEGER | PK | Clave sustituta |
-| | cod_evento | INTEGER | único | Código `cod_eve` del INS |
-| | evento | TEXT | único | DENGUE, DENGUE GRAVE, CHIKUNGUNYA, CHAGAS |
-| | familia | TEXT | | Dengue, Chikungunya, Chagas |
-| | vector | TEXT | | Aedes, Triatominos |
-| dim_territorio | territorio_key | INTEGER | PK | Clave sustituta |
-| | cod_municipio | INTEGER | único | Código DANE del municipio (`cod_mun_o`) |
-| | municipio | TEXT | | Nombre del municipio |
-| | cod_departamento | INTEGER | | Código del departamento (`cod_dpto_o`) |
-| | departamento | TEXT | | Nombre para mostrar |
-| | region_natural | TEXT | | Andina, Caribe, Pacífica, Orinoquía, Amazonía, Insular o «No aplica» |
-| | tipo_ubicacion | TEXT | | Municipio, Sin municipio asignado, Exterior, Procedencia desconocida |
-| dim_anio | anio_key | INTEGER | PK | Año 2007–2022 |
-| | periodo | TEXT | | 2007-2010, 2011-2016, 2017-2022 |
-| | tipo_anio | TEXT | | Epidémico si los casos del año superan el promedio anual (79.334) |
-| dim_semana | semana_key | INTEGER | PK | Semana epidemiológica 1–53 |
-| | trimestre_epi | INTEGER | | 1–4 |
-| | trimestre | TEXT | | T1 (sem 1-13) … T4 (sem 40-53) |
+| `dim_tiempo` | `tiempo_key` | INTEGER | PK; `anio * 100 + semana` | Clave de año y semana; semana 0 identifica un registro anual. |
+| | `anio` | INTEGER | NOT NULL | Año calendario o epidemiológico de la fuente. |
+| | `semana` | INTEGER | 0–53 | Semana epidemiológica; 0 cuando el dato es anual. |
+| | `trimestre_epi` | INTEGER | 0–4 | Trimestre epidemiológico; 0 para el nivel anual. |
+| | `trimestre_epi_nombre` | TEXT | NOT NULL | Etiqueta del trimestre o de «Sin semana». |
+| | `periodo` | TEXT | NOT NULL | Periodo analítico: 1996–2008, 2009–2019, 2020–2025 o 2026 (incompleto), según la fuente. |
+| | `anio_completo` | TEXT | `Si` / `No` | Indica si el año está completo. |
+| `dim_territorio` | `territorio_key` | INTEGER | PK | Clave sustituta. |
+| | `ambito` | TEXT | `Colombia` / `Mundo` | Distingue jerarquías nacionales y globales. |
+| | `region` | TEXT | NOT NULL | Región natural o región OMS. |
+| | `area` | TEXT | NOT NULL | Departamento en Colombia o país en el mundo. |
+| | `localidad` | TEXT | NOT NULL | Municipio o «No aplica». |
+| | `codigo_territorio` | TEXT | UNIQUE con `ambito` | Código DANE o nombre del país. |
+| | `cod_departamento` | TEXT | Nullable | Código DANE del departamento colombiano. |
+| | `subregion_onu` | TEXT | Nullable | Subregión ONU para registros mundiales. |
+| `dim_evento` | `evento_key` | INTEGER | PK | Clave sustituta. |
+| | `catalogo` | TEXT | `SIVIGILA` / `CIE-10 OMS` | Catálogo de origen del evento. |
+| | `cod_evento` | TEXT | Nullable | Código del evento SIVIGILA, si aplica. |
+| | `evento` | TEXT | Único con `catalogo` | Nombre original del evento o código descriptivo. |
+| | `enfermedad` | TEXT | NOT NULL | Enfermedad armonizada entre catálogos. |
+| | `grupo` | TEXT | `ETV` / `No ETV` | Clasificación del evento. |
+| | `cobertura` | TEXT | Nacional / Solo Cundinamarca / Global | Cobertura geográfica de la observación. |
+| | `capitulo_cie10` | TEXT | Nullable | Capítulo CIE-10 OMS, si aplica. |
+| `dim_fuente` | `fuente_key` | INTEGER | PK | Clave sustituta. |
+| | `fuente` | TEXT | UNIQUE | Nombre de la fuente de datos. |
+| | `escala` | TEXT | Global / Nacional / Regional | Escala de la fuente. |
+| | `unidad_medida` | TEXT | NOT NULL | Casos notificados o brotes reportados. |
+| | `archivo_origen` | TEXT | NOT NULL | Archivo empleado en la carga. |
+| `fact_notificacion` | `notificacion_id` | INTEGER | PK | Identificador sustituto de la observación. |
+| | `tiempo_key`, `territorio_key`, `evento_key`, `fuente_key` | INTEGER | FK | Enlace a cada dimensión. |
+| | `id_brote` | TEXT | NOT NULL, default `''` | Identificador de brote; vacío en vigilancia. |
+| | `casos` | INTEGER | Nullable; ≥ 1 si informado | Medida de casos notificados. |
+| | `brotes` | INTEGER | Nullable; = 1 si informado | Indicador aditivo de un brote reportado. |
 
-## Jerarquías
+## Jerarquías dimensionales
 
-| Dimensión | Jerarquía | Validez de la agrupación |
+| Dimensión | Jerarquía | Notas |
 |---|---|---|
-| Evento | vector → familia → evento | Cada evento tiene una familia y cada familia un vector |
-| Territorio | región natural → departamento → municipio | Cada municipio pertenece a un solo departamento (verificado) |
-| Año | periodo → año | Los periodos son rangos de años sin traslape |
-| Semana | trimestre epidemiológico → semana | Cada semana pertenece a un solo trimestre |
+| Tiempo | Periodo → Año → Trimestre epidemiológico → Semana | Semana 0 representa datos anuales sin semana. |
+| Territorio | Ámbito → Región → Área → Localidad | Colombia: región natural → departamento → municipio. Mundo: región OMS → país → «No aplica». |
+| Evento | Grupo → Enfermedad → Evento | Integra SIVIGILA y CIE-10 OMS; el evento conserva catálogo y cobertura. |
+| Fuente | Escala → Fuente | Escalas global, nacional y regional. |
 
-## Medidas
+## Correspondencia y alcance operativo
 
-| Medida | Fórmula | Agregación | Observación |
-|---|---|---|---|
-| Casos notificados | `SUM(casos)` | Suma | Aditiva en todas las dimensiones |
-| Registros de notificación | `COUNT(*)` | Conteo | No son casos ni personas |
-| Municipios con casos | `COUNT(DISTINCT territorio_key)` | Conteo distinto | No aditiva |
-| % de dengue grave | `100 × SUM(casos dengue grave) / SUM(casos dengue + dengue grave)` | Razón recalculada | Nunca se suma ni se promedia entre grupos |
-| % promedio del total anual | Por unidad y año: casos del periodo / casos del año; promedio de los años | Razón por año + promedio | Excluye la semana 53 |
+- SIVIGILA: evento y conteo se asignan a `dim_evento` y `casos`; municipio y departamento a `dim_territorio`; año y semana a `dim_tiempo`; archivo y unidad a `dim_fuente`.
+- CIE-10 OMS: catálogo, código/capítulo y enfermedad armonizada se registran en `dim_evento`.
+- Brotes globales: país, región OMS y subregión ONU se registran en `dim_territorio`; identificador del brote en `id_brote`; cada brote aporta `brotes = 1` y usa semana 0.
 
-## Correspondencia con el archivo de origen
-
-`cod_eve`, `nombre_evento` → dim_evento · `cod_mun_o`, `municipio_ocurrencia`, `cod_dpto_o` (+ `dim_departamento.csv`) → dim_territorio · `ano` → dim_anio · `semana` → dim_semana · `conteo` → fact_notificacion.casos.
-Transformaciones adicionales: región natural (tabla de correspondencia por código de departamento), familia y vector (tabla de correspondencia por evento), periodo y tipo de año (reglas en `scripts/olap/cargar_modelo.py`), trimestre epidemiológico = (semana − 1) // 13 + 1.
+La aplicación todavía carga y valida únicamente el conjunto colombiano de vigilancia mediante `scripts/olap/cargar_modelo.py` y el esquema `scripts/olap/crear_modelo_sivigila.sql`. El modelo multifuente de referencia no tiene aún una carga consolidada ni resultados interactivos.

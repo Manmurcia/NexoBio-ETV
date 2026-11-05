@@ -1,61 +1,87 @@
--- ============================================================================
--- Modelo estrella NexoBio-ETV (Etapa 5: Analisis multidimensional)
--- Motor: SQLite 3.  Tabla de hechos: fact_notificacion
--- Granularidad: un registro = casos notificados de UN evento, en UN municipio,
---               en UNA semana epidemiologica de UN anio.
--- ============================================================================
+-- =====================================================================
+-- Modelo estrella NexoBio-ETV (SQLite) - Analisis multidimensional
+-- 1 tabla de hechos (fact_notificacion) + 4 dimensiones
+-- =====================================================================
 PRAGMA foreign_keys = ON;
 
-DROP TABLE IF EXISTS fact_notificacion;
-DROP TABLE IF EXISTS dim_evento;
-DROP TABLE IF EXISTS dim_territorio;
-DROP TABLE IF EXISTS dim_anio;
-DROP TABLE IF EXISTS dim_semana;
-
--- Dimension evento. Jerarquia: vector -> familia -> evento
-CREATE TABLE dim_evento (
-    evento_key   INTEGER PRIMARY KEY,
-    cod_evento   INTEGER NOT NULL UNIQUE,      -- cod_eve del INS/SIVIGILA
-    evento       TEXT    NOT NULL UNIQUE,
-    familia      TEXT    NOT NULL,             -- Dengue | Chikungunya | Chagas
-    vector       TEXT    NOT NULL              -- Aedes | Triatominos
+-- ---------------------------------------------------------------------
+-- DIMENSION TIEMPO. Jerarquia: periodo > anio > trimestre epidemiologico > semana
+-- tiempo_key = anio * 100 + semana (semana 0 = registro anual, sin semana)
+-- ---------------------------------------------------------------------
+CREATE TABLE dim_tiempo (
+    tiempo_key           INTEGER PRIMARY KEY,
+    anio                 INTEGER NOT NULL,
+    semana               INTEGER NOT NULL CHECK (semana BETWEEN 0 AND 53),
+    trimestre_epi        INTEGER NOT NULL CHECK (trimestre_epi BETWEEN 0 AND 4),
+    trimestre_epi_nombre TEXT    NOT NULL,       -- 'T1 (sem. 1-13)', ..., 'Sin semana'
+    periodo              TEXT    NOT NULL,       -- '1996-2008', '2009-2019', '2020-2025', '2026 (incompleto)'
+    anio_completo        TEXT    NOT NULL CHECK (anio_completo IN ('Si', 'No')),
+    UNIQUE (anio, semana),
+    CHECK (tiempo_key = anio * 100 + semana)
 );
 
--- Dimension territorio. Jerarquia: region_natural -> departamento -> municipio
+-- ---------------------------------------------------------------------
+-- DIMENSION TERRITORIO. Jerarquia: ambito > region > area > localidad
+-- Colombia: Colombia > region natural > departamento > municipio
+-- Mundo:    Mundo    > region OMS     > pais         > 'No aplica'
+-- ---------------------------------------------------------------------
 CREATE TABLE dim_territorio (
-    territorio_key   INTEGER PRIMARY KEY,
-    cod_municipio    INTEGER NOT NULL UNIQUE,
-    municipio        TEXT    NOT NULL,
-    cod_departamento INTEGER NOT NULL,
-    departamento     TEXT    NOT NULL,
-    region_natural   TEXT    NOT NULL,         -- 'No aplica' para exterior / desconocido
-    tipo_ubicacion   TEXT    NOT NULL CHECK (tipo_ubicacion IN
-                     ('Municipio','Sin municipio asignado','Exterior','Procedencia desconocida'))
+    territorio_key    INTEGER PRIMARY KEY,
+    ambito            TEXT NOT NULL CHECK (ambito IN ('Colombia', 'Mundo')),
+    region            TEXT NOT NULL,             -- region natural / region OMS / 'Sin region' / 'No geografico'
+    area              TEXT NOT NULL,             -- departamento / pais
+    localidad         TEXT NOT NULL,             -- municipio / 'No aplica'
+    codigo_territorio TEXT NOT NULL,             -- codigo DANE del municipio o nombre del pais
+    cod_departamento  TEXT,                      -- solo Colombia
+    subregion_onu     TEXT,                      -- solo Mundo (unsd_region)
+    UNIQUE (ambito, codigo_territorio)
 );
 
--- Dimension anio. Jerarquia: periodo -> anio
-CREATE TABLE dim_anio (
-    anio_key   INTEGER PRIMARY KEY,            -- = anio
-    periodo    TEXT NOT NULL,                  -- 2007-2010 | 2011-2016 | 2017-2022
-    tipo_anio  TEXT NOT NULL CHECK (tipo_anio IN ('Epidemico','No epidemico'))
+-- ---------------------------------------------------------------------
+-- DIMENSION EVENTO. Jerarquia: grupo > enfermedad > evento
+-- ---------------------------------------------------------------------
+CREATE TABLE dim_evento (
+    evento_key     INTEGER PRIMARY KEY,
+    catalogo       TEXT NOT NULL CHECK (catalogo IN ('SIVIGILA', 'CIE-10 OMS')),
+    cod_evento     TEXT,                         -- codigo SIVIGILA del evento
+    evento         TEXT NOT NULL,                -- nombre original del evento o enfermedad
+    enfermedad     TEXT NOT NULL,                -- armonizada entre catalogos
+    grupo          TEXT NOT NULL CHECK (grupo IN ('ETV', 'No ETV')),
+    cobertura      TEXT NOT NULL CHECK (cobertura IN ('Nacional', 'Solo Cundinamarca', 'Global')),
+    capitulo_cie10 TEXT,                         -- solo OMS (icd10n)
+    UNIQUE (catalogo, evento)
 );
 
--- Dimension semana epidemiologica. Jerarquia: trimestre epidemiologico -> semana
-CREATE TABLE dim_semana (
-    semana_key     INTEGER PRIMARY KEY,        -- = semana (1..53)
-    trimestre_epi  INTEGER NOT NULL CHECK (trimestre_epi BETWEEN 1 AND 4),
-    trimestre      TEXT    NOT NULL            -- 'T1 (sem 1-13)', ...
+-- ---------------------------------------------------------------------
+-- DIMENSION FUENTE. Jerarquia: escala > fuente
+-- ---------------------------------------------------------------------
+CREATE TABLE dim_fuente (
+    fuente_key     INTEGER PRIMARY KEY,
+    fuente         TEXT NOT NULL UNIQUE,
+    escala         TEXT NOT NULL CHECK (escala IN ('Global', 'Nacional', 'Regional')),
+    unidad_medida  TEXT NOT NULL,                -- casos notificados / brotes reportados
+    archivo_origen TEXT NOT NULL
 );
 
+-- ---------------------------------------------------------------------
+-- TABLA DE HECHOS
+-- Granularidad: notificacion municipal por semana epidemiologica (INS), o brote
+-- reportado por pais y anio (OMS, semana 0). Casos y brotes son excluyentes.
+-- ---------------------------------------------------------------------
 CREATE TABLE fact_notificacion (
-    evento_key     INTEGER NOT NULL REFERENCES dim_evento(evento_key),
-    territorio_key INTEGER NOT NULL REFERENCES dim_territorio(territorio_key),
-    anio_key       INTEGER NOT NULL REFERENCES dim_anio(anio_key),
-    semana_key     INTEGER NOT NULL REFERENCES dim_semana(semana_key),
-    casos          INTEGER NOT NULL CHECK (casos > 0),   -- medida aditiva
-    PRIMARY KEY (evento_key, territorio_key, anio_key, semana_key)
-) WITHOUT ROWID;
+    notificacion_id INTEGER PRIMARY KEY,
+    tiempo_key      INTEGER NOT NULL REFERENCES dim_tiempo (tiempo_key),
+    territorio_key  INTEGER NOT NULL REFERENCES dim_territorio (territorio_key),
+    evento_key      INTEGER NOT NULL REFERENCES dim_evento (evento_key),
+    fuente_key      INTEGER NOT NULL REFERENCES dim_fuente (fuente_key),
+    id_brote        TEXT    NOT NULL DEFAULT '',   -- id_outbreak; '' en vigilancia
+    casos           INTEGER CHECK (casos IS NULL OR casos >= 1),
+    brotes          INTEGER CHECK (brotes IS NULL OR brotes = 1),
+    CHECK ((casos IS NOT NULL AND brotes IS NULL) OR (casos IS NULL AND brotes IS NOT NULL)),
+    UNIQUE (fuente_key, tiempo_key, territorio_key, evento_key, id_brote)
+);
 
+CREATE INDEX ix_fact_tiempo     ON fact_notificacion (tiempo_key);
 CREATE INDEX ix_fact_territorio ON fact_notificacion (territorio_key);
-CREATE INDEX ix_fact_anio       ON fact_notificacion (anio_key);
-CREATE INDEX ix_fact_semana     ON fact_notificacion (semana_key);
+CREATE INDEX ix_fact_evento     ON fact_notificacion (evento_key);
+CREATE INDEX ix_fact_fuente     ON fact_notificacion (fuente_key);

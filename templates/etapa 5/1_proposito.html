@@ -5,10 +5,10 @@
 {{ franja_fuente(cob) }}
 
 <h2 class="h5 fw-bold">Propósito de la etapa</h2>
-<p>Profundizar en los hallazgos de la Etapa 4 con un <strong>análisis multidimensional</strong>: se construye un modelo estrella sobre los datos tratados de vigilancia de las enfermedades transmitidas por vectores (dengue, dengue grave, chikungunya y chagas) y se exploran las medidas cruzando territorio, tiempo y evento, y cambiando de nivel de detalle. A diferencia de la Etapa 4, que describía cada indicador en un tablero, aquí se pregunta <em>dónde, cuándo y en qué combinación</em> ocurre lo que antes solo se vio de forma agregada.</p>
+<p>El diseño multidimensional integra distintas fuentes de vigilancia de enfermedades transmitidas por vectores: registros de casos, eventos de catálogos SIVIGILA/CIE-10 OMS y brotes reportados. El modelo estrella organiza las observaciones por tiempo, territorio, evento y fuente, con medidas diferenciadas para casos y brotes. Las vistas interactivas disponibles profundizan los hallazgos de la Etapa 4 usando únicamente los datos tratados de SIVIGILA Colombia; todavía no consultan ni representan la carga multifuente objetivo.</p>
 
 <h2 class="h5 fw-bold mt-4">Continuidad con las etapas anteriores</h2>
-<p>Se mantienen el tema (vigilancia de ETV en Colombia), la población (casos notificados al SIVIGILA) y el conjunto de datos. El análisis usa el archivo resultante del ETL de la Etapa 3, <code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code>, el mismo de los tableros 2 y 3 de la Etapa 4.</p>
+<p>El análisis interactivo conserva el tema de vigilancia de ETV en Colombia y el archivo resultante del ETL de la Etapa 3, <code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code>, el mismo de los tableros 2 y 3 de la Etapa 4. Este conjunto es una parte del alcance del modelo multifuente; no incluye en la carga actual los registros CIE-10 OMS ni los brotes globales.</p>
 <ul>
     <li><strong>Registros usados:</strong> {{ cob.registros|miles }} filas, equivalentes a {{ cob.casos_totales|miles }} casos notificados entre {{ cob.desde }} y {{ cob.hasta }} (el ETL de la Etapa 3 ya había retirado 4.605 registros con «municipio desconocido»: de 241.746 a 237.141 filas).</li>
     <li><strong>Casos analizados:</strong> {{ cob.casos_base|miles }}. Se excluyen de los análisis territoriales los {{ cob.casos_excluidos|miles }} casos de «Exterior» y «Procedencia desconocida», que no son departamentos; permanecen en el modelo con su propia categoría.</li>
@@ -38,8 +38,8 @@
 </table>
 </div>
 
-<h2 class="h5 fw-bold mt-4">Datos que quedan fuera del modelo</h2>
-<p class="small">El archivo de Cundinamarca (42 eventos, con tasas de incidencia) y los brotes de la OMS tienen otra granularidad y otra unidad de análisis. Cruzarlos con la tabla de hechos multiplicaría valores, por lo que se mantienen en la Etapa 4. Una consecuencia es que este análisis no incluye tasas por población.</p>
+<h2 class="h5 fw-bold mt-4">Alcance de la carga frente al diseño multifuente</h2>
+<p class="small">El modelo de referencia contempla registros nacionales, regionales y globales, pero la carga operativa de estas vistas sigue limitada al CSV colombiano de SIVIGILA. Los brotes de la OMS y los datos de Cundinamarca (42 eventos, con tasas de incidencia) tienen otras granularidades y unidades: deben integrarse respetando sus dimensiones de fuente y unidad de medida, sin sumar casos y brotes ni multiplicar valores. Por eso las cifras interactivas de esta etapa no incluyen esas fuentes ni tasas por población.</p>
 
 <h2 class="h5 fw-bold mt-4">Acceso a las vistas</h2>
 <div class="row g-3">
