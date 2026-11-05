@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% from 'etapa 5/_macros.html' import franja_fuente %}
+{% block content %}
+<h1 class="page-title">1. Propósito y relación con el conocimiento evidente</h1>
+{{ franja_fuente(cob) }}
+
+<h2 class="h5 fw-bold">Propósito de la etapa</h2>
+<p>Profundizar en los hallazgos de la Etapa 4 con un <strong>análisis multidimensional</strong>: se construye un modelo estrella sobre los datos tratados de vigilancia de las enfermedades transmitidas por vectores (dengue, dengue grave, chikungunya y chagas) y se exploran las medidas cruzando territorio, tiempo y evento, y cambiando de nivel de detalle. A diferencia de la Etapa 4, que describía cada indicador en un tablero, aquí se pregunta <em>dónde, cuándo y en qué combinación</em> ocurre lo que antes solo se vio de forma agregada.</p>
+
+<h2 class="h5 fw-bold mt-4">Continuidad con las etapas anteriores</h2>
+<p>Se mantienen el tema (vigilancia de ETV en Colombia), la población (casos notificados al SIVIGILA) y el conjunto de datos. El análisis usa el archivo resultante del ETL de la Etapa 3, <code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code>, el mismo de los tableros 2 y 3 de la Etapa 4.</p>
+<ul>
+    <li><strong>Registros usados:</strong> {{ cob.registros|miles }} filas, equivalentes a {{ cob.casos_totales|miles }} casos notificados entre {{ cob.desde }} y {{ cob.hasta }} (el ETL de la Etapa 3 ya había retirado 4.605 registros con «municipio desconocido»: de 241.746 a 237.141 filas).</li>
+    <li><strong>Casos analizados:</strong> {{ cob.casos_base|miles }}. Se excluyen de los análisis territoriales los {{ cob.casos_excluidos|miles }} casos de «Exterior» y «Procedencia desconocida», que no son departamentos; permanecen en el modelo con su propia categoría.</li>
+    <li><strong>Fuente:</strong> Instituto Nacional de Salud (INS) · SIVIGILA, portal de datos abiertos de vigilancia en salud pública de Colombia (archivo <code>Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv</code>, 241.746 filas originales).</li>
+</ul>
+<div class="alert alert-warning small">
+    <strong>Limitaciones de calidad que pueden afectar los resultados.</strong>
+    Los conteos no están divididos por población (no son tasas). Chikungunya y chagas empezaron a notificarse en 2014 y 2012: los años previos son «sin vigilancia», no cero casos. La definición de dengue grave pudo cambiar durante el periodo. Dos «municipios» son categorías «sin municipio asignado» (La Guajira y Risaralda). La agrupación en regiones naturales la define el equipo a partir del código del departamento.
+</div>
+
+<h2 class="h5 fw-bold mt-4">Unidad de análisis y granularidad</h2>
+<div class="row g-3 mb-3">
+    <div class="col-md-6"><div class="p-3 border rounded h-100 small"><strong>Unidad de análisis.</strong> Una cantidad agregada de casos notificados. No se estudian personas individuales: la suma de casos equivale a casos notificados, no a personas únicas.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded h-100 small"><strong>Granularidad del modelo.</strong> Cada registro de la tabla de hechos es el conteo de casos de <em>un evento, en un municipio, en una semana epidemiológica de un año</em>. La granularidad coincide con la fila del archivo tratado y es la más detallada disponible; se verificó que no hay combinaciones repetidas.</div></div>
+</div>
+
+<h2 class="h5 fw-bold mt-4">Qué conocimientos evidentes se profundizan</h2>
+<div class="table-responsive">
+<table class="table table-bordered table-sm small align-middle">
+    <thead class="table-light"><tr><th>Conocimiento evidente (Etapa 4)</th><th>Qué quedó sin responder</th><th>Cómo se profundiza</th></tr></thead>
+    <tbody>
+        <tr><td><strong>2.1</strong> Cinco departamentos reúnen 47,79 % de los casos.</td><td>Mezcla los cuatro eventos y no baja del departamento.</td><td><a href="{{ url_for('olap.vista', vista='concentracion') }}">Análisis 1</a>: región → departamento → municipio, por evento.</td></tr>
+        <tr><td><strong>3.1</strong> Seis años epidémicos concentran 62,0 % de los casos.</td><td>No dice dónde ocurrieron esos años.</td><td><a href="{{ url_for('olap.vista', vista='ciclos') }}">Análisis 2</a>: territorio × año.</td></tr>
+        <tr><td><strong>3.2</strong> El dengue no tiene estacionalidad nacional marcada.</td><td>La limitación advierte que a escala regional podría haberla.</td><td><a href="{{ url_for('olap.vista', vista='estacionalidad') }}">Análisis 3</a>: semana × territorio.</td></tr>
+        <tr><td><strong>2.2 y 3.3</strong> El dengue grave varía por departamento y cae con los años.</td><td>Nunca se cruzaron: el ranking de departamentos acumula 16 años.</td><td><a href="{{ url_for('olap.vista', vista='gravedad') }}">Análisis 4</a>: evento × año × territorio.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h2 class="h5 fw-bold mt-4">Datos que quedan fuera del modelo</h2>
+<p class="small">El archivo de Cundinamarca (42 eventos, con tasas de incidencia) y los brotes de la OMS tienen otra granularidad y otra unidad de análisis. Cruzarlos con la tabla de hechos multiplicaría valores, por lo que se mantienen en la Etapa 4. Una consecuencia es que este análisis no incluye tasas por población.</p>
+
+<h2 class="h5 fw-bold mt-4">Acceso a las vistas</h2>
+<div class="row g-3">
+    {% for v in orden %}
+    <div class="col-md-6"><a class="text-decoration-none" href="{{ url_for('olap.vista', vista=v) }}">
+        <div class="p-3 border rounded h-100 card-clean"><div class="fw-bold text-primary">{{ metas[v].titulo }}</div><div class="small text-body">{{ metas[v].pregunta }}</div></div></a></div>
+    {% endfor %}
+</div>
+{% endblock %}

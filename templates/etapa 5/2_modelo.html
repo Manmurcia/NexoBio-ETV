@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+{% from 'etapa 5/_macros.html' import franja_fuente %}
+{% block content %}
+<h1 class="page-title">2. Modelo estrella</h1>
+{{ franja_fuente(cob) }}
+<img src="{{ url_for('static', filename='img/olap_estrella.svg') }}" class="img-fluid border rounded mb-3" alt="Diagrama del modelo estrella: la tabla fact_notificacion conectada con dim_evento, dim_territorio, dim_anio y dim_semana">
+
+<h2 class="h5 fw-bold">Tabla de hechos <code>fact_notificacion</code></h2>
+<p class="small"><strong>Propósito:</strong> registrar los casos notificados de las enfermedades transmitidas por vectores para analizarlos por evento, territorio y tiempo.
+<strong>Granularidad:</strong> un registro = casos de un evento en un municipio en una semana epidemiológica de un año ({{ n.fact_notificacion|miles }} registros).
+<strong>Clave primaria:</strong> compuesta (<code>evento_key, territorio_key, anio_key, semana_key</code>), lo que impide duplicados en el grano.
+<strong>Claves foráneas:</strong> las cuatro, cada una hacia la clave primaria de su dimensión (relación uno a muchos, de la dimensión al hecho).</p>
+
+<h2 class="h5 fw-bold mt-4">Dimensiones, atributos y jerarquías</h2>
+<div class="table-responsive"><table class="table table-bordered table-sm small align-middle">
+<thead class="table-light"><tr><th>Dimensión</th><th>Miembros</th><th>Clave</th><th>Atributos</th><th>Jerarquía (relación de agrupación válida)</th></tr></thead>
+<tbody>
+<tr><td><code>dim_evento</code></td><td>{{ n.dim_evento }} eventos</td><td><code>evento_key</code> (natural: <code>cod_evento</code>)</td><td>evento, familia, vector</td><td>vector → familia → evento. Cada evento pertenece a una sola familia y cada familia a un solo vector (Aedes: dengue y chikungunya; triatominos: chagas).</td></tr>
+<tr><td><code>dim_territorio</code></td><td>{{ n.dim_territorio|miles }} municipios y categorías · {{ n.departamentos }} departamentos</td><td><code>territorio_key</code> (natural: <code>cod_municipio</code>)</td><td>municipio, departamento, región natural, tipo de ubicación</td><td>región natural → departamento → municipio. Cada municipio pertenece a un solo departamento (verificado) y cada departamento a una sola región.</td></tr>
+<tr><td><code>dim_anio</code></td><td>{{ n.dim_anio }} años</td><td><code>anio_key</code> = año</td><td>periodo, tipo de año</td><td>periodo → año. Periodos 2007–2010, 2011–2016, 2017–2022. El tipo de año es «epidémico» si los casos del año superan el promedio anual (79.334).</td></tr>
+<tr><td><code>dim_semana</code></td><td>{{ n.dim_semana }} semanas</td><td><code>semana_key</code> = semana epidemiológica</td><td>trimestre epidemiológico</td><td>trimestre → semana (T1: semanas 1–13, T2: 14–26, T3: 27–39, T4: 40–53).</td></tr>
+</tbody></table></div>
+<p class="small"><strong>Por qué estas cuatro dimensiones.</strong> Son perspectivas reales del problema y responden a preguntas distintas de la Etapa 4: <em>qué evento</em> (comparar dengue, dengue grave, chikungunya y chagas), <em>dónde</em> (concentración territorial), <em>cuándo en el ciclo plurianual</em> (año: años epidémicos) y <em>cuándo dentro del año</em> (semana: estacionalidad). Año y semana se separan porque ciclo y estacionalidad son conocimientos diferentes (3.1 y 3.2 de la Etapa 4) y se cruzan de forma independiente con el territorio. La clasificación «tipo de año» y «región natural» son atributos derivados definidos por el equipo en el ETL.</p>
+
+<h2 class="h5 fw-bold mt-4">Medidas</h2>
+<div class="table-responsive"><table class="table table-bordered table-sm small align-middle">
+<thead class="table-light"><tr><th>Medida</th><th>Significado y unidad</th><th>Fórmula</th><th>Agregación</th><th>Cuándo sumar y cuándo otro cálculo</th></tr></thead>
+<tbody>
+<tr><td><strong>Casos notificados</strong></td><td>Casos de la notificación (casos)</td><td><code>SUM(casos)</code></td><td>Suma</td><td>Aditiva en todas las dimensiones: se puede sumar entre eventos, territorios, años y semanas.</td></tr>
+<tr><td><strong>Registros de notificación</strong></td><td>Número de filas de la tabla de hechos (registros)</td><td><code>COUNT(*)</code></td><td>Conteo de registros</td><td>No equivale a casos ni a personas: una fila ya es un conteo agregado.</td></tr>
+<tr><td><strong>Municipios con casos</strong></td><td>Municipios distintos con al menos un caso (municipios)</td><td><code>COUNT(DISTINCT territorio_key)</code></td><td>Conteo distinto</td><td>No aditiva: un municipio que aparece en dos años o dos eventos no debe contarse dos veces; se recalcula en cada nivel.</td></tr>
+<tr><td><strong>% de dengue grave</strong></td><td>Peso del dengue grave sobre el dengue (%)</td><td><code>100 × SUM(casos de dengue grave) / SUM(casos de dengue + dengue grave)</code></td><td>Razón de dos sumas</td><td>No se suma ni se promedia entre grupos: en cada nivel se vuelven a sumar numerador y denominador.</td></tr>
+<tr><td><strong>% promedio del total anual</strong></td><td>Índice estacional (%)</td><td>Para cada unidad y año: casos del periodo / casos del año; luego promedio de los años</td><td>Razón por año, promedio entre años</td><td>Cada año se normaliza antes de promediar para que los años epidémicos no dominen.</td></tr>
+</tbody></table></div>
+
+<h2 class="h5 fw-bold mt-4">Herramientas y justificación</h2>
+<ul class="small">
+    <li><strong>SQLite:</strong> base de datos de un solo archivo, sin servidor, consultable desde Flask con la librería estándar y reproducible: se reconstruye con un script a partir de los CSV del repositorio. El volumen ({{ n.fact_notificacion|miles }} filas) es moderado y las consultas agregan en milisegundos.</li>
+    <li><strong>Python y pandas:</strong> transformación y carga, y validaciones. Es la misma pila de las etapas anteriores.</li>
+    <li><strong>Flask y Chart.js:</strong> las vistas se generan con consultas SQL parametrizadas; los filtros recalculan todo en el servidor.</li>
+</ul>
+
+<h2 class="h5 fw-bold mt-4">Correspondencia entre variables originales y campos del modelo</h2>
+<div class="table-responsive"><table class="table table-bordered table-sm small">
+<thead class="table-light"><tr><th>Variable en el archivo tratado</th><th>Campo del modelo</th><th>Transformación</th></tr></thead><tbody>
+<tr><td><code>cod_eve</code>, <code>nombre_evento</code></td><td><code>dim_evento.cod_evento</code>, <code>evento</code></td><td>Valores distintos; se asigna <code>familia</code> y <code>vector</code> con una tabla de correspondencia.</td></tr>
+<tr><td><code>cod_mun_o</code>, <code>municipio_ocurrencia</code>, <code>cod_dpto_o</code></td><td><code>dim_territorio.cod_municipio</code>, <code>municipio</code>, <code>cod_departamento</code></td><td>Un registro por código de municipio; se quita el asterisco de las categorías; <code>tipo_ubicacion</code> distingue municipio, sin municipio, exterior y procedencia desconocida.</td></tr>
+<tr><td><code>departamento_ocurrencia</code> (y <code>dim_departamento.csv</code>)</td><td><code>dim_territorio.departamento</code></td><td>Se usa el nombre para mostrar (con tildes) de la tabla de apoyo de la Etapa 4.</td></tr>
+<tr><td>(derivada de <code>cod_dpto_o</code>)</td><td><code>dim_territorio.region_natural</code></td><td>Tabla de correspondencia código de departamento → región natural; «No aplica» para exterior y desconocido.</td></tr>
+<tr><td><code>ano</code></td><td><code>dim_anio.anio_key</code>, <code>periodo</code>, <code>tipo_anio</code></td><td>Periodo por rangos; tipo de año por comparación con el promedio anual.</td></tr>
+<tr><td><code>semana</code></td><td><code>dim_semana.semana_key</code>, <code>trimestre_epi</code></td><td>Trimestre = (semana − 1) // 13 + 1, con la semana 53 en el trimestre 4.</td></tr>
+<tr><td><code>conteo</code></td><td><code>fact_notificacion.casos</code></td><td>Sin cambios (todos los valores son mayores que 0).</td></tr>
+</tbody></table></div>
+
+<h2 class="h5 fw-bold mt-4">Procedimiento de transformación y carga</h2>
+<ol class="small">
+    <li><code>scripts/olap/crear_modelo.sql</code> crea las tablas, claves y restricciones.</li>
+    <li><code>scripts/olap/cargar_modelo.py</code> lee el CSV tratado, construye las cuatro dimensiones con claves sustitutas, resuelve las claves foráneas del hecho y carga todo en <code>olap/nexobio_olap.db</code>.</li>
+    <li>El mismo script ejecuta las validaciones y guarda el resultado en <code>olap/validaciones.json</code> (ver <a href="{{ url_for('olap.seccion', seccion='validaciones') }}">sección 3</a>).</li>
+    <li><code>scripts/olap/verificar_conocimientos.py</code> recalcula cada cifra citada en los conocimientos.</li>
+</ol>
+<pre class="small bg-light border rounded p-2">python scripts/olap/cargar_modelo.py
+python scripts/olap/verificar_conocimientos.py
+flask run</pre>
+
+<h2 class="h5 fw-bold mt-4">Condiciones que respeta el análisis</h2>
+<ul class="small">
+    <li>Granularidad única en la tabla de hechos; las dimensiones se relacionan solo con el hecho, sin relaciones muchos a muchos, de modo que ningún valor se multiplica.</li>
+    <li>Se diferencian los conteos de registros, los conteos de entidades únicas (municipios) y las sumas de casos.</li>
+    <li>Cada porcentaje indica su denominador; porcentajes y promedios se recalculan al cambiar el nivel de agrupación y nunca se suman ni se promedian entre grupos.</li>
+    <li>Los valores faltantes no se tratan como respuestas negativas: «Exterior», «Procedencia desconocida» y «sin municipio asignado» conservan una categoría propia; los años sin vigilancia de un evento no se interpretan como cero casos.</li>
+    <li>Las asociaciones observadas no se presentan como causas; las explicaciones que los datos no comprueban se marcan como hipótesis.</li>
+</ul>
+{% endblock %}

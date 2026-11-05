@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% from 'etapa 5/_macros.html' import franja_fuente %}
+{% block content %}
+<h1 class="page-title">3. Carga y validaciones del modelo</h1>
+{{ franja_fuente(cob) }}
+{% if not val %}
+<div class="alert alert-warning">Aún no se ha ejecutado la carga. Ejecute <code>python scripts/olap/cargar_modelo.py</code>.</div>
+{% else %}
+<p>El procedimiento de carga ejecuta {{ n_total }} comprobaciones que comparan el modelo con el archivo tratado de origen (<code>{{ val.fuente }}</code>, {{ val.filas_origen|miles }} filas y {{ val.casos_origen|miles }} casos). Resultado: <strong>{{ n_ok }} de {{ n_total }} correctas</strong>.</p>
+{% for grupo, filas in grupos.items() %}
+<h2 class="h6 fw-bold mt-4">{{ grupo }}</h2>
+<div class="table-responsive"><table class="table table-bordered table-sm small align-middle">
+<thead class="table-light"><tr><th>Comprobación</th><th class="text-end">Esperado (origen)</th><th class="text-end">Obtenido (modelo)</th><th>Resultado</th></tr></thead><tbody>
+{% for r in filas %}<tr><td>{{ r.nombre }}{% if r.nota %}<div class="text-muted">{{ r.nota }}</div>{% endif %}</td><td class="text-end">{{ r.esperado_t }}</td><td class="text-end">{{ r.obtenido_t }}</td>
+<td>{% if r.ok %}<span class="badge text-bg-success">Coincide</span>{% else %}<span class="badge text-bg-danger">Difiere</span>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>
+{% endfor %}
+<h2 class="h6 fw-bold mt-4">Explicación de diferencias</h2>
+<p class="small">No hay diferencias entre el modelo y los datos de origen. Las únicas cifras que difieren entre fuentes son las de la Etapa 4 que incluyen «Exterior» y «Procedencia desconocida» (1.269.342 casos) frente a las que usa este análisis para los territorios (1.265.731); la comprobación de contraste con la Etapa 4 usa la misma base de 1.265.731 casos y coincide.</p>
+<p class="small">Además, el script <code>scripts/olap/verificar_conocimientos.py</code> recalcula con consultas al modelo las cifras citadas en los ocho conocimientos (121 comprobaciones) y falla si alguna cambia.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% from 'etapa 5/_macros.html' import franja_fuente, tabla_simple %}
+{% block content %}
+<h1 class="page-title">4. Operaciones multidimensionales</h1>
+{{ franja_fuente(cob) }}
+<p>Las cinco operaciones se ejecutan sobre el modelo estrella y recalculan las medidas con una consulta SQL nueva en cada cambio de nivel o de filtro (cambiar solo el tipo de gráfica no cuenta como operación). Los resultados de esta página se calculan en vivo; la consulta mostrada es la que genera la aplicación, con sus parámetros.</p>
+<div class="d-flex flex-wrap gap-2 mb-4">
+    {% for o in ops %}<a class="btn btn-outline-primary btn-sm" href="#{{ o.id }}">{{ o.icono }} {{ o.nombre }}</a>{% endfor %}
+</div>
+{% for o in ops %}
+<div class="card shadow-sm mb-4" id="{{ o.id }}">
+    <div class="card-header bg-primary text-white fw-bold">{{ o.icono }} {{ o.nombre }}</div>
+    <div class="card-body">
+        <p class="small mb-1"><strong>Qué hace:</strong> {{ o.que }}</p>
+        <p class="small mb-1"><strong>Dimensiones y medidas:</strong> {{ o.dims }}</p>
+        <p class="small mb-2"><strong>Nivel de detalle o filtros:</strong> {{ o.nivel }}</p>
+        <p class="small fw-bold mb-1">Procedimiento de consulta</p>
+        <pre class="small bg-light border rounded p-2" style="white-space:pre-wrap">{{ o.sql }}</pre>
+        {{ tabla_simple(o.tabla) }}
+        {% if o.tabla2 %}{{ tabla_simple(o.tabla2) }}{% endif %}
+        <p class="small mb-2"><strong>Interpretación:</strong> {{ o.lectura }}</p>
+        <a class="btn btn-sm btn-primary" href="{{ url_for('olap.vista', vista=o.enlace[0], **o.enlace[1]) }}">Ejecutar en la vista interactiva</a>
+    </div>
+</div>
+{% endfor %}
+<h2 class="h5 fw-bold">Dónde está cada operación en las vistas</h2>
+<div class="table-responsive"><table class="table table-bordered table-sm small">
+<thead class="table-light"><tr><th>Vista</th><th>Drill-down / roll-up</th><th>Slice</th><th>Dice</th><th>Pivot</th></tr></thead><tbody>
+<tr><td>Análisis 1</td><td>Botones y enlaces ↓ región → departamento → municipio</td><td>Filtro de evento</td><td>Evento + periodo + región</td><td>Casilla «Pivot»</td></tr>
+<tr><td>Análisis 2</td><td>Nivel de territorio y de tiempo (periodo ↔ año)</td><td>Filtro de tipo de año</td><td>Evento + región + tipo de año</td><td>Casilla «Pivot»</td></tr>
+<tr><td>Análisis 3</td><td>Trimestre ↔ semana; región ↔ departamento</td><td>Filtro de región</td><td>Evento + periodo + región</td><td>Casilla «Pivot»</td></tr>
+<tr><td>Análisis 4</td><td>Periodo ↔ año; región ↔ departamento</td><td>Filtro de periodo</td><td>Región + periodo</td><td>Casilla «Pivot»</td></tr>
+</tbody></table></div>
+{% endblock %}
