@@ -1,0 +1,365 @@
+{
+  "fuente": "Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv",
+  "filas_origen": 237141,
+  "casos_origen": 1269342,
+  "validaciones": [
+    {
+      "grupo": "Unicidad de claves",
+      "nombre": "dim_evento.evento_key sin repetidos",
+      "esperado": 4,
+      "obtenido": 4,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Unicidad de claves",
+      "nombre": "dim_territorio.territorio_key sin repetidos",
+      "esperado": 1138,
+      "obtenido": 1138,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Unicidad de claves",
+      "nombre": "dim_anio.anio_key sin repetidos",
+      "esperado": 16,
+      "obtenido": 16,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Unicidad de claves",
+      "nombre": "dim_semana.semana_key sin repetidos",
+      "esperado": 53,
+      "obtenido": 53,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Unicidad de claves",
+      "nombre": "dim_territorio: un registro por codigo de municipio",
+      "esperado": 1138,
+      "obtenido": 1138,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "Hechos sin registro en dim_evento",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "Hechos sin registro en dim_territorio",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "Hechos sin registro en dim_anio",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "Hechos sin registro en dim_semana",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "PRAGMA foreign_key_check",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Duplicaciones",
+      "nombre": "Combinaciones evento-municipio-semana-anio repetidas",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Duplicaciones",
+      "nombre": "Dimensiones sin municipios huerfanos (todos aparecen en hechos)",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Categorias desconocidas",
+      "nombre": "Hechos con casos nulos o <= 0",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Categorias desconocidas",
+      "nombre": "Casos en 'Exterior' conservados con categoria propia",
+      "esperado": 2643,
+      "obtenido": 2643,
+      "ok": true,
+      "nota": "No se eliminan ni se mezclan con un municipio real; se excluyen de rankings de departamentos."
+    },
+    {
+      "grupo": "Categorias desconocidas",
+      "nombre": "Casos en 'Procedencia desconocida' conservados con categoria propia",
+      "esperado": 968,
+      "obtenido": 968,
+      "ok": true,
+      "nota": "No se eliminan ni se mezclan con un municipio real; se excluyen de rankings de departamentos."
+    },
+    {
+      "grupo": "Categorias desconocidas",
+      "nombre": "Casos en 'Sin municipio asignado' conservados con categoria propia",
+      "esperado": 332,
+      "obtenido": 332,
+      "ok": true,
+      "nota": "No se eliminan ni se mezclan con un municipio real; se excluyen de rankings de departamentos."
+    },
+    {
+      "grupo": "Categorias desconocidas",
+      "nombre": "Municipios de departamentos reales sin region natural",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Categorias desconocidas",
+      "nombre": "Departamentos reales por region natural (33 en total)",
+      "esperado": 33,
+      "obtenido": 33,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Coherencia con el origen",
+      "nombre": "Filas de hechos = filas del CSV tratado",
+      "esperado": 237141,
+      "obtenido": 237141,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Coherencia con el origen",
+      "nombre": "Total de casos (SUM casos) = SUM conteo del CSV",
+      "esperado": 1269342,
+      "obtenido": 1269342,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Coherencia con el origen",
+      "nombre": "Casos por evento (4 eventos)",
+      "esperado": {
+        "CHAGAS": 4894,
+        "CHIKUNGUNYA": 78226,
+        "DENGUE": 1142575,
+        "DENGUE GRAVE": 43647
+      },
+      "obtenido": {
+        "CHAGAS": 4894,
+        "CHIKUNGUNYA": 78226,
+        "DENGUE": 1142575,
+        "DENGUE GRAVE": 43647
+      },
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Coherencia con el origen",
+      "nombre": "Casos por anio (16 anios)",
+      "esperado": {
+        "2007": 41255,
+        "2008": 36664,
+        "2009": 52112,
+        "2010": 155605,
+        "2011": 30206,
+        "2012": 54306,
+        "2013": 125431,
+        "2014": 128592,
+        "2015": 139857,
+        "2016": 112443,
+        "2017": 26360,
+        "2018": 44973,
+        "2019": 125650,
+        "2020": 77557,
+        "2021": 50833,
+        "2022": 67498
+      },
+      "obtenido": {
+        "2007": 41255,
+        "2008": 36664,
+        "2009": 52112,
+        "2010": 155605,
+        "2011": 30206,
+        "2012": 54306,
+        "2013": 125431,
+        "2014": 128592,
+        "2015": 139857,
+        "2016": 112443,
+        "2017": 26360,
+        "2018": 44973,
+        "2019": 125650,
+        "2020": 77557,
+        "2021": 50833,
+        "2022": 67498
+      },
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Coherencia con el origen",
+      "nombre": "Casos por departamento (35 codigos)",
+      "esperado": {
+        "0": 968,
+        "1": 2643,
+        "5": 102819,
+        "8": 70296,
+        "11": 529,
+        "13": 52904,
+        "15": 10830,
+        "17": 8073,
+        "18": 12900,
+        "19": 10385,
+        "20": 44762,
+        "23": 32902,
+        "25": 41556,
+        "27": 5097,
+        "41": 70808,
+        "44": 17415,
+        "47": 24513,
+        "50": 84527,
+        "52": 5768,
+        "54": 72886,
+        "63": 31275,
+        "66": 23432,
+        "68": 123840,
+        "70": 37074,
+        "73": 101821,
+        "76": 191886,
+        "81": 15385,
+        "85": 37725,
+        "86": 17305,
+        "88": 1142,
+        "91": 4700,
+        "94": 1760,
+        "95": 6170,
+        "97": 468,
+        "99": 2778
+      },
+      "obtenido": {
+        "0": 968,
+        "1": 2643,
+        "5": 102819,
+        "8": 70296,
+        "11": 529,
+        "13": 52904,
+        "15": 10830,
+        "17": 8073,
+        "18": 12900,
+        "19": 10385,
+        "20": 44762,
+        "23": 32902,
+        "25": 41556,
+        "27": 5097,
+        "41": 70808,
+        "44": 17415,
+        "47": 24513,
+        "50": 84527,
+        "52": 5768,
+        "54": 72886,
+        "63": 31275,
+        "66": 23432,
+        "68": 123840,
+        "70": 37074,
+        "73": 101821,
+        "76": 191886,
+        "81": 15385,
+        "85": 37725,
+        "86": 17305,
+        "88": 1142,
+        "91": 4700,
+        "94": 1760,
+        "95": 6170,
+        "97": 468,
+        "99": 2778
+      },
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Coherencia con el origen",
+      "nombre": "Casos por region natural suman el total",
+      "esperado": 1269342,
+      "obtenido": 1269342,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Contraste con otras fuentes",
+      "nombre": "Cundinamarca por evento: modelo vs. archivo regional",
+      "esperado": {
+        "CHAGAS": 136,
+        "CHIKUNGUNYA": 3990,
+        "DENGUE": 36402,
+        "DENGUE GRAVE": 1028
+      },
+      "obtenido": {
+        "CHAGAS": 136,
+        "CHIKUNGUNYA": 3990,
+        "DENGUE": 36402,
+        "DENGUE GRAVE": 1028
+      },
+      "ok": true,
+      "nota": "Dos archivos tratados independientes (SIVIGILA portal vs. Gobernacion) deben coincidir."
+    },
+    {
+      "grupo": "Contraste con la Etapa 4",
+      "nombre": "Casos en departamentos (Power BI: 1.265.731)",
+      "esperado": 1265731,
+      "obtenido": 1265731,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Contraste con la Etapa 4",
+      "nombre": "% casos en los 5 departamentos con mas casos (Power BI: 47,79 %)",
+      "esperado": 47.79,
+      "obtenido": 47.79,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Contraste con la Etapa 4",
+      "nombre": "% de dengue grave en departamentos (Power BI: 3,67 %)",
+      "esperado": 3.67,
+      "obtenido": 3.67,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Contraste con la Etapa 4",
+      "nombre": "Promedio anual de casos (Power BI: 79.334)",
+      "esperado": 79334,
+      "obtenido": 79334,
+      "ok": true,
+      "nota": ""
+    }
+  ]
+}
