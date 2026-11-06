@@ -93,6 +93,12 @@ def _con():
     return con
 
 
+def _validar_niveles(niveles):
+    desconocidos = [nivel for nivel in niveles if nivel not in NIVELES]
+    if desconocidos:
+        raise ValueError(f"Niveles de consulta desconocidos: {desconocidos}")
+
+
 PERIODOS_COMPARACION = {
     "2007-2022": (2007, 2022),
     "2007-2010": (2007, 2010),
@@ -170,6 +176,9 @@ def _donde(filtros, incluir_desconocidos, semana_max, excluir_semana_cero=False)
         partes.append("a.semana <= ?")
         params.append(int(semana_max))
     filtros = filtros or {}
+    desconocidos = set(filtros) - NIVELES.keys()
+    if desconocidos:
+        raise ValueError(f"Filtros de consulta desconocidos: {sorted(desconocidos)}")
     fuente = filtros.get("fuente", "SIVIGILA Colombia")
     fuentes = [fuente] if isinstance(fuente, str) else list(fuente)
     if len(fuentes) != 1:
@@ -189,8 +198,12 @@ def _donde(filtros, incluir_desconocidos, semana_max, excluir_semana_cero=False)
 def _consulta_sql(filas=(), medida="casos", filtros=None, incluir_desconocidos=False, semana_max=None):
     """Agrupa la medida por los niveles indicados. Devuelve DataFrame con una columna por nivel,
     'valor' y, para razones, 'num' y 'den'. Sin niveles devuelve el total de la seleccion."""
+    if medida not in MEDIDAS:
+        raise ValueError(f"Medida de consulta desconocida: {medida}")
+    _validar_niveles(filas)
+    if len(set(filas)) != len(filas):
+        raise ValueError(f"Niveles de consulta repetidos: {filas}")
     m = MEDIDAS[medida]
-    filas = [n for n in filas if n in NIVELES]
     sel = [f"{NIVELES[n]['expr']} AS {n}" for n in filas]
     sel.append(f"{m['sql']} AS valor")
     if "num" in m:
@@ -244,6 +257,7 @@ def sql_legible(sql, params):
 
 def valores_nivel(nivel, filtros=None):
     """Valores existentes de un nivel (para llenar los filtros), en orden natural o alfabetico."""
+    _validar_niveles([nivel])
     filtros = filtros or {}
     donde, params = _donde(filtros, incluir_desconocidos=False, semana_max=None)
     expr = NIVELES[nivel]["expr"]

@@ -104,21 +104,31 @@
       const step = labels.length > 1 ? plotWidth / (labels.length - 1) : 0;
       datasets.forEach((dataset, datasetIndex) => {
         const points = (dataset.data || []).map((value, index) => {
+          if (value === null || value === undefined) return null;
           const numericValue = Number(value);
           return Number.isFinite(numericValue)
             ? [margin.left + step * index, margin.top + plotHeight * (1 - numericValue / maximum), numericValue]
             : null;
         });
-        const path = points.filter(Boolean).map(([x, y], index) => `${index ? "L" : "M"}${x},${y}`).join(" ");
-        if (path) {
-          plot.appendChild(svgNode("path", {
-            d: path,
-            fill: "none",
-            stroke: colorDe(dataset, datasetIndex, 0),
-            "stroke-width": dataset.dash ? 2.5 : 2,
-            "stroke-dasharray": dataset.dash ? "6 4" : ""
-          }));
-        }
+        let segment = [];
+        const dibujarSegmento = () => {
+          if (segment.length > 1) {
+            const path = segment.map(([x, y], index) => `${index ? "L" : "M"}${x},${y}`).join(" ");
+            plot.appendChild(svgNode("path", {
+              d: path,
+              fill: "none",
+              stroke: colorDe(dataset, datasetIndex, 0),
+              "stroke-width": dataset.dash ? 2.5 : 2,
+              "stroke-dasharray": dataset.dash ? "6 4" : ""
+            }));
+          }
+          segment = [];
+        };
+        points.forEach(point => {
+          if (point) segment.push(point);
+          else dibujarSegmento();
+        });
+        dibujarSegmento();
         points.forEach((point, index) => {
           if (!point) return;
           const circle = svgNode("circle", {
