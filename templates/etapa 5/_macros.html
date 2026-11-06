@@ -1,0 +1,36 @@
+{% macro ficha(k, vid) %}
+<div class="card shadow-sm mb-3" id="conocimiento-{{ k.id }}">
+    <div class="card-header bg-primary text-white fw-bold">Conocimiento {{ k.id }} · {{ k.titulo }}</div>
+    <div class="card-body small">
+        <dl class="row mb-2">
+            <dt class="col-md-3">Pregunta</dt><dd class="col-md-9">{{ k.pregunta }}</dd>
+            <dt class="col-md-3">Dimensiones y medidas</dt><dd class="col-md-9">{{ k.dimensiones }}</dd>
+            <dt class="col-md-3">Procedimiento</dt><dd class="col-md-9">{{ k.procedimiento }}</dd>
+            <dt class="col-md-3">Evidencia</dt><dd class="col-md-9">{{ k.evidencia }}
+                <a class="ms-1" href="{{ url_for('olap.vista', vista=vid, **k.enlace) }}">Reproducir esta selección en la vista</a></dd>
+            <dt class="col-md-3">Hallazgo</dt><dd class="col-md-9">{{ k.hallazgo }}</dd>
+            <dt class="col-md-3">Interpretación</dt><dd class="col-md-9">{{ k.interpretacion }}</dd>
+            <dt class="col-md-3">Utilidad</dt><dd class="col-md-9">{{ k.utilidad }}</dd>
+            <dt class="col-md-3">Limitación</dt><dd class="col-md-9 mb-0">{{ k.limitacion }}</dd>
+        </dl>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro tabla_simple(t, clase='') %}
+<div class="table-responsive">
+<table class="table table-sm table-bordered align-middle small {{ clase }}">
+    <thead class="table-light"><tr>{% for c in t.cab %}<th{% if not loop.first %} class="text-end"{% endif %}>{{ c }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for f in t.filas %}<tr{% if loop.last and f[0].startswith('REGIÓN') %} class="table-primary fw-bold"{% endif %}>{% for c in f %}<td{% if not loop.first %} class="text-end"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+</table>
+</div>
+{% endmacro %}
+
+{% macro franja_fuente(cob) %}
+<p class="small text-muted border-start border-3 border-primary ps-2 mb-4">
+    <strong>Modelo cargado:</strong> SIVIGILA Colombia ({{ cob.registros|miles }} filas; {{ cob.casos_base|miles }} casos territoriales, {{ cob.desde }}–{{ cob.hasta }}),
+    SIVIGILA Cundinamarca ({{ cob.filas_regional|miles }} filas; {{ cob.casos_regional|miles }} casos) y OMS/HDX
+    ({{ cob.filas_brotes|miles }} brotes reportados). Total: {{ cob.filas_modelo|miles }} registros.
+    Los casos y los brotes se analizan por separado; los registros nacionales de exterior y procedencia desconocida ({{ cob.casos_excluidos|miles }} casos) se conservan, pero se excluyen del análisis territorial.
+</p>
+{% endmacro %}

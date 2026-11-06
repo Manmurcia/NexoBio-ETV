@@ -1,0 +1,184 @@
+{
+  "fuente": "SIVIGILA Colombia + SIVIGILA Cundinamarca + OMS/HDX",
+  "filas_origen": 239344,
+  "casos_origen": 1311772,
+  "brotes_origen": 563,
+  "validaciones": [
+    {
+      "grupo": "Unicidad",
+      "nombre": "dim_tiempo.tiempo_key",
+      "esperado": 866,
+      "obtenido": 866,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Unicidad",
+      "nombre": "dim_territorio.territorio_key",
+      "esperado": 1289,
+      "obtenido": 1289,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Unicidad",
+      "nombre": "dim_evento.evento_key",
+      "esperado": 30,
+      "obtenido": 30,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Unicidad",
+      "nombre": "dim_fuente.fuente_key",
+      "esperado": 3,
+      "obtenido": 3,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Unicidad",
+      "nombre": "fact_notificacion.notificacion_id",
+      "esperado": 239344,
+      "obtenido": 239344,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "Hechos sin dim_tiempo",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "Hechos sin dim_territorio",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "Hechos sin dim_evento",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "Hechos sin dim_fuente",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Integridad referencial",
+      "nombre": "PRAGMA foreign_key_check",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Grano",
+      "nombre": "Duplicados en la clave natural del hecho",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Medidas",
+      "nombre": "Casos y brotes excluyentes y válidos",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Totales por fuente sin doble conteo",
+      "nombre": "SIVIGILA Colombia",
+      "esperado": [
+        237141,
+        1269342,
+        0
+      ],
+      "obtenido": [
+        237141,
+        1269342,
+        0
+      ],
+      "ok": true,
+      "nota": "Se concilian filas y medidas por fuente; no se suman entre coberturas superpuestas."
+    },
+    {
+      "grupo": "Totales por fuente sin doble conteo",
+      "nombre": "SIVIGILA Cundinamarca",
+      "esperado": [
+        1640,
+        42430,
+        0
+      ],
+      "obtenido": [
+        1640,
+        42430,
+        0
+      ],
+      "ok": true,
+      "nota": "Se concilian filas y medidas por fuente; no se suman entre coberturas superpuestas."
+    },
+    {
+      "grupo": "Totales por fuente sin doble conteo",
+      "nombre": "OMS/HDX",
+      "esperado": [
+        563,
+        0,
+        563
+      ],
+      "obtenido": [
+        563,
+        0,
+        563
+      ],
+      "ok": true,
+      "nota": "Se concilian filas y medidas por fuente; no se suman entre coberturas superpuestas."
+    },
+    {
+      "grupo": "Totales por fuente sin doble conteo",
+      "nombre": "Fuentes segregadas",
+      "esperado": 3,
+      "obtenido": 3,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Medidas",
+      "nombre": "Unidad acorde con la fuente",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Cobertura",
+      "nombre": "Fuentes con registros",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    },
+    {
+      "grupo": "Cobertura",
+      "nombre": "Eventos sin registros asociados",
+      "esperado": 0,
+      "obtenido": 0,
+      "ok": true,
+      "nota": ""
+    }
+  ]
+}

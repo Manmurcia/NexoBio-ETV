@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% from 'etapa 5/_macros.html' import franja_fuente %}
+{% block content %}
+<h1 class="page-title">2. Modelo estrella multifuente</h1>
+{{ franja_fuente(cob) }}
+
+<img src="{{ url_for('static', filename='img/olap_estrella.svg') }}" class="img-fluid border rounded mb-3" alt="Modelo estrella con dim_tiempo, dim_territorio, dim_evento y dim_fuente conectadas a fact_notificacion">
+<p class="small text-muted">El diagrama incluye los conteos reales del modelo cargado; el detalle y la fecha se presentan en la tabla.</p>
+
+<h2 class="h5 fw-bold">Tabla de hechos <code>fact_notificacion</code></h2>
+<p class="small"><strong>Grano:</strong> un evento en un territorio y periodo, identificado por su fuente. SIVIGILA Colombia conserva el nivel municipio × semana epidemiológica; SIVIGILA Cundinamarca aporta municipio × año (semana 0); OMS/HDX registra un brote por país × año. <code>id_brote</code> distingue brotes que comparten país, evento y año. Cada fila contiene casos o brotes, nunca ambas medidas.</p>
+<div class="table-responsive"><table class="table table-bordered table-sm small">
+<thead class="table-light"><tr><th>Fuente</th><th class="text-end">Registros cargados</th><th>Unidad</th></tr></thead>
+<tbody>
+{% for fuente, filas in n.fuentes.items() %}
+<tr><td>{{ fuente }}</td><td class="text-end">{{ filas|miles }}</td><td>{% if fuente == 'OMS/HDX' %}brotes reportados{% else %}casos notificados{% endif %}</td></tr>
+{% endfor %}
+<tr class="table-light fw-bold"><td>Total filas del hecho</td><td class="text-end">{{ n.fact_notificacion|miles }}</td><td>{{ n.casos_nacionales|miles }} casos nacionales; {{ n.casos_regionales|miles }} regionales (fuentes con cobertura superpuesta, no sumar); {{ n.brotes|miles }} brotes</td></tr>
+</tbody></table></div>
+
+<h2 class="h5 fw-bold mt-4">Dimensiones y jerarquías</h2>
+<div class="table-responsive"><table class="table table-bordered table-sm small align-middle">
+<thead class="table-light"><tr><th>Dimensión</th><th class="text-end">Filas</th><th>Atributos del esquema</th><th>Jerarquía de análisis</th></tr></thead>
+<tbody>
+<tr><td><code>dim_tiempo</code></td><td class="text-end">{{ n.dim_tiempo|miles }}</td><td><code>tiempo_key</code>, año, semana, trimestre epidemiológico, periodo OMS, periodo de análisis, tipo de año SIVIGILA, año completo</td><td>Periodo → Año → Trimestre → Semana. Semana 0 representa datos anuales.</td></tr>
+<tr><td><code>dim_territorio</code></td><td class="text-end">{{ n.dim_territorio|miles }}</td><td>ámbito (Colombia/Mundo), región, área, localidad, código territorial, departamento y subregión ONU</td><td>Ámbito → Región → Área → Localidad. Colombia: región natural → departamento → municipio. Mundo: región OMS → país.</td></tr>
+<tr><td><code>dim_evento</code></td><td class="text-end">{{ n.dim_evento|miles }}</td><td>catálogo, código, evento original, enfermedad armonizada, cobertura, capítulo CIE-10, primer año registrado</td><td>Enfermedad → Evento.</td></tr>
+<tr><td><code>dim_fuente</code></td><td class="text-end">{{ n.dim_fuente|miles }}</td><td>fuente, escala (Global/Nacional/Regional), unidad de medida, archivo de origen</td><td>Escala → Fuente.</td></tr>
+</tbody></table></div>
+
+<h2 class="h5 fw-bold mt-4">Reglas de análisis</h2>
+<ul class="small">
+    <li><code>casos</code> suma los casos notificados; <code>brotes</code> suma brotes únicos reportados (un registro por brote).</li>
+    <li>Los casos de SIVIGILA Colombia y de Cundinamarca se consultan por separado porque sus coberturas se superponen; las consultas rechazan seleccionar ambas fuentes a la vez.</li>
+    <li>Los brotes OMS/HDX se consultan por separado de los casos. Los porcentajes se recalculan con sus denominadores y no se agregan entre grupos.</li>
+    <li>La dimensión evento conserva el catálogo, la enfermedad armonizada, la cobertura y el primer año observado. Las correspondencias de enfermedad se basan en tablas por evento SIVIGILA y por código de enfermedad CIE-10 OMS (icd104n); no se inventa una jerarquía de vector.</li>
+    <li>El porcentaje de dengue grave usa como denominador casos de Dengue + Dengue grave; se recalcula por cada grupo y excluye mortalidad. El índice estacional divide los casos de cada trimestre/semana entre el total anual de la unidad, normaliza cada año a 100 % y promedia los años completos observados.</li>
+</ul>
+<p class="small">El SQL de creación está en <code>scripts/olap/crear_modelo.sql</code>; la carga reproducible y sus validaciones están en <code>scripts/olap/cargar_modelo.py</code>.</p>
+{% endblock %}

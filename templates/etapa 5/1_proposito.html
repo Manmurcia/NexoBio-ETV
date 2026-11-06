@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% from 'etapa 5/_macros.html' import franja_fuente %}
+{% block content %}
+<h1 class="page-title">1. Propósito y relación con el conocimiento evidente</h1>
+{{ franja_fuente(cob) }}
+
+<h2 class="h5 fw-bold">Propósito de la etapa</h2>
+<p>El análisis multidimensional integra tres fuentes de vigilancia de enfermedades transmitidas por vectores: casos SIVIGILA de Colombia, casos SIVIGILA de Cundinamarca y brotes OMS/HDX. El modelo estrella organiza las observaciones por tiempo, territorio, evento y fuente, con medidas diferenciadas para casos y brotes. La vista 1 compara solo la composición porcentual de Dengue y Chikungunya, las dos enfermedades comunes a las tres fuentes; las demás consultas mantienen una sola fuente seleccionada.</p>
+
+<h2 class="h5 fw-bold mt-4">Continuidad con las etapas anteriores</h2>
+<p>El modelo usa el archivo tratado de SIVIGILA Colombia (<code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code>), el consolidado de casos de Cundinamarca y el archivo limpio de brotes OMS/HDX (<code>Disease_Outbreaks_HDX_Limpio.xlsx</code>). La dimensión de evento armoniza las enfermedades con tablas de correspondencia por evento y enfermedad CIE-10 (icd104n); no atribuye vectores que no estén en los datos.</p>
+<ul>
+    <li><strong>Fuente nacional:</strong> {{ cob.registros|miles }} filas y {{ cob.casos_totales|miles }} casos SIVIGILA entre {{ cob.desde }} y {{ cob.hasta }}. Los {{ cob.casos_excluidos|miles }} casos de «Exterior» y «Procedencia desconocida» se conservan, pero se excluyen de análisis por municipio.</li>
+    <li><strong>Fuentes complementarias:</strong> {{ cob.filas_regional|miles }} filas anuales de Cundinamarca ({{ cob.casos_regional|miles }} casos) y {{ cob.filas_brotes|miles }} brotes OMS/HDX. Las unidades y coberturas permanecen separadas.</li>
+    <li><strong>Fuente:</strong> Instituto Nacional de Salud (INS) · SIVIGILA, portal de datos abiertos de vigilancia en salud pública de Colombia (archivo <code>Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv</code>, 241.746 filas originales).</li>
+</ul>
+<div class="alert alert-warning small">
+    <strong>Limitaciones de calidad que pueden afectar los resultados.</strong>
+    Los conteos no están divididos por población (no son tasas). Chikungunya y chagas empezaron a notificarse en 2014 y 2012: los años previos son «sin vigilancia», no cero casos. La definición de dengue grave pudo cambiar durante el periodo. Dos «municipios» son categorías «sin municipio asignado» (La Guajira y Risaralda). La agrupación en regiones naturales la define el equipo a partir del código del departamento.
+</div>
+
+<h2 class="h5 fw-bold mt-4">Unidad de análisis y granularidad</h2>
+<div class="row g-3 mb-3">
+    <div class="col-md-6"><div class="p-3 border rounded h-100 small"><strong>Unidad de análisis.</strong> Casos notificados para las fuentes SIVIGILA o un brote OMS/HDX. No se estudian personas individuales ni se suman casos con brotes.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded h-100 small"><strong>Granularidad del modelo.</strong> Evento × territorio × periodo × fuente. Colombia nacional: municipio × semana epidemiológica; Cundinamarca: municipio × año; OMS/HDX: un brote por país y año, con semana 0.</div></div>
+</div>
+
+<h2 class="h5 fw-bold mt-4">Qué conocimientos evidentes se profundizan</h2>
+<div class="table-responsive">
+<table class="table table-bordered table-sm small align-middle">
+    <thead class="table-light"><tr><th>Conocimiento evidente (Etapa 4)</th><th>Qué quedó sin responder</th><th>Cómo se profundiza</th></tr></thead>
+    <tbody>
+        <tr><td><strong>2.1</strong> Cinco departamentos reúnen 47,79 % de los casos.</td><td>No contrasta la composición de las enfermedades compartidas entre escalas de vigilancia.</td><td><a href="{{ url_for('olap.vista', vista='concentracion') }}">Análisis 1</a>: composición porcentual por fuente, periodo y enfermedad común.</td></tr>
+        <tr><td><strong>3.1</strong> Seis años epidémicos concentran 62,0 % de los casos.</td><td>No dice dónde ocurrieron esos años.</td><td><a href="{{ url_for('olap.vista', vista='ciclos') }}">Análisis 2</a>: territorio × año.</td></tr>
+        <tr><td><strong>3.2</strong> El dengue no tiene estacionalidad nacional marcada.</td><td>La limitación advierte que a escala regional podría haberla.</td><td><a href="{{ url_for('olap.vista', vista='estacionalidad') }}">Análisis 3</a>: semana × territorio.</td></tr>
+        <tr><td><strong>2.2 y 3.3</strong> El dengue grave varía por departamento y cae con los años.</td><td>Nunca se cruzaron: el ranking de departamentos acumula 16 años.</td><td><a href="{{ url_for('olap.vista', vista='gravedad') }}">Análisis 4</a>: evento × año × territorio.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h2 class="h5 fw-bold mt-4">Alcance y comparabilidad</h2>
+<p class="small">Las fuentes nacional y regional tienen coberturas que se superponen en Cundinamarca: por eso cada consulta de casos selecciona una sola fuente y no suma ambas bases. La comparación entre fuentes se limita a Dengue y Chikungunya y muestra porcentajes normalizados por fuente y periodo; no compara cantidades de casos con brotes. OMS/HDX usa el nombre del país como clave territorial porque el archivo limpio no incluye códigos ISO. Los indicadores regionales de incidencia y letalidad no forman parte del grano de esta tabla de hechos.</p>
+
+<h2 class="h5 fw-bold mt-4">Acceso a las vistas</h2>
+<div class="row g-3">
+    {% for v in orden %}
+    <div class="col-md-6"><a class="text-decoration-none" href="{{ url_for('olap.vista', vista=v) }}">
+        <div class="p-3 border rounded h-100 card-clean"><div class="fw-bold text-primary">{{ metas[v].titulo }}</div><div class="small text-body">{{ metas[v].pregunta }}</div></div></a></div>
+    {% endfor %}
+</div>
+{% endblock %}

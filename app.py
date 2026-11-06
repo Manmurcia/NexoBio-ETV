@@ -1,8 +1,24 @@
-from flask import Flask, render_template, abort
+
+from flask import Flask, render_template, abort, redirect, url_for
+
 app = Flask(__name__)
 
 
+# =====================================================
+# FILTRO PERSONALIZADO PARA FORMATEAR MILES
+# =====================================================
+
+@app.template_filter('miles')
+def miles(valor):
+    try:
+        return "{:,.0f}".format(float(valor)).replace(",", ".")
+    except (ValueError, TypeError):
+        return valor
+
+
+# =====================================================
 # RUTAS DE LA ETAPA 1
+# =====================================================
 
 RUTAS_ETAPA1 = {
     'problema': '1_problema.html',
@@ -15,8 +31,11 @@ RUTAS_ETAPA1 = {
     'limitaciones': '8_limitaciones.html',
 }
 
+
+# =====================================================
 # RUTAS DE LA ETAPA 2
 # CALIDAD DE DATOS
+# =====================================================
 
 RUTAS_ETAPA2 = {
     'descripcion-datos': '1_descripcion_datos.html',
@@ -28,8 +47,11 @@ RUTAS_ETAPA2 = {
     'estrategias': '7_estrategias.html',
 }
 
+
+# =====================================================
 # RUTAS DE LA ETAPA 3
 # TRATAMIENTO ETL CON SSIS
+# =====================================================
 
 RUTAS_ETAPA3 = {
     'reglas-tratamiento': '1_reglas_tratamiento.html',
@@ -41,8 +63,11 @@ RUTAS_ETAPA3 = {
     'entregables': '7_entregables.html',
 }
 
+
+# =====================================================
 # RUTAS DE LA ETAPA 4
 # CONOCIMIENTO EVIDENTE (POWER BI)
+# =====================================================
 
 RUTAS_ETAPA4 = {
     'proposito': '1_proposito.html',
@@ -51,7 +76,20 @@ RUTAS_ETAPA4 = {
     'conocimientos': '4_conocimientos.html',
 }
 
+
+# =====================================================
+# REGISTRO DEL BLUEPRINT DE LA ETAPA 5
+# MODELO MULTIDIMENSIONAL OLAP
+# =====================================================
+
+from olap.rutas import bp as olap_bp
+
+app.register_blueprint(olap_bp)
+
+
+# =====================================================
 # PÁGINA DE INICIO
+# =====================================================
 
 @app.route('/')
 def inicio():
@@ -61,9 +99,9 @@ def inicio():
     )
 
 
-
+# =====================================================
 # RUTAS DE LA ETAPA 1
-
+# =====================================================
 
 @app.route('/etapa1/<seccion>')
 def etapa1_seccion(seccion):
@@ -79,9 +117,9 @@ def etapa1_seccion(seccion):
     )
 
 
-
+# =====================================================
 # RUTAS DE LA ETAPA 2
-
+# =====================================================
 
 @app.route('/etapa2/<seccion>')
 def etapa2_seccion(seccion):
@@ -97,8 +135,9 @@ def etapa2_seccion(seccion):
     )
 
 
+# =====================================================
 # RUTAS DE LA ETAPA 3
-
+# =====================================================
 
 @app.route('/etapa3/<seccion>')
 def etapa3_seccion(seccion):
@@ -113,8 +152,10 @@ def etapa3_seccion(seccion):
         slug_activo=seccion
     )
 
-# RUTAS DE LA ETAPA 4
 
+# =====================================================
+# RUTAS DE LA ETAPA 4
+# =====================================================
 
 @app.route('/etapa4/<seccion>')
 def etapa4_seccion(seccion):
@@ -128,6 +169,23 @@ def etapa4_seccion(seccion):
         f'etapa 4/{plantilla}',
         slug_activo=seccion
     )
+
+
+# =====================================================
+# REDIRECCIONES DE COMPATIBILIDAD PARA LA ETAPA 5
+# =====================================================
+
+@app.route('/etapa5/<seccion>')
+@app.route('/olap/<seccion>')
+def etapa5_redireccion(seccion):
+    return redirect(
+        url_for('olap.seccion', seccion=seccion)
+    )
+
+
+# =====================================================
+# EJECUCIÓN DE LA APLICACIÓN
+# =====================================================
 
 if __name__ == '__main__':
     app.run(debug=True)

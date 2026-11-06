@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="page-title">{{ meta.titulo }}</h1>
+<p class="small text-muted border-start border-3 border-primary ps-2 mb-4">
+    <strong>Fuente:</strong> OMS/HDX · <strong>Unidad:</strong> brotes reportados.
+    Los brotes se analizan aparte de los casos SIVIGILA; no representan casos ni incidencia.
+</p>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Pregunta de análisis</div>
+    <div class="card-body">
+        <h5 class="fw-bold">{{ meta.pregunta }}</h5>
+        <p class="small mb-0"><strong>Dimensiones:</strong> {{ meta.dimensiones }} · <strong>Jerarquías:</strong> {{ meta.jerarquias }}</p>
+    </div>
+</div>
+
+<nav class="d-flex flex-wrap gap-2 mb-4" aria-label="Vistas multidimensionales">
+    {% for vid in orden %}
+    <a class="btn btn-sm {% if vid == 'brotes' %}btn-primary{% else %}btn-outline-primary{% endif %}"
+       href="{{ url_for('olap.vista', vista=vid) }}">{{ metas[vid].menu }}</a>
+    {% endfor %}
+</nav>
+
+<form method="get" class="card shadow-sm mb-4" aria-label="Filtros de brotes globales">
+    <div class="card-header bg-light fw-bold">Filtros y nivel de análisis</div>
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-bold" for="f-nivel">Agrupar por</label>
+                <select class="form-select form-select-sm" id="f-nivel" name="nivel">
+                    {% for valor, etiqueta in [('periodo','Periodo de brotes'),('anio','Año'),('region','Región OMS'),('pais','País'),('enfermedad','Enfermedad'),('evento','Evento CIE-10 OMS')] %}
+                    <option value="{{ valor }}" {% if nivel == valor %}selected{% endif %}>{{ etiqueta }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-bold" for="f-anio">Año</label>
+                <select class="form-select form-select-sm" id="f-anio" name="anio">
+                    <option value="">Todos los años</option>
+                    {% for valor in anios %}<option value="{{ valor }}" {% if seleccion.anio|string == valor|string %}selected{% endif %}>{{ valor }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-bold" for="f-region">Región OMS</label>
+                <select class="form-select form-select-sm" id="f-region" name="region">
+                    <option value="">Todas las regiones</option>
+                    {% for valor in regiones %}<option value="{{ valor }}" {% if seleccion.region == valor %}selected{% endif %}>{{ valor }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-bold" for="f-enfermedad">Enfermedad</label>
+                <select class="form-select form-select-sm" id="f-enfermedad" name="enfermedad">
+                    <option value="">Todas las enfermedades</option>
+                    {% for valor in enfermedades %}<option value="{{ valor }}" {% if seleccion.enfermedad == valor %}selected{% endif %}>{{ valor }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-12 d-flex gap-2">
+                <button class="btn btn-primary btn-sm" type="submit">Aplicar</button>
+                <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('olap.vista', vista='brotes') }}">Restablecer</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="alert alert-info small" role="status">
+    <strong>Selección activa:</strong>
+    {% if seleccion.anio %}Año {{ seleccion.anio }} · {% endif %}
+    {% if seleccion.region %}{{ seleccion.region }} · {% endif %}
+    {% if seleccion.enfermedad %}{{ seleccion.enfermedad }} · {% endif %}
+    agrupación: {{ etiqueta_nivel }}.
+</div>
+
+<h2 class="h5 fw-bold mt-4">Indicadores de la selección</h2>
+<div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-3 fw-bold text-primary">{{ total|miles }}</div><div class="small fw-bold">Brotes reportados</div><div class="small text-muted">Cada fila corresponde a un identificador de brote OMS/HDX.</div></div></div>
+    <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-3 fw-bold text-primary">{{ paises|miles }}</div><div class="small fw-bold">Países</div><div class="small text-muted">Países con al menos un brote en la selección.</div></div></div>
+    <div class="col-md-4"><div class="p-3 border rounded text-center bg-white h-100"><div class="fs-3 fw-bold text-primary">{{ eventos|miles }}</div><div class="small fw-bold">Eventos CIE-10 OMS</div><div class="small text-muted">Años cubiertos: {{ desde }}–{{ hasta }}.</div></div></div>
+</div>
+
+{% if filas %}
+<h2 class="h5 fw-bold">Brotes por {{ etiqueta_nivel|lower }}</h2>
+<div class="border rounded p-3 bg-white mb-4">
+    <div style="position:relative;height:360px"><canvas id="brotesChart" data-chart-labels='{{ labels|tojson }}' data-chart-data='{{ data|tojson }}' role="img" aria-label="Brotes OMS/HDX por {{ etiqueta_nivel|lower }}"></canvas></div>
+</div>
+<div class="table-responsive mb-4">
+    <table class="table table-sm table-bordered align-middle">
+        <thead class="table-light"><tr><th>{{ etiqueta_nivel }}</th><th class="text-end">Brotes reportados</th><th class="text-end">% de la selección</th></tr></thead>
+        <tbody>{% for fila in filas %}<tr><td>{{ fila.etiqueta }}</td><td class="text-end">{{ fila.brotes|miles }}</td><td class="text-end">{{ (100 * fila.brotes / total)|round(1) }} %</td></tr>{% endfor %}</tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-warning">No hay brotes para esa combinación de filtros.</div>
+{% endif %}
+
+<details class="mb-4">
+    <summary class="fw-bold small">Consulta SQL de la selección</summary>
+    <pre class="small bg-light border rounded p-2 mt-2" style="white-space:pre-wrap">{{ sql }}</pre>
+</details>
+<div class="row g-3 mb-4">
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100 small"><strong>Limitación.</strong><br>{{ meta.limitacion }}</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100 small"><strong>Uso recomendado.</strong><br>{{ meta.decision }}</div></div>
+</div>
+<div class="d-flex justify-content-between">
+    {% if anterior %}<a class="btn btn-outline-primary btn-sm" href="{{ url_for('olap.vista', vista=anterior) }}">← {{ metas[anterior].menu }}</a>{% else %}<span></span>{% endif %}
+    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('olap.seccion', seccion='conocimientos') }}">Conocimientos y conclusiones →</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if filas %}
+<script type="application/json" class="nexo-chart-data">{{ [{"id": "brotesChart", "tipo": "bar", "horizontal": nivel not in ("anio", "periodo"), "labels": labels, "datasets": [{"label": "Brotes reportados", "data": data, "color": "#0284c7"}]}]|tojson }}</script>
+<script src="{{ url_for('static', filename='js/graficas.js') }}" defer></script>
+{% endif %}
+{% endblock %}
