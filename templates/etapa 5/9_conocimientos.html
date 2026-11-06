@@ -4,7 +4,7 @@
 <h1 class="page-title">5. Conocimientos, limitaciones y conclusiones</h1>
 {{ franja_fuente(cob) }}
 <p>Estos ocho conocimientos se calcularon exclusivamente con el conjunto SIVIGILA Colombia actualmente cargado. Cada ficha indica la selección para reproducirla en las vistas operativas; sus cifras no representan el modelo multifuente objetivo ni deben generalizarse a CIE-10 OMS o brotes globales. Las cifras SIVIGILA se recalculan con <code>scripts/olap/verificar_conocimientos.py</code>.</p>
-{% for vid in orden %}
+{% for vid in orden_conocimientos %}
 <h2 class="h5 fw-bold mt-4"><a class="text-decoration-none" href="{{ url_for('olap.vista', vista=vid) }}">{{ metas[vid].titulo }}</a></h2>
 {% for k in conocimientos[vid] %}{{ ficha(k, vid) }}{% endfor %}
 {% endfor %}

@@ -18,7 +18,8 @@ SECCIONES = {
     "operaciones": "etapa 5/4_operaciones.html",
     "conocimientos": "etapa 5/9_conocimientos.html",
 }
-ORDEN_VISTAS = ["concentracion", "ciclos", "estacionalidad", "gravedad"]
+ORDEN_VISTAS = ["concentracion", "ciclos", "estacionalidad", "gravedad", "brotes"]
+ORDEN_CONOCIMIENTOS = ["concentracion", "ciclos", "estacionalidad", "gravedad"]
 
 
 @bp.record_once
@@ -41,7 +42,11 @@ def seccion(seccion):
     plantilla = SECCIONES.get(seccion)
     if not plantilla:
         abort(404)
-    ctx = {"slug_activo": f"olap-{seccion}", "cob": C.cobertura(), "metas": VISTAS_META, "orden": ORDEN_VISTAS}
+    ctx = {
+        "slug_activo": f"olap-{seccion}", "cob": C.cobertura(),
+        "metas": VISTAS_META, "orden": ORDEN_VISTAS,
+        "orden_conocimientos": ORDEN_CONOCIMIENTOS,
+    }
     if seccion == "modelo":
         ctx.update(_ctx_modelo())
     elif seccion == "validaciones":
@@ -60,6 +65,16 @@ def vista(vista):
         abort(404)
     ctx = fn(request.args.to_dict())
     pos = ORDEN_VISTAS.index(vista)
+    if vista == "brotes":
+        ctx.update({
+            "slug_activo": f"olap-{vista}",
+            "vid": vista,
+            "orden": ORDEN_VISTAS,
+            "metas": VISTAS_META,
+            "anterior": ORDEN_VISTAS[pos - 1] if pos > 0 else None,
+            "siguiente": ORDEN_VISTAS[pos + 1] if pos < len(ORDEN_VISTAS) - 1 else None,
+        })
+        return render_template("etapa 5/vista_brotes.html", **ctx)
     ctx.update({
         "slug_activo": f"olap-{vista}", "vid": vista, "orden": ORDEN_VISTAS, "metas": VISTAS_META,
         "anterior": ORDEN_VISTAS[pos - 1] if pos > 0 else None,
@@ -74,13 +89,17 @@ def _ctx_modelo():
     con = sqlite3.connect(f"file:{C.DB}?mode=ro", uri=True)
     try:
         n = {t: con.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-             for t in ("dim_evento", "dim_territorio", "dim_anio", "dim_semana", "fact_notificacion")}
+             for t in ("dim_evento", "dim_territorio", "dim_tiempo", "dim_fuente", "fact_notificacion")}
         n["departamentos"] = con.execute(
-            "SELECT COUNT(DISTINCT cod_departamento) FROM dim_territorio WHERE tipo_ubicacion IN "
-            "('Municipio','Sin municipio asignado')").fetchone()[0]
-        ejemplo = pd.read_sql_query(
-            "SELECT * FROM fact_notificacion f JOIN dim_evento e USING(evento_key) JOIN dim_territorio t "
-            "USING(territorio_key) WHERE t.cod_departamento=25 AND f.anio_key=2015 ORDER BY f.semana_key LIMIT 5", con)
+            "SELECT COUNT(DISTINCT cod_departamento) FROM dim_territorio "
+            "WHERE ambito='Colombia' AND cod_departamento NOT IN ('0','1')"
+        ).fetchone()[0]
+        n["casos"] = con.execute("SELECT COALESCE(SUM(casos),0) FROM fact_notificacion").fetchone()[0]
+        n["brotes"] = con.execute("SELECT COALESCE(SUM(brotes),0) FROM fact_notificacion").fetchone()[0]
+        n["fuentes"] = dict(con.execute(
+            "SELECT u.fuente, COUNT(*) FROM fact_notificacion f "
+            "JOIN dim_fuente u USING(fuente_key) GROUP BY u.fuente"
+        ))
     finally:
         con.close()
     return {"n": n, "medidas": C.MEDIDAS}

@@ -54,6 +54,18 @@ VISTAS_META = {
         "limitacion": "El archivo no trae la definición de caso aplicada en cada año, por lo que no se puede separar un cambio real de gravedad de un cambio de clasificación; con pocos casos de dengue el porcentaje es inestable (las celdas con menos de 300 casos se marcan con *).",
         "decision": "Comparar la gravedad entre departamentos solo dentro de periodos comparables (por ejemplo 2017–2022) y pedir a las secretarías con porcentaje reciente más alto (Bolívar, La Guajira, Magdalena y Atlántico) que revisen sus criterios de clasificación.",
     },
+    "brotes": {
+        "num": 5, "slug": "brotes", "menu": "Análisis 5 · Brotes globales OMS/HDX",
+        "titulo": "Análisis 5 · Brotes globales de enfermedades transmitidas por vectores",
+        "pregunta": "¿Cómo se distribuyen en el tiempo y por región OMS los brotes globales registrados por OMS/HDX?",
+        "dimensiones": "Tiempo · Territorio · Evento · Fuente",
+        "medidas": "Brotes reportados (suma); cada identificador de brote aporta una unidad",
+        "jerarquias": "Tiempo: periodo de brotes → año · Territorio: región OMS → país · Evento: enfermedad → evento",
+        "profundiza": "Amplía el análisis de vigilancia local de casos con la fuente mundial de brotes, conservando su unidad de medida y cobertura.",
+        "operaciones": "Roll-up temporal y territorial, slice/dice por región y enfermedad",
+        "limitacion": "Los brotes son notificaciones reportadas, no casos individuales ni incidencia; los años recientes pueden estar incompletos y no son directamente comparables con conteos SIVIGILA.",
+        "decision": "Usar la distribución de brotes como señal descriptiva para orientar preguntas de vigilancia internacional; no sumarla con casos nacionales o regionales.",
+    },
 }
 
 CONOCIMIENTOS = {
