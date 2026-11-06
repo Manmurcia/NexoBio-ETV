@@ -1,88 +1,85 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 780" role="img" aria-labelledby="t d" font-family="Segoe UI, Arial, sans-serif">
-  <title id="t">Modelo estrella multifuente NexoBio-ETV</title>
-  <desc id="d">La tabla de hechos fact_notificacion se relaciona con las dimensiones dim_tiempo, dim_territorio, dim_evento y dim_fuente.</desc>
-  <rect width="1120" height="780" fill="#f3f4f6"/>
-  <g stroke="#64748b" stroke-width="2" fill="none">
-    <line x1="320" y1="225" x2="397" y2="310"/>
-    <line x1="800" y1="225" x2="723" y2="310"/>
-    <line x1="320" y1="555" x2="397" y2="470"/>
-    <line x1="800" y1="555" x2="723" y2="470"/>
-  </g>
-  <g font-size="13" font-weight="700" fill="#1e3a8a">
-    <text x="332" y="238">1</text><text x="382" y="303">N</text>
-    <text x="780" y="238">1</text><text x="730" y="303">N</text>
-    <text x="332" y="545">1</text><text x="382" y="482">N</text>
-    <text x="780" y="545">1</text><text x="730" y="482">N</text>
-  </g>
-  <text x="560" y="25" text-anchor="middle" font-size="20" font-weight="700" fill="#1e4e79">Modelo estrella NexoBio-ETV — vigilancia multifuente</text>
-  <text x="560" y="48" text-anchor="middle" font-size="12" fill="#64748b">Diseño de referencia: una tabla de hechos y cuatro dimensiones conformadas · conteos del diagrama recibido</text>
-
-  <rect x="395" y="285" width="330" height="210" rx="8" fill="#fff" stroke="#ea7b2c" stroke-width="2"/>
-  <path d="M403 285h314a8 8 0 0 1 8 8v29H395v-29a8 8 0 0 1 8-8z" fill="#e87932"/>
-  <text x="560" y="308" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">fact_notificacion</text>
-  <text x="705" y="307" text-anchor="end" font-size="10" fill="#fff">334.780 filas</text>
-  <g font-size="12.5" fill="#0f172a">
-    <text x="412" y="342"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="18">notificacion_id</tspan></text>
-    <text x="412" y="362"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="18">tiempo_key</tspan></text>
-    <text x="412" y="382"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="18">territorio_key</tspan></text>
-    <text x="412" y="402"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="18">evento_key</tspan></text>
-    <text x="412" y="422"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="18">fuente_key</tspan></text>
-    <text x="412" y="442"><tspan font-weight="700" fill="#64748b">D</tspan><tspan dx="18">id_brote (degenerada)</tspan></text>
-    <text x="412" y="464"><tspan font-weight="700" fill="#c2410c">M</tspan><tspan dx="18">casos · brotes (excluyentes)</tspan></text>
-    <text x="560" y="484" text-anchor="middle" font-size="10.5" fill="#475569">1 observación; casos o brotes según la fuente</text>
-  </g>
-
-  <rect x="20" y="70" width="300" height="190" rx="7" fill="#fff" stroke="#1e4e79" stroke-width="2"/>
-  <path d="M27 70h286a7 7 0 0 1 7 7v28H20V77a7 7 0 0 1 7-7z" fill="#1e4e79"/>
-  <text x="36" y="94" font-size="15" font-weight="700" fill="#fff">dim_tiempo</text>
-  <text x="305" y="93" text-anchor="end" font-size="10" fill="#fff">866 filas</text>
-  <g font-size="11.5" fill="#0f172a">
-    <text x="35" y="126"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">tiempo_key = año × 100 + semana</tspan></text>
-    <text x="35" y="148">año · semana (0–53)</text>
-    <text x="35" y="168">trimestre_epi · trimestre_epi_nombre</text>
-    <text x="35" y="188">periodo · anio_completo (Si / No)</text>
-    <text x="35" y="220" font-weight="700" fill="#047857">Jerarquía:</text>
-    <text x="35" y="240" fill="#047857">Periodo → Año → Trimestre epi. → Semana</text>
-    <text x="35" y="255" font-size="10" fill="#64748b">Semana 0 = registro anual, sin semana</text>
-  </g>
-
-  <rect x="800" y="70" width="300" height="190" rx="7" fill="#fff" stroke="#1e4e79" stroke-width="2"/>
-  <path d="M807 70h286a7 7 0 0 1 7 7v28H800V77a7 7 0 0 1 7-7z" fill="#1e4e79"/>
-  <text x="816" y="94" font-size="15" font-weight="700" fill="#fff">dim_territorio</text>
-  <text x="1085" y="93" text-anchor="end" font-size="10" fill="#fff">1.378 filas</text>
-  <g font-size="11.5" fill="#0f172a">
-    <text x="815" y="126"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">territorio_key</tspan></text>
-    <text x="815" y="148">ámbito · región · área · localidad</text>
-    <text x="815" y="168">codigo_territorio · cod_departamento</text>
-    <text x="815" y="188">subregion_onu</text>
-    <text x="815" y="220" font-weight="700" fill="#047857">Jerarquía:</text>
-    <text x="815" y="240" fill="#047857">Ámbito → Región → Área → Localidad</text>
-    <text x="815" y="255" font-size="10" fill="#64748b">Colombia y Mundo</text>
-  </g>
-
-  <rect x="20" y="530" width="300" height="190" rx="7" fill="#fff" stroke="#1e4e79" stroke-width="2"/>
-  <path d="M27 530h286a7 7 0 0 1 7 7v28H20v-28a7 7 0 0 1 7-7z" fill="#1e4e79"/>
-  <text x="36" y="554" font-size="15" font-weight="700" fill="#fff">dim_evento</text>
-  <text x="305" y="553" text-anchor="end" font-size="10" fill="#fff">135 filas</text>
-  <g font-size="11.5" fill="#0f172a">
-    <text x="35" y="586"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">evento_key</tspan></text>
-    <text x="35" y="608">catálogo · cod_evento · evento</text>
-    <text x="35" y="628">enfermedad · grupo (ETV / No ETV)</text>
-    <text x="35" y="648">cobertura · capitulo_cie10</text>
-    <text x="35" y="680" font-weight="700" fill="#047857">Jerarquía: Grupo → Enfermedad → Evento</text>
-    <text x="35" y="700" font-size="10" fill="#64748b">Catálogos SIVIGILA y CIE-10 OMS</text>
-  </g>
-
-  <rect x="800" y="530" width="300" height="190" rx="7" fill="#fff" stroke="#1e4e79" stroke-width="2"/>
-  <path d="M807 530h286a7 7 0 0 1 7 7v28H800v-28a7 7 0 0 1 7-7z" fill="#1e4e79"/>
-  <text x="816" y="554" font-size="15" font-weight="700" fill="#fff">dim_fuente</text>
-  <text x="1085" y="553" text-anchor="end" font-size="10" fill="#fff">3 filas</text>
-  <g font-size="11.5" fill="#0f172a">
-    <text x="815" y="586"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">fuente_key</tspan></text>
-    <text x="815" y="608">fuente · escala</text>
-    <text x="815" y="628">unidad_medida · archivo_origen</text>
-    <text x="815" y="660" font-weight="700" fill="#047857">Jerarquía: Escala → Fuente</text>
-    <text x="815" y="680" fill="#64748b">Global · Nacional · Regional</text>
-  </g>
-  <text x="560" y="755" text-anchor="middle" font-size="11" fill="#64748b">Casos notificados y brotes reportados son medidas excluyentes y conservan unidades separadas.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" width="960" height="700" font-family="Segoe UI, Arial, sans-serif" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo1Njk1M2RlOS1iNzdjLTRmZjYtOWQ4Zi1jYzY3NTM0MmY4NTcAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaFi5kbyKHm2zY5BuJHxD3RsAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpjN2NlNWYzMy1jOWI4LTRjMzAtYTdkYS0yMjFkYzhmMGQ0NzJscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoEaiRfuyxLo0Z0al0OZoWKAAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggwthmRmcK0ZXL/8LUDrinPnN99neaaomTIk70LxoChNikZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaHtfzFMck/PIp12KqGswRAMAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCBYUi8vPehDKLwuWkR4Vvnyf2q1KZmS3/HWKxDcE+OCR2RuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBjAZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjU2OTUzZGU5LWI3N2MtNGZmNi05ZDhmLWNjNjc1MzQyZjg1Ny9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmM2OTlhZmM5LTIxY2EtNGUyZi05ZTJiLTE2YTI0MDljMDdiNHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDC2GZGZwrRlcv/wtQOuKc+c332d5pqiZMiTvQvGgKE2KJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgg2o1EW7KZRr4fXKQ5JzZnk1QnHL3rQZ0Elbut/JtptoGiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgghCELkJpc2EDkorwEYXtAlP3G59p6cqXK3BL2HzuPGLV0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQGXMNk74/ouCtHVzMqG+UUf0Jx8ITPvDkI7wvIpuxXDMN4uRkX5UEvfl05bpDoUQJMJ+NfQs1Dhqds7v2P7dP2g=</c2pa:manifest></metadata>
+<rect width="960" height="700" fill="#ffffff"/>
+<text x="480.0" y="26" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Modelo estrella NexoBio-ETV</text>
+<rect x="20" y="50" width="310" height="197" rx="8" fill="#fff" stroke="#0284c7" stroke-width="2"/>
+<path d="M20,84 v-26 a8,8 0 0 1 8,-8 h294 a8,8 0 0 1 8,8 v26 z" fill="#0284c7"/>
+<text x="175.0" y="73" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">dim_tiempo</text>
+<text x="30" y="99" font-size="11" font-weight="700" fill="#0284c7">PK</text>
+<text x="58" y="99" font-size="12" fill="#0f172a">tiempo_key  (año × 100 + semana)</text>
+<text x="58" y="118" font-size="12" fill="#0f172a">anio, semana (0–53)</text>
+<text x="58" y="137" font-size="12" fill="#0f172a">trimestre_epi, trimestre_epi_nombre</text>
+<text x="58" y="156" font-size="12" fill="#0f172a">periodo  (series de brotes OMS)</text>
+<text x="58" y="175" font-size="12" fill="#0f172a">periodo_analisis  (2007-2010 …)</text>
+<text x="58" y="194" font-size="12" fill="#0f172a">tipo_anio_sivigila</text>
+<text x="58" y="213" font-size="12" fill="#0f172a">anio_completo</text>
+<line x1="28" y1="223" x2="322" y2="223" stroke="#cbd5e1"/>
+<text x="30" y="237" font-size="11" font-style="italic" fill="#475569">Jerarquía: Periodo → Año → Trimestre → Semana</text>
+<rect x="630" y="50" width="310" height="197" rx="8" fill="#fff" stroke="#0284c7" stroke-width="2"/>
+<path d="M630,84 v-26 a8,8 0 0 1 8,-8 h294 a8,8 0 0 1 8,8 v26 z" fill="#0284c7"/>
+<text x="785.0" y="73" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">dim_territorio</text>
+<text x="640" y="99" font-size="11" font-weight="700" fill="#0284c7">PK</text>
+<text x="668" y="99" font-size="12" fill="#0f172a">territorio_key</text>
+<text x="668" y="118" font-size="12" fill="#0f172a">ambito  (Colombia / Mundo)</text>
+<text x="668" y="137" font-size="12" fill="#0f172a">region  (natural / OMS / No geografico)</text>
+<text x="668" y="156" font-size="12" fill="#0f172a">area  (departamento / país)</text>
+<text x="668" y="175" font-size="12" fill="#0f172a">localidad  (municipio / No aplica)</text>
+<text x="668" y="194" font-size="12" fill="#0f172a">codigo_territorio, cod_departamento</text>
+<text x="668" y="213" font-size="12" fill="#0f172a">subregion_onu</text>
+<line x1="638" y1="223" x2="932" y2="223" stroke="#cbd5e1"/>
+<text x="640" y="237" font-size="11" font-style="italic" fill="#475569">Jerarquía: Ámbito → Región → Área → Localidad</text>
+<rect x="20" y="440" width="310" height="197" rx="8" fill="#fff" stroke="#0284c7" stroke-width="2"/>
+<path d="M20,474 v-26 a8,8 0 0 1 8,-8 h294 a8,8 0 0 1 8,8 v26 z" fill="#0284c7"/>
+<text x="175.0" y="463" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">dim_evento</text>
+<text x="30" y="489" font-size="11" font-weight="700" fill="#0284c7">PK</text>
+<text x="58" y="489" font-size="12" fill="#0f172a">evento_key</text>
+<text x="58" y="508" font-size="12" fill="#0f172a">catalogo, cod_evento, evento</text>
+<text x="58" y="527" font-size="12" fill="#0f172a">enfermedad  (armonizada)</text>
+<text x="58" y="546" font-size="12" fill="#0f172a">vector</text>
+<text x="58" y="565" font-size="12" fill="#0f172a">cobertura</text>
+<text x="58" y="584" font-size="12" fill="#0f172a">capitulo_cie10</text>
+<text x="58" y="603" font-size="12" fill="#0f172a">anio_primer_registro</text>
+<line x1="28" y1="613" x2="322" y2="613" stroke="#cbd5e1"/>
+<text x="30" y="627" font-size="11" font-style="italic" fill="#475569">Jerarquía: Vector → Enfermedad → Evento</text>
+<rect x="630" y="440" width="310" height="159" rx="8" fill="#fff" stroke="#0284c7" stroke-width="2"/>
+<path d="M630,474 v-26 a8,8 0 0 1 8,-8 h294 a8,8 0 0 1 8,8 v26 z" fill="#0284c7"/>
+<text x="785.0" y="463" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">dim_fuente</text>
+<text x="640" y="489" font-size="11" font-weight="700" fill="#0284c7">PK</text>
+<text x="668" y="489" font-size="12" fill="#0f172a">fuente_key</text>
+<text x="668" y="508" font-size="12" fill="#0f172a">fuente</text>
+<text x="668" y="527" font-size="12" fill="#0f172a">escala  (Global / Nacional / Regional)</text>
+<text x="668" y="546" font-size="12" fill="#0f172a">unidad_medida</text>
+<text x="668" y="565" font-size="12" fill="#0f172a">archivo_origen</text>
+<line x1="638" y1="575" x2="932" y2="575" stroke="#cbd5e1"/>
+<text x="640" y="589" font-size="11" font-style="italic" fill="#475569">Jerarquía: Escala → Fuente</text>
+<rect x="385" y="255" width="190" height="196" rx="8" fill="#fff" stroke="#0f172a" stroke-width="2"/>
+<path d="M385,289 v-26 a8,8 0 0 1 8,-8 h174 a8,8 0 0 1 8,8 v26 z" fill="#0f172a"/>
+<text x="480.0" y="278" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">fact_notificacion</text>
+<text x="395" y="304" font-size="11" font-weight="700" fill="#0f172a">PK</text>
+<text x="423" y="304" font-size="12" fill="#0f172a">notificacion_id</text>
+<text x="395" y="323" font-size="11" font-weight="700" fill="#0f172a">FK</text>
+<text x="423" y="323" font-size="12" fill="#0f172a">tiempo_key</text>
+<text x="395" y="342" font-size="11" font-weight="700" fill="#0f172a">FK</text>
+<text x="423" y="342" font-size="12" fill="#0f172a">territorio_key</text>
+<text x="395" y="361" font-size="11" font-weight="700" fill="#0f172a">FK</text>
+<text x="423" y="361" font-size="12" fill="#0f172a">evento_key</text>
+<text x="395" y="380" font-size="11" font-weight="700" fill="#0f172a">FK</text>
+<text x="423" y="380" font-size="12" fill="#0f172a">fuente_key</text>
+<text x="423" y="399" font-size="12" fill="#0f172a">id_brote  (degenerada)</text>
+<text x="423" y="418" font-size="12" fill="#0f172a">casos</text>
+<text x="423" y="437" font-size="12" fill="#0f172a">brotes</text>
+<text x="480.0" y="469" text-anchor="middle" font-size="11" fill="#475569">Grano: evento × territorio × periodo × fuente</text>
+<text x="480.0" y="484" text-anchor="middle" font-size="11" fill="#475569">casos y brotes son excluyentes por registro</text>
+<line x1="330" y1="190" x2="385" y2="330" stroke="#475569" stroke-width="1.6"/>
+<text x="334" y="184" font-size="12" font-weight="700" fill="#475569">1</text>
+<text x="371" y="324" font-size="12" font-weight="700" fill="#475569">N</text>
+<line x1="630" y1="190" x2="575" y2="330" stroke="#475569" stroke-width="1.6"/>
+<text x="618" y="184" font-size="12" font-weight="700" fill="#475569">1</text>
+<text x="579" y="324" font-size="12" font-weight="700" fill="#475569">N</text>
+<line x1="330" y1="500" x2="385" y2="390" stroke="#475569" stroke-width="1.6"/>
+<text x="334" y="516" font-size="12" font-weight="700" fill="#475569">1</text>
+<text x="371" y="406" font-size="12" font-weight="700" fill="#475569">N</text>
+<line x1="630" y1="500" x2="575" y2="390" stroke="#475569" stroke-width="1.6"/>
+<text x="618" y="516" font-size="12" font-weight="700" fill="#475569">1</text>
+<text x="579" y="406" font-size="12" font-weight="700" fill="#475569">N</text>
+<text x="20" y="686" font-size="11" fill="#475569">Fuentes: SIVIGILA Colombia (casos), SIVIGILA Cundinamarca (casos) y OMS/HDX (brotes). Solo enfermedades transmitidas por vectores.</text>
 </svg>
