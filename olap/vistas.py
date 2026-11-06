@@ -1,7 +1,4 @@
-"""
-vistas.py - Arma el contexto (indicadores, graficas, matriz, controles) de las cuatro vistas.
-Todo valor numerico se obtiene con consultas al modelo estrella (olap/consultas.py).
-"""
+"""Arma el contexto de indicadores, graficas, matrices y controles de las vistas OLAP."""
 import pandas as pd
 
 from . import consultas as C
@@ -10,6 +7,7 @@ from .conocimientos import CONOCIMIENTOS, VISTAS_META
 EVENTOS = ["DENGUE", "DENGUE GRAVE", "CHIKUNGUNYA", "CHAGAS"]
 PERIODOS = ["2007-2010", "2011-2016", "2017-2022"]
 REGIONES = ["Andina", "Caribe", "Pacifica", "Orinoquia", "Amazonia", "Insular"]
+FUENTES_CASOS = ["SIVIGILA Colombia", "SIVIGILA Cundinamarca"]
 COLOR_REGION = {"Andina": "#0284c7", "Caribe": "#f59e0b", "Pacifica": "#10b981",
                 "Orinoquia": "#8b5cf6", "Amazonia": "#ef4444", "Insular": "#64748b"}
 PALETA = ["#0284c7", "#f59e0b", "#10b981", "#8b5cf6", "#ef4444", "#64748b", "#0f766e", "#be185d"]
@@ -59,6 +57,8 @@ def _filtros(a, claves):
     f = {}
     for k in claves:
         v = (a.get(k) or "").strip()
+        if k == "fuente":
+            v = v if v in FUENTES_CASOS else FUENTES_CASOS[0]
         if v:
             f[k] = [v]
     return f
@@ -141,7 +141,7 @@ def _base(vid, a, filtros, pivot, niveles_info, nota_extra=None):
 def concentracion(a):
     nivel = a.get("nivel", "region")
     nivel = nivel if nivel in ("region", "departamento", "municipio") else "region"
-    filtros = _filtros(a, ["evento", "periodo", "region", "departamento"])
+    filtros = _filtros(a, ["fuente", "evento", "periodo", "region", "departamento"])
     modo = a.get("modo", "valor")
     modo = modo if modo in ("valor", "pct_col") else "valor"
     pivot = a.get("pivot") == "1"
@@ -211,6 +211,7 @@ def concentracion(a):
     ctx["controles"] = {
         "ayuda": "Cambie el nivel de la jerarquía Región → Departamento → Municipio (drill-down / roll-up), filtre por evento o periodo (slice / dice) y pivote la matriz.",
         "selects": [
+            {"name": "fuente", "label": "Fuente de casos", "opts": _opts(FUENTES_CASOS, filtros["fuente"][0])},
             {"name": "evento", "label": "Evento (dimensión Evento)", "opts": _opts([""] + EVENTOS, a.get("evento", ""), {"": "Todos los eventos"})},
             {"name": "periodo", "label": "Periodo (dimensión Año)", "opts": _opts([""] + PERIODOS, a.get("periodo", ""), {"": "Todos los periodos"})},
             {"name": "region", "label": "Región natural (dimensión Territorio)", "opts": _opts([""] + REGIONES, a.get("region", ""), {"": "Todas las regiones"})},
@@ -258,7 +259,7 @@ def ciclos(a):
     nt = nt if nt in ("region", "departamento") else "region"
     na = a.get("nivel_a", "anio")
     na = na if na in ("periodo", "anio") else "anio"
-    filtros = _filtros(a, ["evento", "region", "tipo_anio"])
+    filtros = _filtros(a, ["fuente", "evento", "region", "tipo_anio"])
     modo = a.get("modo", "valor")
     modo = modo if modo in ("valor", "pct_fila", "pct_col") else "valor"
     pivot = a.get("pivot") == "1"
@@ -331,6 +332,7 @@ def ciclos(a):
     ctx["controles"] = {
         "ayuda": "Elija el nivel de territorio y de tiempo (drill-down / roll-up), filtre (slice / dice) y pivote la matriz. El modo % permite comparar ciclos entre territorios de distinto tamaño.",
         "selects": [
+            {"name": "fuente", "label": "Fuente de casos", "opts": _opts(FUENTES_CASOS, filtros["fuente"][0])},
             {"name": "evento", "label": "Evento (dimensión Evento)", "opts": _opts([""] + EVENTOS, a.get("evento", ""), {"": "Todos los eventos"})},
             {"name": "region", "label": "Región natural (dimensión Territorio)", "opts": _opts([""] + REGIONES, a.get("region", ""), {"": "Todas las regiones"})},
             {"name": "tipo_anio", "label": "Tipo de año (dimensión Año)", "opts": _opts(["", "Epidemico", "No epidemico"], a.get("tipo_anio", ""),
@@ -354,7 +356,8 @@ def estacionalidad(a):
     ns = ns if ns in ("trimestre", "semana") else "trimestre"
     if "evento" not in a:                      # primera visita: dengue (evento de la Etapa 4)
         a = dict(a, evento="DENGUE")
-    filtros = _filtros(a, ["evento", "periodo", "region"])
+    filtros = {"fuente": [FUENTES_CASOS[0]]}
+    filtros.update(_filtros(a, ["evento", "periodo", "region"]))
     try:
         min_casos = int(a.get("min_casos", 5000 if nt == "departamento" else 0))
     except ValueError:
@@ -459,7 +462,7 @@ def gravedad(a):
     nt = nt if nt in ("region", "departamento") else "departamento"
     na = a.get("nivel_a", "periodo")
     na = na if na in ("periodo", "anio") else "periodo"
-    filtros = _filtros(a, ["region", "periodo"])
+    filtros = _filtros(a, ["fuente", "region", "periodo"])
     try:
         min_den = int(a.get("min_den", 2000))
     except ValueError:
@@ -553,6 +556,7 @@ def gravedad(a):
     ctx["controles"] = {
         "ayuda": "Cambie el nivel de territorio y de tiempo (drill-down / roll-up), filtre por región o periodo (slice / dice) y pivote la matriz.",
         "selects": [
+            {"name": "fuente", "label": "Fuente de casos", "opts": _opts(FUENTES_CASOS, filtros["fuente"][0])},
             {"name": "region", "label": "Región natural (dimensión Territorio)", "opts": _opts([""] + REGIONES, a.get("region", ""), {"": "Todas las regiones"})},
             {"name": "periodo", "label": "Periodo (dimensión Año)", "opts": _opts([""] + PERIODOS, a.get("periodo", ""), {"": "Todos los periodos"})},
         ],
@@ -566,4 +570,116 @@ def gravedad(a):
     return ctx
 
 
-VISTAS = {"concentracion": concentracion, "ciclos": ciclos, "estacionalidad": estacionalidad, "gravedad": gravedad}
+def brotes(a):
+    """Vista de brotes OMS/HDX, sin mezclar su unidad con los casos SIVIGILA."""
+    niveles = {
+        "periodo": ("d.periodo", "Periodo de brotes"),
+        "anio": ("d.anio", "Año"),
+        "region": ("t.region", "Región OMS"),
+        "pais": ("t.area", "País"),
+        "enfermedad": ("e.enfermedad", "Enfermedad"),
+        "evento": ("e.evento", "Evento CIE-10 OMS"),
+    }
+    nivel = a.get("nivel", "region")
+    if nivel not in niveles:
+        nivel = "region"
+
+    con = C._con()
+    try:
+        periodos = [r[0] for r in con.execute(
+            "SELECT DISTINCT d.periodo FROM fact_notificacion f "
+            "JOIN dim_tiempo d USING(tiempo_key) JOIN dim_fuente u USING(fuente_key) "
+            "WHERE u.fuente='OMS/HDX' ORDER BY d.periodo"
+        )]
+        anios = [r[0] for r in con.execute(
+            "SELECT DISTINCT d.anio FROM fact_notificacion f "
+            "JOIN dim_tiempo d USING(tiempo_key) JOIN dim_fuente u USING(fuente_key) "
+            "WHERE u.fuente='OMS/HDX' ORDER BY d.anio"
+        )]
+        regiones = [r[0] for r in con.execute(
+            "SELECT DISTINCT t.region FROM fact_notificacion f "
+            "JOIN dim_territorio t USING(territorio_key) JOIN dim_fuente u USING(fuente_key) "
+            "WHERE u.fuente='OMS/HDX' ORDER BY t.region"
+        )]
+        enfermedades = [r[0] for r in con.execute(
+            "SELECT DISTINCT e.enfermedad FROM fact_notificacion f "
+            "JOIN dim_evento e USING(evento_key) JOIN dim_fuente u USING(fuente_key) "
+            "WHERE u.fuente='OMS/HDX' ORDER BY e.enfermedad"
+        )]
+
+        filtros = []
+        params = ["OMS/HDX"]
+        anio = a.get("anio", "")
+        if anio and anio.isdigit() and int(anio) in anios:
+            filtros.append("d.anio = ?")
+            params.append(int(anio))
+        else:
+            anio = ""
+        region = a.get("region", "")
+        if region in regiones:
+            filtros.append("t.region = ?")
+            params.append(region)
+        else:
+            region = ""
+        enfermedad = a.get("enfermedad", "")
+        if enfermedad in enfermedades:
+            filtros.append("e.enfermedad = ?")
+            params.append(enfermedad)
+        else:
+            enfermedad = ""
+        where = " WHERE u.fuente = ?" + "".join(f" AND {condicion}" for condicion in filtros)
+        base = (
+            " FROM fact_notificacion f JOIN dim_tiempo d USING(tiempo_key) "
+            "JOIN dim_territorio t USING(territorio_key) JOIN dim_evento e USING(evento_key) "
+            "JOIN dim_fuente u USING(fuente_key)"
+        )
+        total, paises, eventos, desde, hasta = con.execute(
+            "SELECT COALESCE(SUM(f.brotes), 0), COUNT(DISTINCT t.territorio_key), "
+            "COUNT(DISTINCT f.evento_key), MIN(d.anio), MAX(d.anio)"
+            + base + where,
+            params,
+        ).fetchone()
+        expr, etiqueta = niveles[nivel]
+        sql = (
+            f"SELECT {expr} AS etiqueta, SUM(f.brotes) AS brotes"
+            + base + where + f" GROUP BY {expr} ORDER BY brotes DESC, etiqueta"
+        )
+        resultado = pd.read_sql_query(sql, con, params=params)
+        sql_legible = C.sql_legible(sql, params)
+    finally:
+        con.close()
+
+    filas = [
+        {"etiqueta": str(row.etiqueta), "brotes": int(row.brotes)}
+        for row in resultado.itertuples(index=False)
+    ]
+    return {
+        "meta": VISTAS_META["brotes"],
+        "slug_activo": "olap-brotes",
+        "cobertura": C.cobertura(),
+        "nivel": nivel,
+        "etiqueta_nivel": etiqueta,
+        "anios": anios,
+        "periodos": periodos,
+        "regiones": regiones,
+        "enfermedades": enfermedades,
+        "seleccion": {"anio": anio, "region": region, "enfermedad": enfermedad},
+        "filas": filas,
+        "total": int(total),
+        "paises": int(paises),
+        "eventos": int(eventos),
+        "desde": desde,
+        "hasta": hasta,
+        "labels": [row["etiqueta"] for row in filas[:25]],
+        "data": [row["brotes"] for row in filas[:25]],
+        "sql": sql_legible,
+    }
+
+
+VISTAS = {
+    "concentracion": concentracion,
+    "ciclos": ciclos,
+    "estacionalidad": estacionalidad,
+    "gravedad": gravedad,
+    "brotes": brotes,
+}

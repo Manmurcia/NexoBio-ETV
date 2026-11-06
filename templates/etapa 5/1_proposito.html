@@ -5,13 +5,13 @@
 {{ franja_fuente(cob) }}
 
 <h2 class="h5 fw-bold">Propósito de la etapa</h2>
-<p>El diseño multidimensional integra distintas fuentes de vigilancia de enfermedades transmitidas por vectores: registros de casos, eventos de catálogos SIVIGILA/CIE-10 OMS y brotes reportados. El modelo estrella organiza las observaciones por tiempo, territorio, evento y fuente, con medidas diferenciadas para casos y brotes. Las vistas interactivas disponibles profundizan los hallazgos de la Etapa 4 usando únicamente los datos tratados de SIVIGILA Colombia; todavía no consultan ni representan la carga multifuente objetivo.</p>
+<p>El análisis multidimensional integra tres fuentes de vigilancia de enfermedades transmitidas por vectores: casos SIVIGILA de Colombia, casos SIVIGILA de Cundinamarca y brotes OMS/HDX. El modelo estrella organiza las observaciones por tiempo, territorio, evento y fuente, con medidas diferenciadas para casos y brotes. Las vistas de casos permiten seleccionar la fuente nacional o regional; las notificaciones globales se exploran por separado para no mezclar unidades.</p>
 
 <h2 class="h5 fw-bold mt-4">Continuidad con las etapas anteriores</h2>
-<p>El análisis interactivo conserva el tema de vigilancia de ETV en Colombia y el archivo resultante del ETL de la Etapa 3, <code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code>, el mismo de los tableros 2 y 3 de la Etapa 4. Este conjunto es una parte del alcance del modelo multifuente; no incluye en la carga actual los registros CIE-10 OMS ni los brotes globales.</p>
+<p>El modelo usa el archivo tratado de SIVIGILA Colombia (<code>Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv</code>), el consolidado de casos de Cundinamarca y los brotes globales OMS/HDX. La dimensión de evento armoniza las enfermedades y conserva el catálogo, la cobertura, el vector y el primer año observado.</p>
 <ul>
-    <li><strong>Registros usados:</strong> {{ cob.registros|miles }} filas, equivalentes a {{ cob.casos_totales|miles }} casos notificados entre {{ cob.desde }} y {{ cob.hasta }} (el ETL de la Etapa 3 ya había retirado 4.605 registros con «municipio desconocido»: de 241.746 a 237.141 filas).</li>
-    <li><strong>Casos analizados:</strong> {{ cob.casos_base|miles }}. Se excluyen de los análisis territoriales los {{ cob.casos_excluidos|miles }} casos de «Exterior» y «Procedencia desconocida», que no son departamentos; permanecen en el modelo con su propia categoría.</li>
+    <li><strong>Fuente nacional:</strong> {{ cob.registros|miles }} filas y {{ cob.casos_totales|miles }} casos SIVIGILA entre {{ cob.desde }} y {{ cob.hasta }}. Los {{ cob.casos_excluidos|miles }} casos de «Exterior» y «Procedencia desconocida» se conservan, pero se excluyen de análisis por municipio.</li>
+    <li><strong>Fuentes complementarias:</strong> {{ cob.filas_regional|miles }} filas anuales de Cundinamarca ({{ cob.casos_regional|miles }} casos) y {{ cob.filas_brotes|miles }} brotes OMS/HDX. Las unidades y coberturas permanecen separadas.</li>
     <li><strong>Fuente:</strong> Instituto Nacional de Salud (INS) · SIVIGILA, portal de datos abiertos de vigilancia en salud pública de Colombia (archivo <code>Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv</code>, 241.746 filas originales).</li>
 </ul>
 <div class="alert alert-warning small">
@@ -21,8 +21,8 @@
 
 <h2 class="h5 fw-bold mt-4">Unidad de análisis y granularidad</h2>
 <div class="row g-3 mb-3">
-    <div class="col-md-6"><div class="p-3 border rounded h-100 small"><strong>Unidad de análisis.</strong> Una cantidad agregada de casos notificados. No se estudian personas individuales: la suma de casos equivale a casos notificados, no a personas únicas.</div></div>
-    <div class="col-md-6"><div class="p-3 border rounded h-100 small"><strong>Granularidad del modelo.</strong> Cada registro de la tabla de hechos es el conteo de casos de <em>un evento, en un municipio, en una semana epidemiológica de un año</em>. La granularidad coincide con la fila del archivo tratado y es la más detallada disponible; se verificó que no hay combinaciones repetidas.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded h-100 small"><strong>Unidad de análisis.</strong> Casos notificados para las fuentes SIVIGILA o un brote OMS/HDX. No se estudian personas individuales ni se suman casos con brotes.</div></div>
+    <div class="col-md-6"><div class="p-3 border rounded h-100 small"><strong>Granularidad del modelo.</strong> Evento × territorio × periodo × fuente. Colombia nacional: municipio × semana epidemiológica; Cundinamarca: municipio × año; OMS/HDX: un brote por país y año, con semana 0.</div></div>
 </div>
 
 <h2 class="h5 fw-bold mt-4">Qué conocimientos evidentes se profundizan</h2>
@@ -38,8 +38,8 @@
 </table>
 </div>
 
-<h2 class="h5 fw-bold mt-4">Alcance de la carga frente al diseño multifuente</h2>
-<p class="small">El modelo de referencia contempla registros nacionales, regionales y globales, pero la carga operativa de estas vistas sigue limitada al CSV colombiano de SIVIGILA. Los brotes de la OMS y los datos de Cundinamarca (42 eventos, con tasas de incidencia) tienen otras granularidades y unidades: deben integrarse respetando sus dimensiones de fuente y unidad de medida, sin sumar casos y brotes ni multiplicar valores. Por eso las cifras interactivas de esta etapa no incluyen esas fuentes ni tasas por población.</p>
+<h2 class="h5 fw-bold mt-4">Alcance y comparabilidad</h2>
+<p class="small">Las fuentes nacional y regional tienen coberturas que se superponen en Cundinamarca: por eso las vistas de casos ofrecen un selector de fuente y no agregan ambas bases. Los brotes OMS/HDX tienen cobertura y unidad distintas; se presentan en una vista propia y no se suman con los casos. Los indicadores regionales de incidencia y letalidad del archivo de Cundinamarca no forman parte del grano de esta tabla de hechos.</p>
 
 <h2 class="h5 fw-bold mt-4">Acceso a las vistas</h2>
 <div class="row g-3">

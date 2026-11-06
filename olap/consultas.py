@@ -23,42 +23,47 @@ DB = os.path.join(AQUI, "nexobio_olap.db")
 # Niveles de las jerarquias (nombre -> expresion SQL, dimension, etiqueta)
 # ----------------------------------------------------------------------------------------------
 NIVELES = {
-    "region":       {"expr": "t.region_natural", "dim": "Territorio", "etiqueta": "Región natural"},
-    "departamento": {"expr": "t.departamento", "dim": "Territorio", "etiqueta": "Departamento"},
-    "municipio":    {"expr": "t.municipio || ' (' || t.departamento || ')'", "dim": "Territorio",
+    "region":       {"expr": "t.region", "dim": "Territorio", "etiqueta": "Región natural"},
+    "departamento": {"expr": "t.area", "dim": "Territorio", "etiqueta": "Departamento"},
+    "municipio":    {"expr": "t.localidad || ' (' || t.area || ')'", "dim": "Territorio",
                      "etiqueta": "Municipio"},
     "vector":       {"expr": "e.vector", "dim": "Evento", "etiqueta": "Vector transmisor"},
-    "familia":      {"expr": "e.familia", "dim": "Evento", "etiqueta": "Familia de la enfermedad"},
+    "familia":      {"expr": "e.enfermedad", "dim": "Evento", "etiqueta": "Enfermedad"},
     "evento":       {"expr": "e.evento", "dim": "Evento", "etiqueta": "Evento"},
-    "periodo":      {"expr": "a.periodo", "dim": "Año", "etiqueta": "Periodo"},
-    "tipo_anio":    {"expr": "a.tipo_anio", "dim": "Año", "etiqueta": "Tipo de año"},
-    "anio":         {"expr": "f.anio_key", "dim": "Año", "etiqueta": "Año"},
-    "trimestre":    {"expr": "s.trimestre", "dim": "Semana", "etiqueta": "Trimestre epidemiológico"},
-    "semana":       {"expr": "f.semana_key", "dim": "Semana", "etiqueta": "Semana epidemiológica"},
+    "periodo":      {"expr": "a.periodo_analisis", "dim": "Tiempo", "etiqueta": "Periodo de análisis"},
+    "tipo_anio":    {"expr": "a.tipo_anio_sivigila", "dim": "Tiempo", "etiqueta": "Tipo de año SIVIGILA"},
+    "anio":         {"expr": "a.anio", "dim": "Tiempo", "etiqueta": "Año"},
+    "trimestre":    {"expr": "a.trimestre_epi_nombre", "dim": "Tiempo", "etiqueta": "Trimestre epidemiológico"},
+    "semana":       {"expr": "a.semana", "dim": "Tiempo", "etiqueta": "Semana epidemiológica"},
+    "escala":       {"expr": "u.escala", "dim": "Fuente", "etiqueta": "Escala de la fuente"},
+    "fuente":       {"expr": "u.fuente", "dim": "Fuente", "etiqueta": "Fuente de datos"},
 }
 
 JERARQUIAS = {
     "Territorio": ["region", "departamento", "municipio"],
     "Evento": ["vector", "familia", "evento"],
-    "Año": ["periodo", "anio"],
+    "Tiempo": ["periodo", "anio", "trimestre", "semana"],
     "Semana": ["trimestre", "semana"],
+    "Fuente": ["escala", "fuente"],
 }
 
 # Niveles con orden natural (no por valor de la medida)
-ORDEN_NATURAL = {"periodo", "tipo_anio", "anio", "trimestre", "semana"}
+ORDEN_NATURAL = {"periodo", "tipo_anio", "anio", "trimestre", "semana", "escala", "fuente"}
 
 # ----------------------------------------------------------------------------------------------
 # Medidas. 'aditiva' indica si se puede sumar entre grupos; las demas se RECALCULAN por grupo.
 # ----------------------------------------------------------------------------------------------
 GRAVE = "SUM(CASE WHEN e.evento='DENGUE GRAVE' THEN f.casos END)"
-DENGUE = "SUM(CASE WHEN e.familia='Dengue' THEN f.casos END)"
+DENGUE = "SUM(CASE WHEN e.enfermedad='Dengue' THEN f.casos END)"
 
 MEDIDAS = {
     "casos": {"sql": "SUM(f.casos)", "nombre": "Casos notificados", "unidad": "casos", "aditiva": True,
               "formula": "SUM(casos)"},
     "registros": {"sql": "COUNT(*)", "nombre": "Registros de notificación", "unidad": "registros",
                   "aditiva": True, "formula": "COUNT(*) de la tabla de hechos"},
-    "municipios": {"sql": "COUNT(DISTINCT CASE WHEN t.tipo_ubicacion='Municipio' THEN f.territorio_key END)",
+    "municipios": {"sql": "COUNT(DISTINCT CASE WHEN t.ambito='Colombia' "
+                          "AND t.localidad NOT IN ('No aplica','Sin municipio asignado') "
+                          "THEN f.territorio_key END)",
                    "nombre": "Municipios con casos", "unidad": "municipios", "aditiva": False,
                    "formula": "COUNT(DISTINCT municipio con casos)"},
     "pct_grave": {"sql": f"100.0*COALESCE({GRAVE},0)/NULLIF({DENGUE},0)",
@@ -67,15 +72,12 @@ MEDIDAS = {
                   "formula": "100 × casos dengue grave / (casos dengue + dengue grave)"},
 }
 
-SOLO_DEPARTAMENTOS = "t.tipo_ubicacion IN ('Municipio','Sin municipio asignado')"
-
-FROM = (" FROM fact_notificacion f JOIN dim_evento e USING(evento_key) "
-        "JOIN dim_territorio t USING(territorio_key) JOIN dim_anio a USING(anio_key) "
-        "JOIN dim_semana s USING(semana_key) ")
+SOLO_DEPARTAMENTOS = "t.ambito='Colombia' AND t.localidad<>'No aplica'"
 
 # Cada alias se une solo si la consulta lo usa (menos joins = consultas mas rapidas)
 _JOINS = {"e": "JOIN dim_evento e USING(evento_key)", "t": "JOIN dim_territorio t USING(territorio_key)",
-          "a": "JOIN dim_anio a USING(anio_key)", "s": "JOIN dim_semana s USING(semana_key)"}
+          "a": "JOIN dim_tiempo a ON f.tiempo_key=a.tiempo_key",
+          "u": "JOIN dim_fuente u USING(fuente_key)"}
 
 
 def _from(textos):
@@ -96,9 +98,13 @@ def _donde(filtros, incluir_desconocidos, semana_max):
     if not incluir_desconocidos:
         partes.append(SOLO_DEPARTAMENTOS)
     if semana_max:
-        partes.append("f.semana_key <= ?")
+        partes.append("a.semana <= ?")
         params.append(int(semana_max))
-    for nivel, valores in (filtros or {}).items():
+    filtros = filtros or {}
+    if not filtros.get("fuente"):
+        partes.append("u.fuente = ?")
+        params.append("SIVIGILA Colombia")
+    for nivel, valores in filtros.items():
         if nivel not in NIVELES or not valores:
             continue
         valores = [valores] if isinstance(valores, (str, int)) else list(valores)
@@ -162,12 +168,13 @@ def sql_legible(sql, params):
 
 def valores_nivel(nivel, filtros=None):
     """Valores existentes de un nivel (para llenar los filtros), en orden natural o alfabetico."""
+    filtros = filtros or {}
+    donde, params = _donde(filtros, incluir_desconocidos=False, semana_max=None)
+    expr = NIVELES[nivel]["expr"]
+    sql = f"SELECT DISTINCT {expr} AS v" + _from([expr, donde]) + donde + " ORDER BY 1"
     con = _con()
     try:
-        expr = NIVELES[nivel]["expr"]
-        sql = f"SELECT DISTINCT {expr} AS v" + FROM + (
-            f" WHERE {SOLO_DEPARTAMENTOS}" if NIVELES[nivel]["dim"] == "Territorio" else "") + " ORDER BY 1"
-        vals = [r[0] for r in con.execute(sql).fetchall()]
+        vals = [r[0] for r in con.execute(sql, params).fetchall()]
     finally:
         con.close()
     return vals
@@ -328,16 +335,41 @@ def nivel_superior(nivel):
 
 
 def cobertura():
-    """Fuente y cobertura mostradas en todas las vistas."""
+    """Resumen de registros cargados, con cobertura nacional para las vistas 1-4."""
     df = consulta((), "casos")
     con = _con()
     try:
-        a, b = con.execute("SELECT MIN(anio_key), MAX(anio_key) FROM dim_anio").fetchone()
-        filas, = con.execute("SELECT COUNT(*) FROM fact_notificacion").fetchone()
-        mun, = con.execute("SELECT COUNT(*) FROM dim_territorio WHERE tipo_ubicacion='Municipio'").fetchone()
-        total_all, = con.execute("SELECT SUM(casos) FROM fact_notificacion").fetchone()
+        a, b = con.execute(
+            "SELECT MIN(t.anio), MAX(t.anio) FROM fact_notificacion f "
+            "JOIN dim_tiempo t USING(tiempo_key) JOIN dim_fuente u USING(fuente_key) "
+            "WHERE u.fuente='SIVIGILA Colombia'"
+        ).fetchone()
+        filas = con.execute(
+            "SELECT COUNT(*) FROM fact_notificacion f JOIN dim_fuente u USING(fuente_key) "
+            "WHERE u.fuente='SIVIGILA Colombia'"
+        ).fetchone()[0]
+        mun = con.execute(
+            "SELECT COUNT(*) FROM dim_territorio WHERE ambito='Colombia' "
+            "AND localidad NOT IN ('No aplica','Sin municipio asignado')"
+        ).fetchone()[0]
+        total_all = con.execute(
+            "SELECT SUM(f.casos) FROM fact_notificacion f JOIN dim_fuente u USING(fuente_key) "
+            "WHERE u.fuente='SIVIGILA Colombia'"
+        ).fetchone()[0]
+        regional = con.execute(
+            "SELECT COUNT(*), SUM(f.casos) FROM fact_notificacion f "
+            "JOIN dim_fuente u USING(fuente_key) WHERE u.fuente='SIVIGILA Cundinamarca'"
+        ).fetchone()
+        brotes = con.execute(
+            "SELECT COUNT(*), SUM(f.brotes) FROM fact_notificacion f "
+            "JOIN dim_fuente u USING(fuente_key) WHERE u.fuente='OMS/HDX'"
+        ).fetchone()
+        filas_modelo = con.execute("SELECT COUNT(*) FROM fact_notificacion").fetchone()[0]
     finally:
         con.close()
     return {"desde": a, "hasta": b, "registros": filas, "municipios": mun,
             "casos_base": int(df.valor.iloc[0]), "casos_totales": int(total_all),
-            "casos_excluidos": int(total_all - df.valor.iloc[0])}
+            "casos_excluidos": int(total_all - df.valor.iloc[0]),
+            "filas_modelo": filas_modelo, "filas_regional": regional[0],
+            "casos_regional": int(regional[1]), "filas_brotes": brotes[0],
+            "brotes": int(brotes[1])}

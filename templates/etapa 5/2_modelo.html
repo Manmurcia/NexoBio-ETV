@@ -4,47 +4,36 @@
 <h1 class="page-title">2. Modelo estrella multifuente</h1>
 {{ franja_fuente(cob) }}
 
-<div class="alert alert-warning small">
-    <strong>Diseño de referencia, aún no cargado.</strong> El esquema y el diagrama de esta página reflejan el modelo multifuente definido en <code>scripts/olap/crear_modelo.sql</code>. Las vistas interactivas disponibles siguen utilizando la carga SIVIGILA descrita al final de esta página.
-</div>
-<img src="{{ url_for('static', filename='img/olap_estrella.svg') }}" class="img-fluid border rounded mb-3" alt="Modelo estrella multifuente: fact_notificacion conectada con dim_tiempo, dim_territorio, dim_evento y dim_fuente">
-<p class="small text-muted">Los conteos de filas indicados en el diagrama corresponden a la imagen de referencia del modelo; no son conteos de la base cargada en este repositorio.</p>
+<img src="{{ url_for('static', filename='img/olap_estrella.svg') }}" class="img-fluid border rounded mb-3" alt="Modelo estrella con dim_tiempo, dim_territorio, dim_evento y dim_fuente conectadas a fact_notificacion">
+<p class="small text-muted">El diagrama corresponde al esquema y a los datos cargados; los conteos de filas se muestran a continuación.</p>
 
 <h2 class="h5 fw-bold">Tabla de hechos <code>fact_notificacion</code></h2>
-<p class="small"><strong>Propósito:</strong> integrar observaciones de vigilancia de casos y brotes con una fuente, tiempo, territorio y evento asociados.
-<strong>Granularidad:</strong> una notificación por evento, territorio, periodo y fuente. Para SIVIGILA es evento × municipio × semana × año; para los brotes de OMS, evento × país × año (semana 0).
-<strong>Clave primaria:</strong> <code>notificacion_id</code>. Una restricción única sobre fuente, tiempo, territorio, evento e <code>id_brote</code> evita duplicar el grano definido.</p>
-
-<h2 class="h5 fw-bold mt-4">Dimensiones, atributos y jerarquías</h2>
-<div class="table-responsive"><table class="table table-bordered table-sm small align-middle">
-<thead class="table-light"><tr><th>Dimensión</th><th>Clave</th><th>Atributos principales</th><th>Jerarquía de análisis</th></tr></thead>
+<p class="small"><strong>Grano:</strong> un evento en un territorio y periodo, identificado por su fuente. SIVIGILA Colombia conserva el nivel municipio × semana epidemiológica; SIVIGILA Cundinamarca aporta municipio × año (semana 0); OMS/HDX registra un brote por país × año. <code>id_brote</code> distingue brotes que comparten país, evento y año. Cada fila contiene casos o brotes, nunca ambas medidas.</p>
+<div class="table-responsive"><table class="table table-bordered table-sm small">
+<thead class="table-light"><tr><th>Fuente</th><th class="text-end">Registros cargados</th><th>Unidad</th></tr></thead>
 <tbody>
-<tr><td><code>dim_tiempo</code></td><td><code>tiempo_key</code> = año × 100 + semana</td><td>año, semana (0–53), trimestre epidemiológico, periodo, año completo</td><td>Periodo → Año → Trimestre epidemiológico → Semana. Semana 0 representa un dato anual sin semana epidemiológica.</td></tr>
-<tr><td><code>dim_territorio</code></td><td><code>territorio_key</code>; clave natural única por ámbito y código</td><td>ámbito (Colombia/Mundo), región, área, localidad, código territorial, departamento y subregión ONU</td><td>Ámbito → Región → Área → Localidad. Colombia: región natural → departamento → municipio. Mundo: región OMS → país → «No aplica».</td></tr>
-<tr><td><code>dim_evento</code></td><td><code>evento_key</code>; catálogo + evento únicos</td><td>catálogo, código, evento, enfermedad armonizada, grupo, cobertura, capítulo CIE-10</td><td>Grupo (ETV/No ETV) → Enfermedad → Evento.</td></tr>
-<tr><td><code>dim_fuente</code></td><td><code>fuente_key</code>; fuente única</td><td>fuente, escala (Global/Nacional/Regional), unidad de medida, archivo de origen</td><td>Escala → Fuente.</td></tr>
+{% for fuente, filas in n.fuentes.items() %}
+<tr><td>{{ fuente }}</td><td class="text-end">{{ filas|miles }}</td><td>{% if fuente == 'OMS/HDX' %}brotes reportados{% else %}casos notificados{% endif %}</td></tr>
+{% endfor %}
+<tr class="table-light fw-bold"><td>Total filas del hecho</td><td class="text-end">{{ n.fact_notificacion|miles }}</td><td>{{ n.casos|miles }} casos y {{ n.brotes|miles }} brotes (no sumables entre sí)</td></tr>
 </tbody></table></div>
 
-<h2 class="h5 fw-bold mt-4">Medidas y reglas de agregación</h2>
+<h2 class="h5 fw-bold mt-4">Dimensiones y jerarquías</h2>
 <div class="table-responsive"><table class="table table-bordered table-sm small align-middle">
-<thead class="table-light"><tr><th>Medida</th><th>Campo y fórmula</th><th>Regla</th></tr></thead>
+<thead class="table-light"><tr><th>Dimensión</th><th class="text-end">Filas</th><th>Atributos del esquema</th><th>Jerarquía de análisis</th></tr></thead>
 <tbody>
-<tr><td><strong>Casos notificados</strong></td><td><code>SUM(casos)</code></td><td>Aditiva entre registros de casos; NULL para registros de brotes.</td></tr>
-<tr><td><strong>Brotes reportados</strong></td><td><code>SUM(brotes)</code></td><td>Aditiva entre registros de brotes; cada fila aporta 1 y NULL para registros de casos.</td></tr>
-<tr><td><strong>Registros</strong></td><td><code>COUNT(*)</code></td><td>Cuenta observaciones, no personas ni casos.</td></tr>
+<tr><td><code>dim_tiempo</code></td><td class="text-end">{{ n.dim_tiempo|miles }}</td><td><code>tiempo_key</code>, año, semana, trimestre epidemiológico, periodo OMS, periodo de análisis, tipo de año SIVIGILA, año completo</td><td>Periodo → Año → Trimestre → Semana. Semana 0 representa datos anuales.</td></tr>
+<tr><td><code>dim_territorio</code></td><td class="text-end">{{ n.dim_territorio|miles }}</td><td>ámbito (Colombia/Mundo), región, área, localidad, código territorial, departamento y subregión ONU</td><td>Ámbito → Región → Área → Localidad. Colombia: región natural → departamento → municipio. Mundo: región OMS → país.</td></tr>
+<tr><td><code>dim_evento</code></td><td class="text-end">{{ n.dim_evento|miles }}</td><td>catálogo, código, evento, enfermedad armonizada, vector, cobertura, capítulo CIE-10, primer año registrado</td><td>Vector → Enfermedad → Evento.</td></tr>
+<tr><td><code>dim_fuente</code></td><td class="text-end">{{ n.dim_fuente|miles }}</td><td>fuente, escala (Global/Nacional/Regional), unidad de medida, archivo de origen</td><td>Escala → Fuente.</td></tr>
 </tbody></table></div>
-<p class="small">La restricción de la tabla de hechos exige que exactamente una de las medidas <code>casos</code> o <code>brotes</code> esté informada. No se suman ni comparan directamente porque sus unidades son diferentes. <code>id_brote</code> es una dimensión degenerada: conserva el identificador de brote y usa una cadena vacía para registros de vigilancia.</p>
 
-<h2 class="h5 fw-bold mt-4">Correspondencia con las fuentes</h2>
+<h2 class="h5 fw-bold mt-4">Reglas de análisis</h2>
 <ul class="small">
-    <li><strong>SIVIGILA:</strong> eventos del catálogo, conteos de casos, municipio/departamento y semana epidemiológica; la fuente registra su unidad y archivo de origen.</li>
-    <li><strong>CIE-10 OMS:</strong> catálogo y capítulo CIE-10 vinculados con la enfermedad armonizada.</li>
-    <li><strong>Brotes globales OMS:</strong> país, región OMS y subregión ONU; cada brote se identifica en <code>id_brote</code> y se representa con <code>brotes = 1</code> en el año correspondiente.</li>
+    <li><code>casos</code> suma los casos notificados; <code>brotes</code> suma brotes únicos reportados (un registro por brote).</li>
+    <li>Los casos de SIVIGILA Colombia y de Cundinamarca son fuentes distintas: el archivo regional se usa para análisis regional y no se agrega al total nacional para evitar duplicar Cundinamarca.</li>
+    <li>Los brotes OMS/HDX se consultan por separado de los casos. Los porcentajes se recalculan con sus denominadores y no se agregan entre grupos.</li>
+    <li>La dimensión evento conserva catálogo, cobertura y año del primer registro observado. La dimensión tiempo distingue la semana epidemiológica, los periodos analíticos y los intervalos de brotes OMS.</li>
 </ul>
-
-<h2 class="h5 fw-bold mt-4">Esquema que alimenta hoy las vistas interactivas</h2>
-<div class="alert alert-info small">
-    La carga operativa actual es un subconjunto SIVIGILA Colombia: <strong>{{ n.fact_notificacion|miles }} registros</strong> en <code>fact_notificacion</code>, con las dimensiones propias de esa fuente ({{ n.dim_evento }} eventos, {{ n.dim_territorio|miles }} territorios, {{ n.dim_anio }} años y {{ n.dim_semana }} semanas). Su esquema se conserva en <code>scripts/olap/crear_modelo_sivigila.sql</code> para que sigan funcionando la carga, las validaciones y las vistas existentes. No es la carga multifuente representada arriba.
-</div>
-<p class="small">Para activar el modelo de referencia falta integrar las fuentes Global, Nacional y Regional, armonizar sus catálogos y poblar las cuatro dimensiones y la tabla de hechos respetando las unidades y granularidades propias de cada archivo.</p>
+<p class="small">El SQL de creación está en <code>scripts/olap/crear_modelo.sql</code>; la carga reproducible y sus validaciones están en <code>scripts/olap/cargar_modelo.py</code>.</p>
 {% endblock %}

@@ -1,88 +1,99 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 780" role="img" aria-labelledby="t d" font-family="Segoe UI, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 830" role="img" aria-labelledby="t d" font-family="Segoe UI, Arial, sans-serif">
   <title id="t">Modelo estrella multifuente NexoBio-ETV</title>
-  <desc id="d">La tabla de hechos fact_notificacion se relaciona con las dimensiones dim_tiempo, dim_territorio, dim_evento y dim_fuente.</desc>
-  <rect width="1120" height="780" fill="#f3f4f6"/>
+  <desc id="d">La tabla fact_notificacion conecta tiempo, territorio, evento y fuente para consultar casos SIVIGILA y brotes OMS/HDX sin mezclar sus medidas.</desc>
+  <rect width="1120" height="830" fill="#f3f4f6"/>
+  <text x="560" y="28" text-anchor="middle" font-size="21" font-weight="700" fill="#1e4e79">Modelo estrella NexoBio-ETV</text>
+  <text x="560" y="50" text-anchor="middle" font-size="12" fill="#64748b">Tres fuentes: SIVIGILA Colombia · SIVIGILA Cundinamarca · OMS/HDX</text>
+
   <g stroke="#64748b" stroke-width="2" fill="none">
-    <line x1="320" y1="225" x2="397" y2="310"/>
-    <line x1="800" y1="225" x2="723" y2="310"/>
-    <line x1="320" y1="555" x2="397" y2="470"/>
-    <line x1="800" y1="555" x2="723" y2="470"/>
+    <line x1="360" y1="225" x2="405" y2="330"/>
+    <line x1="760" y1="225" x2="715" y2="330"/>
+    <line x1="360" y1="625" x2="405" y2="510"/>
+    <line x1="760" y1="625" x2="715" y2="510"/>
   </g>
   <g font-size="13" font-weight="700" fill="#1e3a8a">
-    <text x="332" y="238">1</text><text x="382" y="303">N</text>
-    <text x="780" y="238">1</text><text x="730" y="303">N</text>
-    <text x="332" y="545">1</text><text x="382" y="482">N</text>
-    <text x="780" y="545">1</text><text x="730" y="482">N</text>
+    <text x="370" y="240">1</text><text x="392" y="321">N</text>
+    <text x="740" y="240">1</text><text x="720" y="321">N</text>
+    <text x="370" y="615">1</text><text x="392" y="520">N</text>
+    <text x="740" y="615">1</text><text x="720" y="520">N</text>
   </g>
-  <text x="560" y="25" text-anchor="middle" font-size="20" font-weight="700" fill="#1e4e79">Modelo estrella NexoBio-ETV — vigilancia multifuente</text>
-  <text x="560" y="48" text-anchor="middle" font-size="12" fill="#64748b">Diseño de referencia: una tabla de hechos y cuatro dimensiones conformadas · conteos del diagrama recibido</text>
 
-  <rect x="395" y="285" width="330" height="210" rx="8" fill="#fff" stroke="#ea7b2c" stroke-width="2"/>
-  <path d="M403 285h314a8 8 0 0 1 8 8v29H395v-29a8 8 0 0 1 8-8z" fill="#e87932"/>
-  <text x="560" y="308" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">fact_notificacion</text>
-  <text x="705" y="307" text-anchor="end" font-size="10" fill="#fff">334.780 filas</text>
+  <rect x="395" y="300" width="330" height="235" rx="8" fill="#fff" stroke="#e87932" stroke-width="2"/>
+  <path d="M403 300h314a8 8 0 0 1 8 8v29H395v-29a8 8 0 0 1 8-8z" fill="#e87932"/>
+  <text x="560" y="323" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">fact_notificacion</text>
   <g font-size="12.5" fill="#0f172a">
-    <text x="412" y="342"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="18">notificacion_id</tspan></text>
-    <text x="412" y="362"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="18">tiempo_key</tspan></text>
-    <text x="412" y="382"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="18">territorio_key</tspan></text>
-    <text x="412" y="402"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="18">evento_key</tspan></text>
-    <text x="412" y="422"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="18">fuente_key</tspan></text>
-    <text x="412" y="442"><tspan font-weight="700" fill="#64748b">D</tspan><tspan dx="18">id_brote (degenerada)</tspan></text>
-    <text x="412" y="464"><tspan font-weight="700" fill="#c2410c">M</tspan><tspan dx="18">casos · brotes (excluyentes)</tspan></text>
-    <text x="560" y="484" text-anchor="middle" font-size="10.5" fill="#475569">1 observación; casos o brotes según la fuente</text>
+    <text x="412" y="361"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="16">notificacion_id</tspan></text>
+    <text x="412" y="383"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="16">tiempo_key</tspan></text>
+    <text x="412" y="405"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="16">territorio_key</tspan></text>
+    <text x="412" y="427"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="16">evento_key</tspan></text>
+    <text x="412" y="449"><tspan font-weight="700" fill="#1d4ed8">FK</tspan><tspan dx="16">fuente_key</tspan></text>
+    <text x="412" y="471"><tspan font-weight="700" fill="#64748b">D</tspan><tspan dx="16">id_brote (degenerada)</tspan></text>
+    <text x="412" y="493"><tspan font-weight="700" fill="#c2410c">M</tspan><tspan dx="16">casos · brotes (excluyentes)</tspan></text>
+    <text x="560" y="522" text-anchor="middle" font-size="10.5" fill="#475569">Grano: evento × territorio × periodo × fuente</text>
   </g>
 
-  <rect x="20" y="70" width="300" height="190" rx="7" fill="#fff" stroke="#1e4e79" stroke-width="2"/>
-  <path d="M27 70h286a7 7 0 0 1 7 7v28H20V77a7 7 0 0 1 7-7z" fill="#1e4e79"/>
-  <text x="36" y="94" font-size="15" font-weight="700" fill="#fff">dim_tiempo</text>
-  <text x="305" y="93" text-anchor="end" font-size="10" fill="#fff">866 filas</text>
+  <rect x="20" y="65" width="340" height="320" rx="8" fill="#fff" stroke="#1683b8" stroke-width="2"/>
+  <path d="M28 65h324a8 8 0 0 1 8 8v30H20V73a8 8 0 0 1 8-8z" fill="#1683b8"/>
+  <text x="38" y="89" font-size="15" font-weight="700" fill="#fff">dim_tiempo</text>
   <g font-size="11.5" fill="#0f172a">
-    <text x="35" y="126"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">tiempo_key = año × 100 + semana</tspan></text>
-    <text x="35" y="148">año · semana (0–53)</text>
-    <text x="35" y="168">trimestre_epi · trimestre_epi_nombre</text>
-    <text x="35" y="188">periodo · anio_completo (Si / No)</text>
-    <text x="35" y="220" font-weight="700" fill="#047857">Jerarquía:</text>
-    <text x="35" y="240" fill="#047857">Periodo → Año → Trimestre epi. → Semana</text>
-    <text x="35" y="255" font-size="10" fill="#64748b">Semana 0 = registro anual, sin semana</text>
+    <text x="38" y="125"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">tiempo_key = año × 100 + semana</tspan></text>
+    <text x="38" y="150">anio · semana (0–53)</text>
+    <text x="38" y="175">trimestre_epi · trimestre_epi_nombre</text>
+    <text x="38" y="200">periodo (series de brotes OMS)</text>
+    <text x="38" y="225">periodo_analisis (2007–2010 …)</text>
+    <text x="38" y="250">tipo_anio_sivigila</text>
+    <text x="38" y="275">anio_completo (Si / No)</text>
+    <line x1="38" y1="293" x2="342" y2="293" stroke="#cbd5e1"/>
+    <text x="38" y="321" font-weight="700" fill="#047857">Jerarquía:</text>
+    <text x="38" y="345" fill="#047857">Periodo → Año → Trimestre → Semana</text>
+    <text x="38" y="368" font-size="10" fill="#64748b">Semana 0 = dato anual sin semana epi.</text>
   </g>
 
-  <rect x="800" y="70" width="300" height="190" rx="7" fill="#fff" stroke="#1e4e79" stroke-width="2"/>
-  <path d="M807 70h286a7 7 0 0 1 7 7v28H800V77a7 7 0 0 1 7-7z" fill="#1e4e79"/>
-  <text x="816" y="94" font-size="15" font-weight="700" fill="#fff">dim_territorio</text>
-  <text x="1085" y="93" text-anchor="end" font-size="10" fill="#fff">1.378 filas</text>
+  <rect x="760" y="65" width="340" height="320" rx="8" fill="#fff" stroke="#1683b8" stroke-width="2"/>
+  <path d="M768 65h324a8 8 0 0 1 8 8v30H760V73a8 8 0 0 1 8-8z" fill="#1683b8"/>
+  <text x="778" y="89" font-size="15" font-weight="700" fill="#fff">dim_territorio</text>
   <g font-size="11.5" fill="#0f172a">
-    <text x="815" y="126"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">territorio_key</tspan></text>
-    <text x="815" y="148">ámbito · región · área · localidad</text>
-    <text x="815" y="168">codigo_territorio · cod_departamento</text>
-    <text x="815" y="188">subregion_onu</text>
-    <text x="815" y="220" font-weight="700" fill="#047857">Jerarquía:</text>
-    <text x="815" y="240" fill="#047857">Ámbito → Región → Área → Localidad</text>
-    <text x="815" y="255" font-size="10" fill="#64748b">Colombia y Mundo</text>
+    <text x="778" y="125"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">territorio_key</tspan></text>
+    <text x="778" y="150">ambito (Colombia / Mundo)</text>
+    <text x="778" y="175">region (natural / OMS / No geografico)</text>
+    <text x="778" y="200">area (departamento / país)</text>
+    <text x="778" y="225">localidad (municipio / No aplica)</text>
+    <text x="778" y="250">codigo_territorio · cod_departamento</text>
+    <text x="778" y="275">subregion_onu</text>
+    <line x1="778" y1="293" x2="1082" y2="293" stroke="#cbd5e1"/>
+    <text x="778" y="321" font-weight="700" fill="#047857">Jerarquía:</text>
+    <text x="778" y="345" fill="#047857">Ámbito → Región → Área → Localidad</text>
+    <text x="778" y="368" font-size="10" fill="#64748b">Colombia y Mundo</text>
   </g>
 
-  <rect x="20" y="530" width="300" height="190" rx="7" fill="#fff" stroke="#1e4e79" stroke-width="2"/>
-  <path d="M27 530h286a7 7 0 0 1 7 7v28H20v-28a7 7 0 0 1 7-7z" fill="#1e4e79"/>
-  <text x="36" y="554" font-size="15" font-weight="700" fill="#fff">dim_evento</text>
-  <text x="305" y="553" text-anchor="end" font-size="10" fill="#fff">135 filas</text>
+  <rect x="20" y="485" width="340" height="300" rx="8" fill="#fff" stroke="#1683b8" stroke-width="2"/>
+  <path d="M28 485h324a8 8 0 0 1 8 8v30H20v-30a8 8 0 0 1 8-8z" fill="#1683b8"/>
+  <text x="38" y="509" font-size="15" font-weight="700" fill="#fff">dim_evento</text>
   <g font-size="11.5" fill="#0f172a">
-    <text x="35" y="586"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">evento_key</tspan></text>
-    <text x="35" y="608">catálogo · cod_evento · evento</text>
-    <text x="35" y="628">enfermedad · grupo (ETV / No ETV)</text>
-    <text x="35" y="648">cobertura · capitulo_cie10</text>
-    <text x="35" y="680" font-weight="700" fill="#047857">Jerarquía: Grupo → Enfermedad → Evento</text>
-    <text x="35" y="700" font-size="10" fill="#64748b">Catálogos SIVIGILA y CIE-10 OMS</text>
+    <text x="38" y="548"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">evento_key</tspan></text>
+    <text x="38" y="573">catalogo · cod_evento · evento</text>
+    <text x="38" y="598">enfermedad (armonizada) · vector</text>
+    <text x="38" y="623">cobertura · capitulo_cie10</text>
+    <text x="38" y="648">anio_primer_registro</text>
+    <line x1="38" y1="666" x2="342" y2="666" stroke="#cbd5e1"/>
+    <text x="38" y="696" font-weight="700" fill="#047857">Jerarquía:</text>
+    <text x="38" y="720" fill="#047857">Vector → Enfermedad → Evento</text>
+    <text x="38" y="752" font-size="10" fill="#64748b">SIVIGILA y CIE-10 OMS</text>
   </g>
 
-  <rect x="800" y="530" width="300" height="190" rx="7" fill="#fff" stroke="#1e4e79" stroke-width="2"/>
-  <path d="M807 530h286a7 7 0 0 1 7 7v28H800v-28a7 7 0 0 1 7-7z" fill="#1e4e79"/>
-  <text x="816" y="554" font-size="15" font-weight="700" fill="#fff">dim_fuente</text>
-  <text x="1085" y="553" text-anchor="end" font-size="10" fill="#fff">3 filas</text>
+  <rect x="760" y="485" width="340" height="300" rx="8" fill="#fff" stroke="#1683b8" stroke-width="2"/>
+  <path d="M768 485h324a8 8 0 0 1 8 8v30H760v-30a8 8 0 0 1 8-8z" fill="#1683b8"/>
+  <text x="778" y="509" font-size="15" font-weight="700" fill="#fff">dim_fuente</text>
   <g font-size="11.5" fill="#0f172a">
-    <text x="815" y="586"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">fuente_key</tspan></text>
-    <text x="815" y="608">fuente · escala</text>
-    <text x="815" y="628">unidad_medida · archivo_origen</text>
-    <text x="815" y="660" font-weight="700" fill="#047857">Jerarquía: Escala → Fuente</text>
-    <text x="815" y="680" fill="#64748b">Global · Nacional · Regional</text>
+    <text x="778" y="548"><tspan font-weight="700" fill="#c2410c">PK</tspan><tspan dx="12">fuente_key</tspan></text>
+    <text x="778" y="573">fuente · escala</text>
+    <text x="778" y="598">unidad_medida · archivo_origen</text>
+    <line x1="778" y1="616" x2="1082" y2="616" stroke="#cbd5e1"/>
+    <text x="778" y="648" font-weight="700" fill="#047857">Jerarquía:</text>
+    <text x="778" y="672" fill="#047857">Escala → Fuente</text>
+    <text x="778" y="704">Global · Nacional · Regional</text>
+    <text x="778" y="752" font-size="10" fill="#64748b">INS Colombia · Cundinamarca · OMS/HDX</text>
   </g>
-  <text x="560" y="755" text-anchor="middle" font-size="11" fill="#64748b">Casos notificados y brotes reportados son medidas excluyentes y conservan unidades separadas.</text>
+
+  <text x="560" y="812" text-anchor="middle" font-size="11" fill="#64748b">Casos notificados y brotes reportados son medidas distintas, excluyentes por registro.</text>
 </svg>

@@ -1,13 +1,12 @@
 {% extends 'layout.html' %}
 {% from 'etapa 5/_macros.html' import franja_fuente %}
 {% block content %}
-<h1 class="page-title">3. Carga y validaciones del análisis SIVIGILA</h1>
+<h1 class="page-title">3. Carga y validaciones del modelo multifuente</h1>
 {{ franja_fuente(cob) }}
-<div class="alert alert-info small">Estas comprobaciones validan la carga operativa de SIVIGILA Colombia que alimenta las vistas interactivas. No son una validación de la carga del modelo multifuente de referencia; esa integración aún no está implementada.</div>
 {% if not val %}
 <div class="alert alert-warning">Aún no se ha ejecutado la carga. Ejecute <code>python scripts/olap/cargar_modelo.py</code>.</div>
 {% else %}
-<p>El procedimiento de carga ejecuta {{ n_total }} comprobaciones que comparan el modelo con el archivo tratado de origen (<code>{{ val.fuente }}</code>, {{ val.filas_origen|miles }} filas y {{ val.casos_origen|miles }} casos). Resultado: <strong>{{ n_ok }} de {{ n_total }} correctas</strong>.</p>
+<p>El procedimiento ejecuta {{ n_total }} comprobaciones para las tres fuentes (<code>{{ val.fuente }}</code>): {{ val.filas_origen|miles }} filas, {{ val.casos_origen|miles }} casos y {{ val.brotes_origen|miles }} brotes. Resultado: <strong>{{ n_ok }} de {{ n_total }} correctas</strong>.</p>
 {% for grupo, filas in grupos.items() %}
 <h2 class="h6 fw-bold mt-4">{{ grupo }}</h2>
 <div class="table-responsive"><table class="table table-bordered table-sm small align-middle">
@@ -17,7 +16,7 @@
 </tbody></table></div>
 {% endfor %}
 <h2 class="h6 fw-bold mt-4">Explicación de diferencias</h2>
-<p class="small">No hay diferencias entre la carga operativa SIVIGILA y sus datos de origen. Las únicas cifras que difieren entre fuentes son las de la Etapa 4 que incluyen «Exterior» y «Procedencia desconocida» (1.269.342 casos) frente a las que usa este análisis para los territorios (1.265.731); la comprobación de contraste con la Etapa 4 usa la misma base de 1.265.731 casos y coincide.</p>
-<p class="small">Además, el script <code>scripts/olap/verificar_conocimientos.py</code> recalcula con consultas al modelo las cifras citadas en los ocho conocimientos (121 comprobaciones) y falla si alguna cambia.</p>
+<p class="small">Las comprobaciones de coherencia validan por separado las filas y los casos de cada archivo SIVIGILA, los brotes OMS/HDX, la integridad referencial y la exclusividad de medidas. El análisis territorial nacional excluye «Exterior» y «Procedencia desconocida», aunque sus registros se conservan en el modelo.</p>
+<p class="small">El script <code>scripts/olap/verificar_conocimientos.py</code> sigue recalculando los ocho conocimientos de casos con la fuente SIVIGILA Colombia seleccionada.</p>
 {% endif %}
 {% endblock %}
