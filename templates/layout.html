@@ -104,7 +104,7 @@
                             <li><a class="dropdown-item {% if slug_activo == 'olap-validaciones' %}active{% endif %}" href="{{ url_for('olap.seccion', seccion='validaciones') }}">3. Validaciones</a></li>
                             <li><a class="dropdown-item {% if slug_activo == 'olap-operaciones' %}active{% endif %}" href="{{ url_for('olap.seccion', seccion='operaciones') }}">4. Operaciones</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item {% if slug_activo == 'olap-concentracion' %}active{% endif %}" href="{{ url_for('olap.vista', vista='concentracion') }}">Análisis 1. Concentración territorial</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'olap-concentracion' %}active{% endif %}" href="{{ url_for('olap.vista', vista='concentracion') }}">Análisis 1. Composición por fuente</a></li>
                             <li><a class="dropdown-item {% if slug_activo == 'olap-ciclos' %}active{% endif %}" href="{{ url_for('olap.vista', vista='ciclos') }}">Análisis 2. Ciclos epidémicos</a></li>
                             <li><a class="dropdown-item {% if slug_activo == 'olap-estacionalidad' %}active{% endif %}" href="{{ url_for('olap.vista', vista='estacionalidad') }}">Análisis 3. Estacionalidad</a></li>
                             <li><a class="dropdown-item {% if slug_activo == 'olap-gravedad' %}active{% endif %}" href="{{ url_for('olap.vista', vista='gravedad') }}">Análisis 4. Gravedad del dengue</a></li>

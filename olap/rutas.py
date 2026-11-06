@@ -65,6 +65,15 @@ def vista(vista):
         abort(404)
     ctx = fn(request.args.to_dict())
     pos = ORDEN_VISTAS.index(vista)
+    if vista == "concentracion":
+        ctx.update({
+            "slug_activo": f"olap-{vista}",
+            "orden": ORDEN_VISTAS,
+            "metas": VISTAS_META,
+            "anterior": None,
+            "siguiente": ORDEN_VISTAS[pos + 1],
+        })
+        return render_template("etapa 5/vista_fuentes.html", **ctx)
     if vista == "brotes":
         ctx.update({
             "slug_activo": f"olap-{vista}",
@@ -94,8 +103,18 @@ def _ctx_modelo():
             "SELECT COUNT(DISTINCT cod_departamento) FROM dim_territorio "
             "WHERE ambito='Colombia' AND cod_departamento NOT IN ('0','1')"
         ).fetchone()[0]
-        n["casos"] = con.execute("SELECT COALESCE(SUM(casos),0) FROM fact_notificacion").fetchone()[0]
-        n["brotes"] = con.execute("SELECT COALESCE(SUM(brotes),0) FROM fact_notificacion").fetchone()[0]
+        n["casos_nacionales"] = con.execute(
+            "SELECT COALESCE(SUM(f.casos),0) FROM fact_notificacion f "
+            "JOIN dim_fuente u USING(fuente_key) WHERE u.fuente='SIVIGILA Colombia'"
+        ).fetchone()[0]
+        n["casos_regionales"] = con.execute(
+            "SELECT COALESCE(SUM(f.casos),0) FROM fact_notificacion f "
+            "JOIN dim_fuente u USING(fuente_key) WHERE u.fuente='SIVIGILA Cundinamarca'"
+        ).fetchone()[0]
+        n["brotes"] = con.execute(
+            "SELECT COALESCE(SUM(f.brotes),0) FROM fact_notificacion f "
+            "JOIN dim_fuente u USING(fuente_key) WHERE u.fuente='OMS/HDX'"
+        ).fetchone()[0]
         n["fuentes"] = dict(con.execute(
             "SELECT u.fuente, COUNT(*) FROM fact_notificacion f "
             "JOIN dim_fuente u USING(fuente_key) GROUP BY u.fuente"

@@ -1,61 +1,93 @@
-icd103n,grupo_enfermedad,es_etv
-Acute bronchitis,Influenza y respiratorias,No
-Acute hepatitis A,Otras,No
-Acute poliomyelitis,Otras,No
-Anthrax,Otras,No
-Arenaviral haemorrhagic fever,Otras,No
-Atypical virus infections of central nervous system,Otras,No
-"Bacterial meningitis, not elsewhere classified",Otras,No
-"Bacterial pneumonia, not elsewhere classified",Influenza y respiratorias,No
-Chlamydia psittaci infection,Otras,No
-Cholera,Cólera y enteropatógenas,No
-Coccidioidomycosis,Otras,No
-Dengue,Transmitidas por vectores (ETV),Si
-Diphtheria,Otras,No
-Dracunculiasis,Otras,No
-Emergency use of U07,COVID-19 y uso de emergencia,No
-Gonococcal infection,Otras,No
-Inflammatory polyneuropathy,Otras,No
-Influenza due to identified seasonal influenza virus,Influenza y respiratorias,No
-Influenza due to identified zoonotic or pandemic influenza virus,Influenza y respiratorias,No
-Leishmaniasis,Transmitidas por vectores (ETV),Si
-Leptospirosis,Otras,No
-Listeriosis,Otras,No
-Measles,Otras,No
-Meningococcal infection,Otras,No
-Monkeypox,Otras,No
-Mosquito-borne viral encephalitis,Transmitidas por vectores (ETV),Si
-Other acute viral hepatitis,Otras,No
-Other and unspecified infectious diseases,Otras,No
-"Other arthropod-borne viral fevers, not elsewhere classified",Transmitidas por vectores (ETV),Si
-"Other bacterial diseases, not elsewhere classified",Otras,No
-"Other bacterial foodborne intoxications, not elsewhere classified",Cólera y enteropatógenas,No
-Other gastroenteritis and colitis of infectious and unspecified origin,Cólera y enteropatógenas,No
-Other mosquito-borne viral fevers,Transmitidas por vectores (ETV),Si
-Other salmonella infections,Cólera y enteropatógenas,No
-Other specified bacterial agents as the cause of diseases classified to other chapters,Otras,No
-"Other viral diseases, not elsewhere classified",Otras,No
-"Other viral haemorrhagic fevers, not elsewhere classified",Otras,No
-"Other viral infections characterized by skin and mucous membrane lesions, not elsewhere classified",Otras,No
-Plague,Transmitidas por vectores (ETV),Si
-Plasmodium falciparum malaria,Transmitidas por vectores (ETV),Si
-Plasmodium vivax malaria,Transmitidas por vectores (ETV),Si
-"Pneumonia, organism unspecified",Influenza y respiratorias,No
-Provisional assignment of new diseases of uncertain etiology or emergency use,COVID-19 y uso de emergencia,No
-Rabies,Otras,No
-"Respiratory tuberculosis, bacteriologically and histologically confirmed",Otras,No
-Scarlet fever,Otras,No
-Severe acute respiratory syndrome [SARS],Influenza y respiratorias,No
-Shigellosis,Cólera y enteropatógenas,No
-Streptococcal sepsis,Otras,No
-Tularaemia,Otras,No
-Typhoid and paratyphoid fevers,Cólera y enteropatógenas,No
-Typhus fever,Transmitidas por vectores (ETV),Si
-Unspecified human immunodeficiency virus [HIV] disease,Otras,No
-Unspecified malaria,Transmitidas por vectores (ETV),Si
-Unspecified viral haemorrhagic fever,Otras,No
-Viral infection of unspecified site,Otras,No
-Viral meningitis,Otras,No
-"Viral pneumonia, not elsewhere classified",Influenza y respiratorias,No
-Whooping cough,Otras,No
-Yellow fever,Transmitidas por vectores (ETV),Si
+﻿icd104n,icd103n,disease,enfermedad,grupo_enfermedad,es_etv
+Acute bronchitis due to rhinovirus,Acute bronchitis,Acute bronchitis due to Rhinovirus,Acute bronchitis due to rhinovirus,Influenza y respiratorias,No
+Acute hepatitis A,Acute hepatitis A,Acute hepatitis A,Acute hepatitis A,Otras,No
+Acute hepatitis E,Other acute viral hepatitis,Acute hepatitis E,Acute hepatitis E,Otras,No
+"Acute poliomyelitis, unspecified",Acute poliomyelitis,"Acute poliomyelitis, unspecified","Acute poliomyelitis, unspecified",Otras,No
+"Acute viral hepatitis, unspecified",Other acute viral hepatitis,"Acute viral hepatitis, unspecified","Acute viral hepatitis, unspecified",Otras,No
+Adenoviral pneumonia,"Viral pneumonia, not elsewhere classified",Pneumonia due to Adenovirus,Adenoviral pneumonia,Influenza y respiratorias,No
+"Anthrax, unspecified",Anthrax,"Anthrax, unspecified","Anthrax, unspecified",Otras,No
+"Arenaviral haemorrhagic fever, unspecified",Arenaviral haemorrhagic fever,"Arenavirus disease, unspecified","Arenaviral haemorrhagic fever, unspecified",Otras,No
+"Bacterial foodborne intoxication, unspecified","Other bacterial foodborne intoxications, not elsewhere classified","Bacterial foodborne intoxications, unspecified","Bacterial foodborne intoxication, unspecified",Cólera y enteropatógenas,No
+"Bacterial meningitis, unspecified","Bacterial meningitis, not elsewhere classified","Bacterial meningitis, unspecified","Bacterial meningitis, unspecified",Otras,No
+Botulism,"Other bacterial foodborne intoxications, not elsewhere classified",Botulism,Botulism,Cólera y enteropatógenas,No
+Bubonic plague,Plague,Bubonic plague,Peste,Transmitidas por vectores (ETV),Si
+"COVID-19, virus identified",Emergency use of U07,COVID-19,"COVID-19, virus identified",COVID-19 y uso de emergencia,No
+Chikungunya virus disease,Other mosquito-borne viral fevers,Chikungunya mosquito-borne viral fever,Chikungunya,Transmitidas por vectores (ETV),Si
+Chlamydia psittaci infection,Chlamydia psittaci infection,Infections due to Chlamydia psittaci,Chlamydia psittaci infection,Otras,No
+Classical cholera,Cholera,Cholera,Classical cholera,Cólera y enteropatógenas,No
+"Coccidioidomycosis, unspecified",Coccidioidomycosis,"Coccidioidomycosis, unspecified","Coccidioidomycosis, unspecified",Otras,No
+"Coronavirus infection, unspecified site",Viral infection of unspecified site,"Coronavirus infection, unspecified site","Coronavirus infection, unspecified site",Otras,No
+Creutzfeldt-Jakob disease,Atypical virus infections of central nervous system,"Creutzfeldt-Jakob disease, unspecified",Creutzfeldt-Jakob disease,Otras,No
+Crimean-Congo haemorrhagic fever,"Other viral haemorrhagic fevers, not elsewhere classified",Crimean-Congo haemorrhagic fever,Crimean-Congo haemorrhagic fever,Otras,No
+Cutaneous anthrax,Anthrax,Cutaneous anthrax,Cutaneous anthrax,Otras,No
+"Dengue, unspecified",Dengue,"Dengue fever, unspecified",Dengue,Transmitidas por vectores (ETV),Si
+"Diphtheria, unspecified",Diphtheria,"Diphtheria, unspecified","Diphtheria, unspecified",Otras,No
+Dracunculiasis,Dracunculiasis,Dracunculiasis,Dracunculiasis,Otras,No
+Ebola virus disease,"Other viral haemorrhagic fevers, not elsewhere classified",Ebola disease,Ebola virus disease,Otras,No
+Enteroviral vesicular stomatitis with exanthem,"Other viral infections characterized by skin and mucous membrane lesions, not elsewhere classified",Enteroviral vesicular stomatitis,Enteroviral vesicular stomatitis with exanthem,Otras,No
+"Enterovirus infection, unspecified site",Viral infection of unspecified site,Enterovirus infection of unspecified site,"Enterovirus infection, unspecified site",Otras,No
+Epidemic louse-borne typhus fever due to Rickettsia prowazekii,Typhus fever,Epidemic louse-borne typhus fever due to Rickettsia prowazekii,Tifus epid?mico,Transmitidas por vectores (ETV),Si
+Escherichia coli [E. coli] as the cause of diseases classified to other chapters,Other specified bacterial agents as the cause of diseases classified to other chapters,Escherichia coli,Escherichia coli [E. coli] as the cause of diseases classified to other chapters,Otras,No
+Foodborne staphylococcal intoxication,"Other bacterial foodborne intoxications, not elsewhere classified",Foodborne staphylococcal intoxication,Foodborne staphylococcal intoxication,Cólera y enteropatógenas,No
+"Gonococcal infection, unspecified",Gonococcal infection,"Gonococcal infection, unspecified","Gonococcal infection, unspecified",Otras,No
+Guillain-Barré syndrome,Inflammatory polyneuropathy,Guillain Barre syndrome,Guillain-Barré syndrome,Otras,No
+Haemorrhagic fever with renal syndrome,"Other viral haemorrhagic fevers, not elsewhere classified",Haemorrhagic fever with renal syndrome,Haemorrhagic fever with renal syndrome,Otras,No
+Hantavirus (cardio-)pulmonary syndrome,"Other viral diseases, not elsewhere classified",Hantavirus pulmonary syndrome,Hantavirus (cardio-)pulmonary syndrome,Otras,No
+Human metapneumovirus pneumonia,"Viral pneumonia, not elsewhere classified",Pneumonia due to Human metapneumovirus,Human metapneumovirus pneumonia,Influenza y respiratorias,No
+Influenza due to identified zoonotic or pandemic influenza virus,Influenza due to identified zoonotic or pandemic influenza virus,Influenza due to identified zoonotic or pandemic influenza virus,Influenza due to identified zoonotic or pandemic influenza virus,Influenza y respiratorias,No
+"Influenza with other manifestations, seasonal influenza virus identified",Influenza due to identified seasonal influenza virus,"Influenza with other manifestations, seasonal influenza virus identified","Influenza with other manifestations, seasonal influenza virus identified",Influenza y respiratorias,No
+Japanese encephalitis,Mosquito-borne viral encephalitis,Japanese encephalitis virus disease,Encefalitis japonesa,Transmitidas por vectores (ETV),Si
+Lassa fever,Arenaviral haemorrhagic fever,Lassa fever,Lassa fever,Otras,No
+Legionnaires disease,"Other bacterial diseases, not elsewhere classified",Legionnaires disease,Legionnaires disease,Otras,No
+"Leishmaniasis, unspecified",Leishmaniasis,"Leishmaniasis, unspecified",Leishmaniasis,Transmitidas por vectores (ETV),Si
+"Leptospirosis, unspecified",Leptospirosis,"Leptospirosis, unspecified","Leptospirosis, unspecified",Otras,No
+"Listeriosis, unspecified",Listeriosis,"Listeriosis, unspecified","Listeriosis, unspecified",Otras,No
+Marburg virus disease,"Other viral haemorrhagic fevers, not elsewhere classified",Marburg disease,Marburg virus disease,Otras,No
+Measles,Measles,Measles,Measles,Otras,No
+Meningococcal meningitis,Meningococcal infection,Meningococcal meningitis,Meningococcal meningitis,Otras,No
+Middle East respiratory syndrome coronavirus [MERS-CoV],Severe acute respiratory syndrome [SARS],Middle East respiratory syndrome,Middle East respiratory syndrome coronavirus [MERS-CoV],Influenza y respiratorias,No
+Monkeypox,Monkeypox,Monkeypox,Monkeypox,Otras,No
+"Mosquito-borne viral encephalitis, unspecified",Mosquito-borne viral encephalitis,"Mosquito-borne viral encephalitis, unspecified",Encefalitis viral transmitida por mosquitos,Transmitidas por vectores (ETV),Si
+O'nyong-nyong fever,Other mosquito-borne viral fevers,O'nyong-nyong mosquito-borne viral fever,Fiebre de O'nyong-nyong,Transmitidas por vectores (ETV),Si
+Oropouche virus disease,"Other arthropod-borne viral fevers, not elsewhere classified",Oropouche virus disease,Oropouche,Transmitidas por vectores (ETV),Si
+Other and unspecified gastroenteritis and colitis of infectious origin,Other gastroenteritis and colitis of infectious and unspecified origin,Infectious gastroenteritis or colitis without specification of infectious agent,Other and unspecified gastroenteritis and colitis of infectious origin,Cólera y enteropatógenas,No
+Other and unspecified infectious diseases,Other and unspecified infectious diseases,"Infection, unspecified",Other and unspecified infectious diseases,Otras,No
+Other arenaviral haemorrhagic fevers,Arenaviral haemorrhagic fever,Chapare virus,Other arenaviral haemorrhagic fevers,Otras,No
+Other specified mosquito-borne viral fevers,Other mosquito-borne viral fevers,"Arthropod-borne viral fever, virus unspecified",Otras fiebres virales transmitidas por mosquitos,Transmitidas por vectores (ETV),Si
+Other specified viral diseases,"Other viral diseases, not elsewhere classified",Other specified viral diseases,Other specified viral diseases,Otras,No
+Other specified viral haemorrhagic fevers,"Other viral haemorrhagic fevers, not elsewhere classified",Sudan virus disease,Other specified viral haemorrhagic fevers,Otras,No
+Other viral infections of unspecified site,Viral infection of unspecified site,Unspecified viral disease,Other viral infections of unspecified site,Otras,No
+Parainfluenza virus pneumonia,"Viral pneumonia, not elsewhere classified",Pneumonia due to parainfluenza virus,Parainfluenza virus pneumonia,Influenza y respiratorias,No
+"Plague, unspecified",Plague,"Plague, unspecified",Peste,Transmitidas por vectores (ETV),Si
+"Plasmodium falciparum malaria, unspecified",Plasmodium falciparum malaria,"Malaria due to Plasmodium falciparum, unspecified",Malaria,Transmitidas por vectores (ETV),Si
+Plasmodium vivax malaria with other complications,Plasmodium vivax malaria,Malaria due to Plasmodium vivax with other complications,Malaria,Transmitidas por vectores (ETV),Si
+Pneumonia due to Mycoplasma pneumoniae,"Bacterial pneumonia, not elsewhere classified",Pneumonia due to Mycoplasma pneumoniae,Pneumonia due to Mycoplasma pneumoniae,Influenza y respiratorias,No
+"Pneumonia, unspecified","Pneumonia, organism unspecified","Pneumonia, organism unspecified","Pneumonia, unspecified",Influenza y respiratorias,No
+Pseudomonas (aeruginosa) as the cause of diseases classified to other chapters,Other specified bacterial agents as the cause of diseases classified to other chapters,Pseudomonas aeruginosa,Pseudomonas (aeruginosa) as the cause of diseases classified to other chapters,Otras,No
+"Rabies, unspecified",Rabies,"Rabies, unspecified","Rabies, unspecified",Otras,No
+Respiratory syncytial virus pneumonia,"Viral pneumonia, not elsewhere classified",Human respiratory syncytial virus | Pneumonia due to Respiratory syncytial virus,Respiratory syncytial virus pneumonia,Influenza y respiratorias,No
+"Respiratory tuberculosis unspecified, confirmed bacteriologically and histologically","Respiratory tuberculosis, bacteriologically and histologically confirmed",Tuberculosis of the respiratory system,"Respiratory tuberculosis unspecified, confirmed bacteriologically and histologically",Otras,No
+Rift Valley fever,Other mosquito-borne viral fevers,Rift Valley fever,Fiebre del Valle del Rift,Transmitidas por vectores (ETV),Si
+"Salmonella infection, unspecified",Other salmonella infections,Infections due to other Salmonella,"Salmonella infection, unspecified",Cólera y enteropatógenas,No
+Scarlet fever,Scarlet fever,Scarlet fever,Scarlet fever,Otras,No
+"Sepsis due to streptococcus, group A",Streptococcal sepsis,"Sepsis due to streptococcus, group A","Sepsis due to streptococcus, group A",Otras,No
+Severe acute respiratory syndrome [SARS],Provisional assignment of new diseases of uncertain etiology or emergency use,Severe acute respiratory syndrome,Severe acute respiratory syndrome [SARS],COVID-19 y uso de emergencia,No
+Shigellosis due to Shigella dysenteriae,Shigellosis,Shigellosis due to Shigella dysenteriae,Shigellosis due to Shigella dysenteriae,Cólera y enteropatógenas,No
+Shigellosis due to Shigella flexneri,Shigellosis,Intestinal infections due to Shigella,Shigellosis due to Shigella flexneri,Cólera y enteropatógenas,No
+St Louis encephalitis,Mosquito-borne viral encephalitis,St. Louis encephalitis virus infection,Encefalitis de San Luis,Transmitidas por vectores (ETV),Si
+"Streptococcal sepsis, unspecified",Streptococcal sepsis,Sepsis without septic shock,"Streptococcal sepsis, unspecified",Otras,No
+Sylvatic yellow fever,Yellow fever,Sylvatic yellow fever,Fiebre amarilla,Transmitidas por vectores (ETV),Si
+"Tularaemia, unspecified",Tularaemia,"Tularaemia, unspecified","Tularaemia, unspecified",Otras,No
+Typhoid fever,Typhoid and paratyphoid fevers,Typhoid fever,Typhoid fever,Cólera y enteropatógenas,No
+Unspecified human immunodeficiency virus [HIV] disease,Unspecified human immunodeficiency virus [HIV] disease,"Human immunodeficiency virus disease without mention of associated disease or condition, clinical stage unspecified",Unspecified human immunodeficiency virus [HIV] disease,Otras,No
+Unspecified malaria,Unspecified malaria,"Malaria, unspecified",Malaria,Transmitidas por vectores (ETV),Si
+Unspecified viral haemorrhagic fever,Unspecified viral haemorrhagic fever,Unspecified viral haemorrhagic fever,Unspecified viral haemorrhagic fever,Otras,No
+Urban rabies,Rabies,Urban rabies,Urban rabies,Otras,No
+Venezuelan equine fever,Other mosquito-borne viral fevers,Venezuelan equine fever,Fiebre equina venezolana,Transmitidas por vectores (ETV),Si
+"Viral meningitis, unspecified",Viral meningitis,"Viral meningitis not elsewhere classified, unspecified","Viral meningitis, unspecified",Otras,No
+"Viral pneumonia, unspecified","Viral pneumonia, not elsewhere classified",Viral pneumonia,"Viral pneumonia, unspecified",Influenza y respiratorias,No
+West Nile virus infection,Other mosquito-borne viral fevers,West Nile virus infection,Virus del Nilo Occidental,Transmitidas por vectores (ETV),Si
+Western equine encephalitis,Mosquito-borne viral encephalitis,Western equine encephalitis,Encefalitis equina occidental,Transmitidas por vectores (ETV),Si
+Whooping cough due to Bordetella pertussis,Whooping cough,Whooping cough due to Bordetella pertussis,Whooping cough due to Bordetella pertussis,Otras,No
+"Yellow fever, unspecified",Yellow fever,"Yellow fever, unspecified",Fiebre amarilla,Transmitidas por vectores (ETV),Si
+Zika virus disease,Other mosquito-borne viral fevers,Zika virus disease,Zika,Transmitidas por vectores (ETV),Si

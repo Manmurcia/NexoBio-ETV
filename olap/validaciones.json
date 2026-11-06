@@ -1,8 +1,8 @@
 {
   "fuente": "SIVIGILA Colombia + SIVIGILA Cundinamarca + OMS/HDX",
-  "filas_origen": 239301,
+  "filas_origen": 239344,
   "casos_origen": 1311772,
-  "brotes_origen": 520,
+  "brotes_origen": 563,
   "validaciones": [
     {
       "grupo": "Unicidad",
@@ -15,16 +15,16 @@
     {
       "grupo": "Unicidad",
       "nombre": "dim_territorio.territorio_key",
-      "esperado": 1284,
-      "obtenido": 1284,
+      "esperado": 1289,
+      "obtenido": 1289,
       "ok": true,
       "nota": ""
     },
     {
       "grupo": "Unicidad",
       "nombre": "dim_evento.evento_key",
-      "esperado": 21,
-      "obtenido": 21,
+      "esperado": 30,
+      "obtenido": 30,
       "ok": true,
       "nota": ""
     },
@@ -39,8 +39,8 @@
     {
       "grupo": "Unicidad",
       "nombre": "fact_notificacion.notificacion_id",
-      "esperado": 239301,
-      "obtenido": 239301,
+      "esperado": 239344,
+      "obtenido": 239344,
       "ok": true,
       "nota": ""
     },
@@ -101,50 +101,66 @@
       "nota": ""
     },
     {
-      "grupo": "Coherencia con fuentes",
-      "nombre": "Filas de SIVIGILA Colombia",
-      "esperado": 237141,
-      "obtenido": 237141,
+      "grupo": "Totales por fuente sin doble conteo",
+      "nombre": "SIVIGILA Colombia",
+      "esperado": [
+        237141,
+        1269342,
+        0
+      ],
+      "obtenido": [
+        237141,
+        1269342,
+        0
+      ],
+      "ok": true,
+      "nota": "Se concilian filas y medidas por fuente; no se suman entre coberturas superpuestas."
+    },
+    {
+      "grupo": "Totales por fuente sin doble conteo",
+      "nombre": "SIVIGILA Cundinamarca",
+      "esperado": [
+        1640,
+        42430,
+        0
+      ],
+      "obtenido": [
+        1640,
+        42430,
+        0
+      ],
+      "ok": true,
+      "nota": "Se concilian filas y medidas por fuente; no se suman entre coberturas superpuestas."
+    },
+    {
+      "grupo": "Totales por fuente sin doble conteo",
+      "nombre": "OMS/HDX",
+      "esperado": [
+        563,
+        0,
+        563
+      ],
+      "obtenido": [
+        563,
+        0,
+        563
+      ],
+      "ok": true,
+      "nota": "Se concilian filas y medidas por fuente; no se suman entre coberturas superpuestas."
+    },
+    {
+      "grupo": "Totales por fuente sin doble conteo",
+      "nombre": "Fuentes segregadas",
+      "esperado": 3,
+      "obtenido": 3,
       "ok": true,
       "nota": ""
     },
     {
-      "grupo": "Coherencia con fuentes",
-      "nombre": "Casos de SIVIGILA Colombia",
-      "esperado": 1269342,
-      "obtenido": 1269342,
-      "ok": true,
-      "nota": ""
-    },
-    {
-      "grupo": "Coherencia con fuentes",
-      "nombre": "Filas de SIVIGILA Cundinamarca",
-      "esperado": 1640,
-      "obtenido": 1640,
-      "ok": true,
-      "nota": ""
-    },
-    {
-      "grupo": "Coherencia con fuentes",
-      "nombre": "Casos de SIVIGILA Cundinamarca",
-      "esperado": 42430,
-      "obtenido": 42430,
-      "ok": true,
-      "nota": ""
-    },
-    {
-      "grupo": "Coherencia con fuentes",
-      "nombre": "Filas de OMS/HDX",
-      "esperado": 520,
-      "obtenido": 520,
-      "ok": true,
-      "nota": ""
-    },
-    {
-      "grupo": "Coherencia con fuentes",
-      "nombre": "Brotes OMS/HDX",
-      "esperado": 520,
-      "obtenido": 520,
+      "grupo": "Medidas",
+      "nombre": "Unidad acorde con la fuente",
+      "esperado": 0,
+      "obtenido": 0,
       "ok": true,
       "nota": ""
     },

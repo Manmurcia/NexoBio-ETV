@@ -27,7 +27,7 @@ NIVELES = {
     "departamento": {"expr": "t.area", "dim": "Territorio", "etiqueta": "Departamento"},
     "municipio":    {"expr": "t.localidad || ' (' || t.area || ')'", "dim": "Territorio",
                      "etiqueta": "Municipio"},
-    "vector":       {"expr": "e.vector", "dim": "Evento", "etiqueta": "Vector transmisor"},
+    "enfermedad":   {"expr": "e.enfermedad", "dim": "Evento", "etiqueta": "Enfermedad"},
     "familia":      {"expr": "e.enfermedad", "dim": "Evento", "etiqueta": "Enfermedad"},
     "evento":       {"expr": "e.evento", "dim": "Evento", "etiqueta": "Evento"},
     "periodo":      {"expr": "a.periodo_analisis", "dim": "Tiempo", "etiqueta": "Periodo de análisis"},
@@ -41,7 +41,7 @@ NIVELES = {
 
 JERARQUIAS = {
     "Territorio": ["region", "departamento", "municipio"],
-    "Evento": ["vector", "familia", "evento"],
+    "Evento": ["enfermedad", "evento"],
     "Tiempo": ["periodo", "anio", "trimestre", "semana"],
     "Semana": ["trimestre", "semana"],
     "Fuente": ["escala", "fuente"],
@@ -93,19 +93,91 @@ def _con():
     return con
 
 
-def _donde(filtros, incluir_desconocidos, semana_max):
+PERIODOS_COMPARACION = {
+    "2007-2022": (2007, 2022),
+    "2007-2010": (2007, 2010),
+    "2011-2016": (2011, 2016),
+    "2017-2022": (2017, 2022),
+}
+ENFERMEDADES_COMUNES = ("Dengue", "Chikungunya")
+SQL_COMPOSICION_FUENTES = """
+WITH composicion AS (
+    SELECT u.fuente, u.escala, t.ambito, e.enfermedad,
+           SUM(CASE WHEN u.fuente = 'OMS/HDX' THEN f.brotes ELSE f.casos END) AS medida
+    FROM fact_notificacion f
+    JOIN dim_fuente u USING (fuente_key)
+    JOIN dim_evento e USING (evento_key)
+    JOIN dim_tiempo d USING (tiempo_key)
+    JOIN dim_territorio t USING (territorio_key)
+    WHERE u.fuente IN (?, ?, ?) AND e.enfermedad IN (?, ?)
+      AND d.anio BETWEEN ? AND ? AND t.region <> 'No geografico'
+    GROUP BY u.fuente, u.escala, t.ambito, e.enfermedad
+)
+SELECT fuente, escala, ambito, enfermedad,
+       100.0 * medida / NULLIF(SUM(medida) OVER (PARTITION BY fuente), 0) AS porcentaje
+FROM composicion
+ORDER BY escala, fuente, enfermedad
+"""
+
+
+def composicion_fuentes(periodo="2007-2022"):
+    """Compara porcentajes por fuente en el conjunto comun de Dengue/Chikungunya."""
+    if periodo not in PERIODOS_COMPARACION:
+        raise ValueError(f"Periodo de comparacion no permitido: {periodo}")
+    desde, hasta = PERIODOS_COMPARACION[periodo]
+    con = _con()
+    try:
+        resultados = con.execute(
+            SQL_COMPOSICION_FUENTES,
+            (
+                "SIVIGILA Colombia", "SIVIGILA Cundinamarca", "OMS/HDX",
+                *ENFERMEDADES_COMUNES, desde, hasta,
+            ),
+        ).fetchall()
+    finally:
+        con.close()
+
+    por_fuente = {}
+    for fuente, escala, ambito, enfermedad, porcentaje in resultados:
+        por_fuente.setdefault(fuente, {
+            "escala": escala, "ambito": ambito, "porcentajes": {},
+        })["porcentajes"][enfermedad] = float(porcentaje)
+
+    esperado = ("SIVIGILA Colombia", "SIVIGILA Cundinamarca", "OMS/HDX")
+    registros = []
+    for fuente in esperado:
+        detalle = por_fuente.get(fuente)
+        if detalle is None:
+            raise RuntimeError(f"No hay datos comparables para la fuente {fuente}.")
+        for enfermedad in ENFERMEDADES_COMUNES:
+            registros.append({
+                "fuente": fuente,
+                "escala": detalle["escala"],
+                "ambito": detalle["ambito"],
+                "enfermedad": enfermedad,
+                "porcentaje": detalle["porcentajes"].get(enfermedad, 0.0),
+            })
+    return registros
+
+
+def _donde(filtros, incluir_desconocidos, semana_max, excluir_semana_cero=False):
     partes, params = [], []
     if not incluir_desconocidos:
         partes.append(SOLO_DEPARTAMENTOS)
+    if excluir_semana_cero:
+        partes.append("a.semana > 0")
     if semana_max:
         partes.append("a.semana <= ?")
         params.append(int(semana_max))
     filtros = filtros or {}
-    if not filtros.get("fuente"):
-        partes.append("u.fuente = ?")
-        params.append("SIVIGILA Colombia")
+    fuente = filtros.get("fuente", "SIVIGILA Colombia")
+    fuentes = [fuente] if isinstance(fuente, str) else list(fuente)
+    if len(fuentes) != 1:
+        raise ValueError("Cada consulta debe seleccionar exactamente una fuente.")
+    partes.append("u.fuente = ?")
+    params.append(str(fuentes[0]))
     for nivel, valores in filtros.items():
-        if nivel not in NIVELES or not valores:
+        if nivel == "fuente" or nivel not in NIVELES or not valores:
             continue
         valores = [valores] if isinstance(valores, (str, int)) else list(valores)
         marcas = ",".join("?" * len(valores))
@@ -123,7 +195,11 @@ def _consulta_sql(filas=(), medida="casos", filtros=None, incluir_desconocidos=F
     sel.append(f"{m['sql']} AS valor")
     if "num" in m:
         sel += [f"{m['num']} AS num", f"{m['den']} AS den"]
-    donde, params = _donde(filtros, incluir_desconocidos, semana_max)
+    excluir_semana_cero = any(nivel in ("trimestre", "semana") for nivel in filas)
+    donde, params = _donde(
+        filtros, incluir_desconocidos, semana_max,
+        excluir_semana_cero=excluir_semana_cero,
+    )
     sql = "SELECT " + ", ".join(sel) + _from(sel + [donde]) + donde
     if filas:
         sql += " GROUP BY " + ", ".join(NIVELES[n]["expr"] for n in filas)

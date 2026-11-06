@@ -79,7 +79,7 @@
 {% if filas %}
 <h2 class="h5 fw-bold">Brotes por {{ etiqueta_nivel|lower }}</h2>
 <div class="border rounded p-3 bg-white mb-4">
-    <div style="position:relative;height:360px"><canvas id="brotesChart" role="img" aria-label="Brotes OMS/HDX por {{ etiqueta_nivel|lower }}"></canvas></div>
+    <div style="position:relative;height:360px"><canvas id="brotesChart" data-chart-labels='{{ labels|tojson }}' data-chart-data='{{ data|tojson }}' role="img" aria-label="Brotes OMS/HDX por {{ etiqueta_nivel|lower }}"></canvas></div>
 </div>
 <div class="table-responsive mb-4">
     <table class="table table-sm table-bordered align-middle">
@@ -112,8 +112,8 @@
 new Chart(document.getElementById('brotesChart'), {
   type: 'bar',
   data: {
-    labels: {{ labels|tojson }},
-    datasets: [{label: 'Brotes reportados', data: {{ data|tojson }}, backgroundColor: '#0284c7', borderRadius: 3}]
+    labels: JSON.parse(document.getElementById('brotesChart').dataset.chartLabels),
+    datasets: [{label: 'Brotes reportados', data: JSON.parse(document.getElementById('brotesChart').dataset.chartData), backgroundColor: '#0284c7', borderRadius: 3}]
   },
   options: {
     indexAxis: '{{ "x" if nivel in ("anio", "periodo") else "y" }}',

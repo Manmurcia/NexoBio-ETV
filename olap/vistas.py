@@ -139,118 +139,54 @@ def _base(vid, a, filtros, pivot, niveles_info, nota_extra=None):
 
 # =============================================================================== VISTA 1
 def concentracion(a):
-    nivel = a.get("nivel", "region")
-    nivel = nivel if nivel in ("region", "departamento", "municipio") else "region"
-    filtros = _filtros(a, ["fuente", "evento", "periodo", "region", "departamento"])
-    modo = a.get("modo", "valor")
-    modo = modo if modo in ("valor", "pct_col") else "valor"
-    pivot = a.get("pivot") == "1"
-
-    sup = C.nivel_superior(nivel)
-    info = [f"Nivel de territorio: {C.NIVELES[nivel]['etiqueta']}"]
-    if sup and sup in filtros:
-        info.append(f"Drill-down: {C.NIVELES[sup]['etiqueta']} → {C.NIVELES[nivel]['etiqueta']} dentro de {bonito(filtros[sup][0])}")
-    ctx = _base("concentracion", a, filtros, pivot, info)
-
-    rk = C.ranking(nivel, "casos", filtros)
-    if rk.empty:
-        ctx["sin_datos"] = True
-        return ctx
-    total = float(rk.valor.sum())
-    n = len(rk)
-    n50 = int((rk.acum < 50).sum() + 1)
-    lider = rk.iloc[0]
-    et = C.NIVELES[nivel]["etiqueta"].lower()
-    plural = {"region": "regiones", "departamento": "departamentos", "municipio": "municipios"}[nivel]
-
-    ctx["indicadores"] = [
-        {"valor": fm(total), "titulo": "Casos notificados", "nota": "Suma de casos de la selección. Denominador de todos los porcentajes de la vista."},
-        {"valor": fp(lider.pct, 2), "titulo": f"Peso de la unidad líder: {bonito(lider[nivel])}",
-         "nota": f"Casos de la unidad ({fm(lider.valor)}) / casos de la selección ({fm(total)})."},
-        {"valor": f"{n50} de {n}", "titulo": f"{plural.capitalize()} que reúnen el 50 % de los casos",
-         "nota": "Unidades ordenadas de mayor a menor hasta acumular la mitad de los casos de la selección."},
-    ]
-    top = rk.head(15)
-    ctx["graficas"] = [
-        {"id": "g1", "tipo": "bar", "horizontal": True,
-         "titulo": f"Casos notificados por {et} (top {len(top)}; casos)",
-         "labels": [bonito(x) for x in top[nivel]], "datasets": [{"label": "Casos", "data": [float(x) for x in top.valor],
-                                                                  "color": "#0284c7"}],
-         "tooltip_pct": [round(float(x), 2) for x in top.pct], "ytitle": "Casos notificados",
-         "nota": "Cada barra es la suma de casos de la unidad; el % (en el tooltip) usa como denominador los casos de la selección."},
-        {"id": "g2", "tipo": "line", "titulo": f"Curva de concentración: % acumulado de casos según el ranking de {plural}",
-         "labels": [str(i + 1) for i in range(min(n, 60))],
-         "datasets": [{"label": "% acumulado de casos", "data": [round(float(x), 2) for x in rk.acum.head(60)], "color": "#0f766e"}],
-         "xtitle": f"Posición en el ranking ({plural}, de mayor a menor)", "ytitle": "% acumulado de los casos", "ymax": 100,
-         "nota": "Una curva que sube rápido indica concentración en pocas unidades."},
-    ]
-    # matriz
-    if pivot:
-        m = C.matriz("evento", nivel, "casos", filtros, modo, max_cols=8)
-        etq_cols = f"{C.NIVELES[nivel]['etiqueta']} (top 8)"
-        link = None
-    else:
-        m = C.matriz(nivel, "evento", "casos", filtros, modo, max_filas=15)
-        etq_cols = "Evento"
-        link = _link_drill_v1(nivel, filtros, a)
-    tabla = _tabla(m, "casos", modo, etq_cols, link)
-    tabla["titulo"] = (f"{'Evento' if pivot else C.NIVELES[nivel]['etiqueta']} × {'Unidad territorial' if pivot else 'Evento'}"
-                       f" · {'casos' if modo == 'valor' else '% de cada columna'}")
-    tabla["denominador"] = ("Valores: casos notificados; los totales se recalculan con su propia consulta."
-                            if modo == "valor" else
-                            ("Cada columna suma 100 %: denominador = casos de ese "
-                             + ("evento" if not pivot else "territorio") + " en la selección."))
-    ctx["matriz"] = tabla
-
-    ev_txt = f" de {filtros['evento'][0].lower()}" if "evento" in filtros else ""
-    ctx["lectura"] = (
-        f"En la selección hay {fm(total)} casos{ev_txt} repartidos en {n} {plural}. "
-        f"{bonito(lider[nivel])} concentra {fp(lider.pct, 2)} y se necesitan {n50} {plural} para llegar a la mitad de los casos "
-        f"({fp(100 * n50 / n, 1)} de las unidades). Los porcentajes usan como denominador los {fm(total)} casos de la selección.")
-
-    ctx["controles"] = {
-        "ayuda": "Cambie el nivel de la jerarquía Región → Departamento → Municipio (drill-down / roll-up), filtre por evento o periodo (slice / dice) y pivote la matriz.",
-        "selects": [
-            {"name": "fuente", "label": "Fuente de casos", "opts": _opts(FUENTES_CASOS, filtros["fuente"][0])},
-            {"name": "evento", "label": "Evento (dimensión Evento)", "opts": _opts([""] + EVENTOS, a.get("evento", ""), {"": "Todos los eventos"})},
-            {"name": "periodo", "label": "Periodo (dimensión Año)", "opts": _opts([""] + PERIODOS, a.get("periodo", ""), {"": "Todos los periodos"})},
-            {"name": "region", "label": "Región natural (dimensión Territorio)", "opts": _opts([""] + REGIONES, a.get("region", ""), {"": "Todas las regiones"})},
-        ],
-        "nivel": {"name": "nivel", "label": "Nivel de territorio", "opts": _opts(["region", "departamento", "municipio"], nivel,
-                                                                                  {"region": "Región natural", "departamento": "Departamento", "municipio": "Municipio"})},
-        "modo": {"name": "modo", "opts": _opts(["valor", "pct_col"], modo, {"valor": "Casos", "pct_col": "% de la columna"})},
-        "pivot": pivot, "ocultos": {k: v[0] for k, v in filtros.items() if k in ("departamento",)},
-        "botones": _botones_nivel_v1(nivel, filtros, a),
+    periodos = {
+        "2007-2022": "2007–2022",
+        "2007-2010": "2007–2010",
+        "2011-2016": "2011–2016",
+        "2017-2022": "2017–2022",
     }
-    return ctx
-
-
-def _link_drill_v1(nivel, filtros, a):
-    inf = C.nivel_inferior(nivel)
-    if not inf:
-        return None
-
-    def f(etiqueta):
-        q = {k: v[0] for k, v in filtros.items()}
-        q[nivel] = etiqueta
-        q.update({"nivel": inf, "modo": a.get("modo", "valor")})
-        return q
-    return f
-
-
-def _botones_nivel_v1(nivel, filtros, a):
-    q0 = {k: v[0] for k, v in filtros.items()}
-    q0["modo"] = a.get("modo", "valor")
-    if a.get("pivot") == "1":
-        q0["pivot"] = "1"
-    out = {}
-    inf, sup = C.nivel_inferior(nivel), C.nivel_superior(nivel)
-    if inf:
-        out["drill"] = dict(q0, nivel=inf)
-    if sup:
-        q = {k: v for k, v in q0.items() if k != sup}
-        out["roll"] = dict(q, nivel=sup)
-    return out
+    periodo = a.get("periodo", "2007-2022")
+    if periodo not in periodos:
+        periodo = "2007-2022"
+    filas = C.composicion_fuentes(periodo)
+    fuentes = [
+        "SIVIGILA Colombia",
+        "SIVIGILA Cundinamarca",
+        "OMS/HDX",
+    ]
+    colores = {
+        "SIVIGILA Colombia": "#0284c7",
+        "SIVIGILA Cundinamarca": "#f59e0b",
+        "OMS/HDX": "#10b981",
+    }
+    return {
+        "vid": "concentracion",
+        "meta": VISTAS_META["concentracion"],
+        "cobertura": C.cobertura(),
+        "periodo": periodo,
+        "periodo_etiqueta": periodos[periodo],
+        "periodos": [
+            {"valor": valor, "etiqueta": etiqueta, "seleccionado": valor == periodo}
+            for valor, etiqueta in periodos.items()
+        ],
+        "filas": filas,
+        "enfermedades": list(C.ENFERMEDADES_COMUNES),
+        "datasets": [
+            {
+                "label": fuente,
+                "data": [
+                    next(
+                        fila["porcentaje"]
+                        for fila in filas
+                        if fila["fuente"] == fuente and fila["enfermedad"] == enfermedad
+                    )
+                    for enfermedad in C.ENFERMEDADES_COMUNES
+                ],
+                "backgroundColor": colores[fuente],
+            }
+            for fuente in fuentes
+        ],
+    }
 
 
 # =============================================================================== VISTA 2

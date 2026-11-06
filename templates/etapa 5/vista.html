@@ -105,7 +105,7 @@
     <div class="col-lg-6">
         <div class="border rounded p-3 bg-white h-100">
             <div class="small fw-bold mb-2">{{ g.titulo }}</div>
-            <div style="position:relative;height:{{ 420 if g.horizontal else 320 }}px"><canvas id="{{ g.id }}" role="img" aria-label="{{ g.titulo }}"></canvas></div>
+            {% if g.horizontal %}<div style="position:relative;height:420px">{% else %}<div style="position:relative;height:320px">{% endif %}<canvas id="{{ g.id }}" role="img" aria-label="{{ g.titulo }}"></canvas></div>
             <div class="small text-muted mt-2">{{ g.nota }}</div>
         </div>
     </div>
@@ -131,7 +131,7 @@
                 <th class="text-start fw-normal" style="position:sticky;left:0;background:#fff">
                     {% if f.link %}<a href="{{ url_for('olap.vista', vista=vid, **f.link) }}" title="Drill-down: descender un nivel dentro de esta unidad">{{ f.etiqueta }} ↓</a>{% else %}{{ f.etiqueta }}{% endif %}
                 </th>
-                {% for c in f.celdas %}<td style="{{ c.style }}" {% if c.title %}title="{{ c.title }}"{% endif %}>{{ c.txt }}</td>{% endfor %}
+                {% for c in f.celdas %}<td {{ ('style="' ~ c.style ~ '"')|safe }} {% if c.title %}title="{{ c.title }}"{% endif %}>{{ c.txt }}</td>{% endfor %}
                 {% if hay_total %}<td class="fw-bold">{{ f.total }}</td>{% endif %}
             </tr>
         {% endfor %}
@@ -173,8 +173,9 @@
 {% block scripts %}
 {% if graficas is defined and not sin_datos %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script id="graficas-data" type="application/json">{{ graficas|tojson }}</script>
 <script>
-const GRAFICAS = {{ graficas|tojson }};
+const GRAFICAS = JSON.parse(document.getElementById('graficas-data').textContent);
 const fmt = new Intl.NumberFormat('es-CO', {maximumFractionDigits: 2});
 GRAFICAS.forEach(g => {
   const el = document.getElementById(g.id);

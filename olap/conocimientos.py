@@ -1,5 +1,5 @@
 """
-conocimientos.py - Metadatos de las cuatro vistas y los ocho conocimientos multidimensionales.
+conocimientos.py - Metadatos de las cinco vistas y los conocimientos multidimensionales.
 
 Todas las cifras citadas se recalculan y se comparan con el modelo en
 scripts/olap/verificar_conocimientos.py (python scripts/olap/verificar_conocimientos.py).
@@ -7,16 +7,16 @@ scripts/olap/verificar_conocimientos.py (python scripts/olap/verificar_conocimie
 
 VISTAS_META = {
     "concentracion": {
-        "num": 1, "slug": "concentracion", "menu": "Análisis 1 · Concentración territorial",
-        "titulo": "Análisis 1 · Concentración territorial de los casos por evento",
-        "pregunta": "¿Cómo cambia la concentración de los casos al descender de región natural a departamento y municipio, y qué eventos se concentran en qué territorios?",
-        "dimensiones": "Evento · Territorio (· Año como filtro)",
-        "medidas": "Casos notificados (suma, aditiva)",
-        "jerarquias": "Territorio: región natural → departamento → municipio",
-        "profundiza": "La Etapa 4 (conocimiento 2.1) mostró que cinco departamentos reúnen 47,79 % de los casos, pero sumaba los cuatro eventos y no bajaba del departamento. Aquí se separa por evento, se agrupa en regiones y se desciende hasta el municipio.",
-        "operaciones": "Drill-down, roll-up, slice, dice y pivot",
-        "limitacion": "Son casos notificados por municipio de ocurrencia, no tasas: las ciudades grandes concentran población y capacidad diagnóstica, así que este análisis no demuestra que el riesgo individual sea mayor donde hay más casos.",
-        "decision": "Focalizar las acciones frente al dengue grave en los 14 municipios que reúnen la mitad de sus casos, mantener una cobertura más amplia (39 municipios) para chikungunya y reforzar la vigilancia de chagas en la Orinoquía y la región Andina.",
+        "num": 1, "slug": "concentracion", "menu": "Análisis 1 · Composición por fuente",
+        "titulo": "Análisis 1 · Composición de Dengue y Chikungunya por fuente",
+        "pregunta": "¿Cómo cambia la composición porcentual de Dengue y Chikungunya entre las escalas nacional, regional y global?",
+        "dimensiones": "Tiempo · Territorio (ámbito) · Evento (enfermedad) · Fuente (escala y nombre)",
+        "medidas": "Porcentaje dentro de Dengue + Chikungunya, normalizado por fuente; no compara cantidades de casos y brotes.",
+        "jerarquias": "Tiempo: periodo → año · Territorio: ámbito → región → área → localidad · Evento: enfermedad → evento · Fuente: escala → fuente",
+        "profundiza": "La Etapa 4 mostró que cinco departamentos reúnen 47,79 % de los casos. Esta vista añade la dimensión Fuente y compara solo la composición porcentual de las dos enfermedades presentes en las tres fuentes, dentro del periodo común 2007–2022.",
+        "operaciones": "Slice temporal y comparación de composición porcentual por fuente",
+        "limitacion": "La comparación se restringe a Dengue y Chikungunya. Los porcentajes usan denominadores internos por fuente y no hacen equivalentes la cobertura de Colombia, Cundinamarca y OMS/HDX ni sus unidades.",
+        "decision": "Usar la vista para comparar qué proporción de las dos enfermedades representa cada una dentro de cada fuente, no para inferir diferencias de incidencia ni comparar volúmenes entre escalas.",
     },
     "ciclos": {
         "num": 2, "slug": "ciclos", "menu": "Análisis 2 · Ciclos epidémicos por territorio",
@@ -71,28 +71,28 @@ VISTAS_META = {
 CONOCIMIENTOS = {
     "concentracion": [
         {
-            "id": "1.1", "titulo": "La región Andina pesa más en el dengue grave y la Orinoquía en el chagas",
-            "pregunta": "¿Se reparten igual entre regiones los casos de cada evento, o hay regiones que pesan más en un evento que en el total?",
-            "dimensiones": "Territorio (región natural) × Evento. Medida: casos notificados (suma) y su porcentaje por columna.",
-            "procedimiento": "Nivel región natural, sin filtros, matriz en modo «% de la columna»: denominador = casos de cada evento en departamentos (dengue 1.139.356; dengue grave 43.461; chikungunya 78.043; chagas 4.871).",
-            "evidencia": "Vista 1, nivel «Región natural», modo «% de la columna».",
-            "enlace": {"nivel": "region", "modo": "pct_col"},
-            "hallazgo": "La región Andina reúne 46,45 % de todos los casos, 46,6 % del dengue y 59,7 % del dengue grave (25.964 de 43.461). La Orinoquía pesa 11,09 % del total pero 33,5 % del chagas (1.631 de 4.871). El Pacífico reúne 23,5 % de la chikungunya frente a 16,6 % del dengue y solo 0,8 % del chagas (38 casos).",
-            "interpretacion": "El reparto territorial depende del evento: mirar solo el total oculta que la gravedad se concentra más en la región Andina y que el chagas tiene un mapa propio. Frente al conocimiento evidente (2.1, cinco departamentos con 47,79 % mezclando los cuatro eventos), aquí aparece que cada evento tiene una geografía distinta.",
-            "utilidad": "Permite dirigir la atención clínica del dengue grave a la región Andina y la vigilancia de chagas a la Orinoquía y la región Andina, en lugar de aplicar una misma distribución a todos los eventos.",
-            "limitacion": "Son casos notificados, no tasas: las regiones tienen poblaciones muy distintas. Hablar de «más peso» no es hablar de más riesgo, y la agrupación en regiones naturales la definió el equipo.",
+            "id": "1.1", "titulo": "La participación de Chikungunya es mayor en la fuente global que en las fuentes colombianas",
+            "pregunta": "¿Qué participación tienen Dengue y Chikungunya dentro de cada fuente durante el periodo común?",
+            "dimensiones": "Tiempo (2007–2022) × Territorio (ámbito) × Evento (enfermedad) × Fuente (escala y fuente). Medida: composición porcentual por fuente.",
+            "procedimiento": "Para cada fuente se suman internamente los casos (SIVIGILA) o brotes (OMS/HDX) de Dengue y Chikungunya entre 2007 y 2022. El porcentaje de cada enfermedad divide su medida entre el total de esas dos enfermedades en la misma fuente; las cantidades no se comparan.",
+            "evidencia": "Vista 1, periodo 2007–2022; tabla y gráfica de porcentajes por fuente.",
+            "enlace": {"periodo": "2007-2022"},
+            "hallazgo": "La participación de Chikungunya es 6,19 % en SIVIGILA Colombia, 9,61 % en SIVIGILA Cundinamarca y 31,71 % en OMS/HDX; la de Dengue completa el 100 % dentro de cada fuente.",
+            "interpretacion": "La composición de las dos enfermedades varía entre las fuentes. Esto describe sus registros relativos dentro de cada cobertura, no que haya más casos o brotes en una escala que en otra.",
+            "utilidad": "Permite identificar diferencias de composición que orienten preguntas de vigilancia y de calidad de los datos, sin convertirlas en comparaciones de riesgo.",
+            "limitacion": "Solo se comparan las dos enfermedades compartidas por las tres fuentes. Los denominadores son propios de cada fuente y los brotes OMS/HDX no equivalen a casos individuales.",
         },
         {
-            "id": "1.2", "titulo": "Para llegar a la mitad de los casos se necesitan 14 municipios en dengue grave y 39 en chikungunya",
-            "pregunta": "¿Cuán concentrado está cada evento al bajar hasta el municipio y cuáles son los municipios líderes?",
-            "dimensiones": "Territorio (municipio) × Evento. Medida: casos notificados y % acumulado.",
-            "procedimiento": "Drill-down: región → departamento → municipio. Slice por evento (uno por vez) en el nivel municipio; unidades ordenadas de mayor a menor hasta acumular 50 % de los casos del evento (denominador: casos del evento en departamentos).",
-            "evidencia": "Vista 1, nivel «Municipio» con el filtro de evento; indicador «unidades que reúnen el 50 % de los casos» y curva de concentración.",
-            "enlace": {"nivel": "municipio", "evento": "DENGUE GRAVE"},
-            "hallazgo": "Dengue grave: 14 de 820 municipios reúnen el 50 % (líder Bucaramanga, 9,6 %). Chagas: 16 de 404 (Valledupar, 10,3 %). Dengue: 23 de 1.072 (Cali, 9,6 %). Chikungunya: 39 de 875 (Cali, 5,7 %). Con los cuatro eventos juntos, 25 de 1.078 unidades reúnen la mitad y el 10 % de las unidades (107) reúne 73,56 %.",
-            "interpretacion": "La concentración aumenta al bajar de nivel y es distinta por evento: el dengue grave y el chagas están en muy pocos municipios, mientras que la chikungunya está más dispersa. La Etapa 4 llegó hasta el departamento y no comparó la concentración entre eventos.",
-            "utilidad": "Define cuántos municipios cubre una intervención focalizada para cada evento: 14 para dengue grave frente a 39 para chikungunya.",
-            "limitacion": "Las unidades incluyen dos categorías «sin municipio asignado» (La Guajira y Risaralda). Sin tasas no se sabe si los municipios líderes lo son por tamaño de población; ese factor no se puede separar con estos datos.",
+            "id": "1.2", "titulo": "La participación de Chikungunya disminuye después de 2011–2016 en las tres fuentes",
+            "pregunta": "¿Cómo cambia la composición porcentual entre los periodos 2011–2016 y 2017–2022 dentro de cada fuente?",
+            "dimensiones": "Tiempo (periodo) × Territorio (ámbito) × Evento (enfermedad) × Fuente (escala y fuente). Medida: composición porcentual recalculada por fuente y periodo.",
+            "procedimiento": "Seleccionar cada periodo en la vista 1. En cada fuente y periodo, calcular la participación de Chikungunya sobre los casos o brotes conjuntos de Dengue y Chikungunya; el denominador se recalcula por separado para cada selección.",
+            "evidencia": "Vista 1, alternar entre 2011–2016 y 2017–2022 y comparar la fila Chikungunya por fuente.",
+            "enlace": {"periodo": "2017-2022"},
+            "hallazgo": "La participación de Chikungunya pasa de 12,89 % a 0,61 % en SIVIGILA Colombia, de 16,70 % a 1,86 % en SIVIGILA Cundinamarca y de 63,64 % a 20,69 % en OMS/HDX.",
+            "interpretacion": "La proporción de los registros para Chikungunya baja en las tres fuentes, aunque se mantiene distinta entre escalas. El patrón no demuestra un cambio de incidencia ni permite comparar cantidades de casos con brotes.",
+            "utilidad": "Usar el cambio temporal como señal descriptiva para revisar diferencias de notificación, cobertura y clasificación entre fuentes.",
+            "limitacion": "Los periodos contienen ventanas de vigilancia y coberturas distintas. Chikungunya no tiene casos SIVIGILA en 2007–2010; los porcentajes describen la composición registrada, no ausencia biológica de enfermedad.",
         },
     ],
     "ciclos": [

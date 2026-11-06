@@ -22,7 +22,16 @@ add("OPERACION SLICE: casos de chagas por region", C.consulta(["region"], "casos
 add("OPERACION DICE: Caribe x 2017-2022 x dengue, por departamento",
     C.consulta(["departamento"], "casos", {"region": ["Caribe"], "periodo": ["2017-2022"], "evento": ["DENGUE"]}))
 add("OPERACION PIVOT: region x evento (la matriz se transpone en la aplicacion)", C.consulta(["region", "evento"], "casos"))
-add("VISTA 1: concentracion por municipio y evento", C.consulta(["municipio", "evento"], "casos"))
+params_composicion = (
+    "SIVIGILA Colombia", "SIVIGILA Cundinamarca", "OMS/HDX",
+    *C.ENFERMEDADES_COMUNES, 2007, 2022,
+)
+bloques.append(
+    "-- VISTA 1: composición porcentual por fuente, enfermedad común y periodo.\n"
+    "-- El denominador usa la medida propia de cada fuente y solo Dengue + Chikungunya.\n"
+    + C.sql_legible(C.SQL_COMPOSICION_FUENTES, params_composicion)
+    + ";\n"
+)
 add("VISTA 2: casos por departamento y anio", C.consulta(["departamento", "anio"], "casos"))
 add("VISTA 2: casos por region y tipo de anio", C.consulta(["region", "tipo_anio"], "casos"))
 add("VISTA 3: casos por region, anio y trimestre (dengue, semanas 1-52); el indice se calcula normalizando cada anio",

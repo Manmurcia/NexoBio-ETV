@@ -2,7 +2,7 @@
 verificar_etapa4.py
 
 Calcula con pandas los valores que deben mostrar las medidas DAX del informe de Power BI (Etapa 4)
-usando los cuatro archivos resultantes del ETL de la Etapa 3 (powerbi/datos/). Sirve para comprobar
+usando los cuatro archivos resultantes del ETL de la Etapa 3 (datos/). Sirve para comprobar
 que Power BI calcula bien. No genera archivos ni paginas.
 
 USO (desde la raiz del repositorio):
@@ -12,7 +12,7 @@ import os
 import pandas as pd
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-D = os.path.join(RAIZ, "powerbi", "datos")
+D = os.path.join(RAIZ, "datos")
 rd = lambda f: pd.read_csv(os.path.join(D, f), dtype=str, keep_default_na=False)
 n = lambda x: f"{x:,.0f}".replace(",", ".")
 p = lambda x, d=2: f"{x:.{d}f}".replace(".", ",") + " %"
@@ -40,8 +40,8 @@ checks = [("clasificacion_evento_vigilancia[nombre_evento] unico", cls_ev.nombre
           ("fact Cundinamarca sin eventos huerfanos", cund.nombre_evento.isin(cls_ev.nombre_evento).all()),
           ("dim_departamento[cod_dpto_o] unico", dep.cod_dpto_o.is_unique),
           ("fact nacional sin departamentos huerfanos", nac.cod_dpto_o.isin(dep.cod_dpto_o).all()),
-          ("clasificacion_enfermedad_hdx[icd103n] unico", cls_hdx.icd103n.is_unique),
-          ("fact HDX sin enfermedades huerfanas", hdx.icd103n.isin(cls_hdx.icd103n).all()),
+          ("clasificacion_enfermedad_hdx[icd104n] unico", cls_hdx.icd104n.is_unique),
+          ("fact HDX sin enfermedades huerfanas", hdx.icd104n.isin(cls_hdx.icd104n).all()),
           ("claves duplicadas en nacional (evento, semana, ano, municipio)", not nac.duplicated(["cod_eve", "semana", "ano", "cod_mun_o"]).any()),
           ("claves duplicadas en Cundinamarca", not cund.duplicated(["cod_eve", "semana", "ano", "cod_mun_o"]).any()),
           ("id_outbreak unico en HDX", hdx.id_outbreak.is_unique)]
@@ -109,7 +109,7 @@ print("Bloques de 13 semanas:", {k: p(a[(a.index >= lo) & (a.index <= hi)].sum()
 # ---------------------------------------------------------------- Tablero 4
 titulo("Tablero 4 - Multivariado (brotes globales HDX, 1996-2025)")
 print("Brotes en el archivo:", n(len(hdx)), "| de 2026 (anio incompleto, se excluyen):", int((hdx.year == 2026).sum()))
-h = hdx[hdx.year <= 2025].merge(cls_hdx, on="icd103n")
+h = hdx[hdx.year <= 2025].merge(cls_hdx, on="icd104n", validate="many_to_one")
 h["region"] = h.who_region.replace("", "Sin región")
 h["periodo"] = h.year.map(lambda y: "1996-2008" if y <= 2008 else "2009-2019" if y <= 2019 else "2020-2025")
 N = len(h); E = h[h.es_etv == "Si"]

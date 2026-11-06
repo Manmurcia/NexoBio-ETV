@@ -47,14 +47,17 @@ JOIN dim_fuente u USING(fuente_key)
 WHERE t.ambito='Colombia' AND t.localidad<>'No aplica' AND u.fuente = 'SIVIGILA Colombia'
 GROUP BY t.region, e.evento;
 
--- VISTA 1: concentracion por municipio y evento
-SELECT t.localidad || ' (' || t.area || ')' AS municipio, e.evento AS evento, SUM(f.casos) AS valor
+-- VISTA 1: composición porcentual por fuente, enfermedad común y periodo.
+-- El denominador usa la medida propia de cada fuente y solo Dengue + Chikungunya.
+WITH composicion AS ( SELECT u.fuente, u.escala, t.ambito, e.enfermedad, SUM(CASE WHEN u.fuente = 'OMS/HDX' THEN f.brotes ELSE f.casos END) AS medida
 FROM fact_notificacion f
-JOIN dim_evento e USING(evento_key)
-JOIN dim_territorio t USING(territorio_key)
-JOIN dim_fuente u USING(fuente_key)
-WHERE t.ambito='Colombia' AND t.localidad<>'No aplica' AND u.fuente = 'SIVIGILA Colombia'
-GROUP BY t.localidad || ' (' || t.area || ')', e.evento;
+JOIN dim_fuente u USING (fuente_key)
+JOIN dim_evento e USING (evento_key)
+JOIN dim_tiempo d USING (tiempo_key)
+JOIN dim_territorio t USING (territorio_key)
+WHERE u.fuente IN ('SIVIGILA Colombia', 'SIVIGILA Cundinamarca', 'OMS/HDX') AND e.enfermedad IN ('Dengue', 'Chikungunya') AND d.anio BETWEEN 2007 AND 2022 AND t.region <> 'No geografico'
+GROUP BY u.fuente, u.escala, t.ambito, e.enfermedad ) SELECT fuente, escala, ambito, enfermedad, 100.0 * medida / NULLIF(SUM(medida) OVER (PARTITION BY fuente), 0) AS porcentaje
+FROM composicion ORDER BY escala, fuente, enfermedad;
 
 -- VISTA 2: casos por departamento y anio
 SELECT t.area AS departamento, a.anio AS anio, SUM(f.casos) AS valor
@@ -81,7 +84,7 @@ JOIN dim_evento e USING(evento_key)
 JOIN dim_territorio t USING(territorio_key)
 JOIN dim_tiempo a ON f.tiempo_key=a.tiempo_key
 JOIN dim_fuente u USING(fuente_key)
-WHERE t.ambito='Colombia' AND t.localidad<>'No aplica' AND a.semana <= 52 AND u.fuente = 'SIVIGILA Colombia' AND CAST(e.evento AS TEXT) IN ('DENGUE')
+WHERE t.ambito='Colombia' AND t.localidad<>'No aplica' AND a.semana > 0 AND a.semana <= 52 AND u.fuente = 'SIVIGILA Colombia' AND CAST(e.evento AS TEXT) IN ('DENGUE')
 GROUP BY t.region, a.anio, a.trimestre_epi_nombre;
 
 -- VISTA 4: % de dengue grave por departamento y periodo
@@ -110,7 +113,7 @@ FROM fact_notificacion f
 JOIN dim_territorio t USING(territorio_key)
 JOIN dim_tiempo a ON f.tiempo_key=a.tiempo_key
 JOIN dim_fuente u USING(fuente_key)
-WHERE t.ambito='Colombia' AND t.localidad<>'No aplica' AND CAST(u.fuente AS TEXT) IN ('SIVIGILA Cundinamarca')
+WHERE t.ambito='Colombia' AND t.localidad<>'No aplica' AND u.fuente = 'SIVIGILA Cundinamarca'
 GROUP BY t.area, a.periodo_analisis;
 
 -- VISTA 5: brotes OMS/HDX por region OMS

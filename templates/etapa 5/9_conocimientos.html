@@ -3,7 +3,7 @@
 {% block content %}
 <h1 class="page-title">5. Conocimientos, limitaciones y conclusiones</h1>
 {{ franja_fuente(cob) }}
-<p>Estos ocho conocimientos se calcularon exclusivamente con el conjunto SIVIGILA Colombia actualmente cargado. Cada ficha indica la selección para reproducirla en las vistas operativas; sus cifras no representan el modelo multifuente objetivo ni deben generalizarse a CIE-10 OMS o brotes globales. Las cifras SIVIGILA se recalculan con <code>scripts/olap/verificar_conocimientos.py</code>.</p>
+<p>Los conocimientos 1.1 y 1.2 comparan composición porcentual por fuente, normalizada por separado para Dengue y Chikungunya durante periodos comunes; los conocimientos 2.1–4.2 describen casos SIVIGILA Colombia. Cada ficha enlaza la vista que permite reproducir su selección. Las cifras y los porcentajes se recalculan con <code>scripts/olap/verificar_conocimientos.py</code>.</p>
 {% for vid in orden_conocimientos %}
 <h2 class="h5 fw-bold mt-4"><a class="text-decoration-none" href="{{ url_for('olap.vista', vista=vid) }}">{{ metas[vid].titulo }}</a></h2>
 {% for k in conocimientos[vid] %}{{ ficha(k, vid) }}{% endfor %}
@@ -17,10 +17,10 @@
 
 <h2 class="h5 fw-bold mt-4">Conclusiones</h2>
 <ul>
-    <li><strong>La geografía depende del evento.</strong> La región Andina reúne 46,45 % de los casos pero 59,7 % del dengue grave; la Orinoquía pesa 33,5 % del chagas. Para el dengue grave bastan 14 municipios para llegar a la mitad de los casos; para la chikungunya hacen falta 39.</li>
+    <li><strong>La composición depende de la fuente y el periodo.</strong> En 2007–2022, Chikungunya representa 6,19 % de los dos eventos comunes en SIVIGILA Colombia, 9,61 % en Cundinamarca y 31,71 % en OMS/HDX. Son porcentajes internos de cada fuente, no volúmenes comparables.</li>
     <li><strong>El ciclo epidémico nacional es la suma de ciclos locales desfasados.</strong> Los 33 departamentos alcanzan su pico en 10 años distintos y desde 2021 el Caribe concentra la mitad de los casos mientras la región Andina cae a 18,5 %.</li>
     <li><strong>La ausencia de estacionalidad nacional esconde estaciones regionales opuestas.</strong> El Caribe pica hacia la semana 46 y la Orinoquía hacia la 21; Cundinamarca varía solo 4,2 puntos porcentuales entre trimestres.</li>
     <li><strong>El mapa de la gravedad cambió.</strong> En 2007–2010 la región Andina tenía 2,1 veces el porcentaje de dengue grave del Caribe; en 2017–2022 el Caribe tiene casi el doble. La caída ocurre en años distintos según el departamento (2008–2012), lo que refuerza la hipótesis de cambios en la clasificación sin demostrarla.</li>
-    <li><strong>Alcance.</strong> Estos hallazgos describen casos SIVIGILA notificados y asociaciones observadas, no incidencia por población ni causalidad; tampoco representan las fuentes globales o CIE-10 del modelo objetivo. Las explicaciones sin respaldo en los datos se presentan como hipótesis. La carga multifuente y la incorporación de población por departamento (DANE) permitirían ampliar el análisis y calcular tasas.</li>
+    <li><strong>Alcance.</strong> Los análisis describen casos notificados y brotes reportados, no incidencia por población ni causalidad. Las proporciones se normalizan dentro de cada fuente y no hacen equivalentes las unidades; las explicaciones sin respaldo en los datos se presentan como hipótesis. Incorporar población por departamento (DANE) permitiría calcular tasas.</li>
 </ul>
 {% endblock %}

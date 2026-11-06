@@ -3,7 +3,7 @@
 {% block content %}
 <h1 class="page-title">4. Operaciones multidimensionales</h1>
 {{ franja_fuente(cob) }}
-<p>Las operaciones se calculan sobre el modelo estrella cargado. Las vistas de casos usan la fuente seleccionada (SIVIGILA Colombia o SIVIGILA Cundinamarca); la vista de brotes consulta OMS/HDX por separado. Cada cambio de nivel o filtro genera una consulta SQL nueva.</p>
+<p>Las operaciones se calculan sobre el modelo estrella cargado. Cada consulta de casos usa una sola fuente SIVIGILA; la vista 1 compara porcentajes internos de las tres fuentes en Dengue y Chikungunya, y la vista de brotes consulta OMS/HDX por separado. Cada cambio de filtro genera una consulta SQL nueva.</p>
 <div class="d-flex flex-wrap gap-2 mb-4">
     {% for o in ops %}<a class="btn btn-outline-primary btn-sm" href="#{{ o.id }}">{{ o.icono }} {{ o.nombre }}</a>{% endfor %}
 </div>
@@ -23,20 +23,21 @@
     </div>
 </div>
 {% endfor %}
-<h2 class="h5 fw-bold">Dónde está cada operación en las vistas SIVIGILA actuales</h2>
+<h2 class="h5 fw-bold">Operaciones y dimensiones utilizadas en las vistas actuales</h2>
 <div class="table-responsive"><table class="table table-bordered table-sm small">
 <thead class="table-light"><tr><th>Vista</th><th>Drill-down / roll-up</th><th>Slice</th><th>Dice</th><th>Pivot</th></tr></thead><tbody>
-<tr><td>Análisis 1</td><td>Botones y enlaces ↓ región → departamento → municipio</td><td>Filtro de evento</td><td>Evento + periodo + región</td><td>Casilla «Pivot»</td></tr>
-<tr><td>Análisis 2</td><td>Nivel de territorio y de tiempo (periodo ↔ año)</td><td>Filtro de tipo de año</td><td>Evento + región + tipo de año</td><td>Casilla «Pivot»</td></tr>
-<tr><td>Análisis 3</td><td>Trimestre ↔ semana; región ↔ departamento</td><td>Filtro de región</td><td>Evento + periodo + región</td><td>Casilla «Pivot»</td></tr>
-<tr><td>Análisis 4</td><td>Periodo ↔ año; región ↔ departamento</td><td>Filtro de periodo</td><td>Región + periodo</td><td>Casilla «Pivot»</td></tr>
-<tr><td>Análisis 5</td><td>Periodo ↔ año; región ↔ país; enfermedad ↔ evento</td><td>Filtro de año, región OMS o enfermedad</td><td>Combinación de filtros globales</td><td>Elegir el nivel de agrupación</td></tr>
+<tr><td>Análisis 1 · composición por fuente</td><td>Tiempo: comparar periodos</td><td>Filtro de periodo</td><td>Enfermedad × fuente × ámbito territorial</td><td>Gráfica por enfermedad y fuente</td></tr>
+<tr><td>Análisis 2 · ciclos</td><td>Territorio y tiempo (periodo ↔ año)</td><td>Filtro de tipo de año</td><td>Evento + región + tipo de año</td><td>Casilla «Pivot»</td></tr>
+<tr><td>Análisis 3 · estacionalidad</td><td>Trimestre ↔ semana; región ↔ departamento</td><td>Filtro de región</td><td>Evento + periodo + región</td><td>Casilla «Pivot»</td></tr>
+<tr><td>Análisis 4 · gravedad</td><td>Periodo ↔ año; región ↔ departamento</td><td>Filtro de periodo</td><td>Región + periodo</td><td>Casilla «Pivot»</td></tr>
+<tr><td>Análisis 5 · brotes OMS/HDX</td><td>Periodo ↔ año; región OMS ↔ país; enfermedad ↔ evento</td><td>Filtro de año, región OMS o enfermedad</td><td>Combinación de filtros globales</td><td>Elegir el nivel de agrupación</td></tr>
 </tbody></table></div>
 <div class="table-responsive"><table class="table table-bordered table-sm small">
 <thead class="table-light"><tr><th>Dimensión</th><th>Jerarquía de análisis</th><th>Medidas relacionadas</th></tr></thead><tbody>
 <tr><td>Tiempo</td><td>Periodo → Año → Trimestre epidemiológico → Semana (0 = registro anual)</td><td>Casos o brotes, según la fuente seleccionada</td></tr>
 <tr><td>Territorio</td><td>Ámbito → Región → Área → Localidad; Colombia (región natural → departamento → municipio) o Mundo (región OMS → país)</td><td>Colombia: casos; Mundo: brotes</td></tr>
-<tr><td>Evento</td><td>Vector → Enfermedad → Evento</td><td>Casos o brotes por catálogo y cobertura</td></tr>
+<tr><td>Evento</td><td>Enfermedad armonizada → Evento original CIE-10/SIVIGILA</td><td>Casos o brotes por catálogo y cobertura; sin vector inferido</td></tr>
 <tr><td>Fuente</td><td>Escala → Fuente</td><td>Casos notificados y brotes reportados por separado</td></tr>
 </tbody></table></div>
+<p class="small">La composición de la vista 1 usa la medida propia de cada fuente y la normaliza dentro de Dengue + Chikungunya. El porcentaje de dengue grave se calcula como casos de Dengue grave / (casos de Dengue + Dengue grave), excluye eventos de mortalidad y se recalcula por grupo. El índice estacional usa como denominador los casos anuales de cada unidad: normaliza cada año a 100 % y promedia las distribuciones anuales; excluye semana 53 y semana 0.</p>
 {% endblock %}

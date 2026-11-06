@@ -1,6 +1,6 @@
 """
-verificar_conocimientos.py - Recalcula con consultas al modelo estrella las cifras citadas en los ocho
-conocimientos multidimensionales (olap/conocimientos.py) y las compara con el texto.
+verificar_conocimientos.py - Recalcula las cifras de los conocimientos y las regresiones de Etapa 4
+con consultas al modelo estrella (olap/conocimientos.py).
 
 USO (desde la raiz):  python scripts/olap/verificar_conocimientos.py
 Sale con codigo 1 si alguna cifra no coincide.
@@ -13,9 +13,12 @@ sys.path.insert(0, RAIZ)
 from olap import consultas as C  # noqa: E402
 
 fallos = []
+comprobaciones = 0
 
 
 def chk(nombre, obtenido, esperado, dec=1):
+    global comprobaciones
+    comprobaciones += 1
     ok = round(obtenido, dec) == round(esperado, dec) if isinstance(esperado, float) else obtenido == esperado
     print(("OK   " if ok else "FALLA"), "|", nombre, "| obtenido:", obtenido if not isinstance(obtenido, float) else round(obtenido, 3), "| texto:", esperado)
     if not ok:
@@ -157,5 +160,48 @@ at = [celda(ma, "Atlántico", y) for y in range(2007, 2023)]
 chk("4.2 Atlántico mínimo", min(at), 0.6)
 chk("4.2 Atlántico máximo", max(at), 3.5)
 
-print(f"\n{'TODAS LAS CIFRAS COINCIDEN' if not fallos else str(len(fallos)) + ' cifras NO coinciden: ' + ', '.join(fallos)}")
+def porcentaje_fuente(periodo, fuente, enfermedad):
+    filas = C.composicion_fuentes(periodo)
+    return next(
+        fila["porcentaje"] for fila in filas
+        if fila["fuente"] == fuente and fila["enfermedad"] == enfermedad
+    )
+
+
+# ---------------- 5. Comparación de composición por fuente
+fuentes_comparacion = ("SIVIGILA Colombia", "SIVIGILA Cundinamarca", "OMS/HDX")
+for fuente, chik in zip(fuentes_comparacion, (6.19, 9.61, 31.71)):
+    chk(f"5.1 Chikungunya % dentro de {fuente} (2007-2022)",
+        porcentaje_fuente("2007-2022", fuente, "Chikungunya"), chik, 2)
+    chk(f"5.1 composición Dengue + Chikungunya = 100 % en {fuente}",
+        porcentaje_fuente("2007-2022", fuente, "Dengue")
+        + porcentaje_fuente("2007-2022", fuente, "Chikungunya"), 100.0, 2)
+for fuente, anterior, reciente in zip(
+    fuentes_comparacion,
+    (12.89, 16.70, 63.64),
+    (0.61, 1.86, 20.69),
+):
+    chk(f"5.2 Chikungunya % {fuente} (2011-2016)",
+        porcentaje_fuente("2011-2016", fuente, "Chikungunya"), anterior, 2)
+    chk(f"5.2 Chikungunya % {fuente} (2017-2022)",
+        porcentaje_fuente("2017-2022", fuente, "Chikungunya"), reciente, 2)
+
+# ---------------- Regresión de cifras de la Etapa 4 y aislamiento de fuentes
+cob = C.cobertura()
+chk("Etapa 4: casos nacionales territoriales", cob["casos_base"], 1265731)
+chk("Etapa 4: cinco departamentos", float(C.ranking("departamento").head(5).pct.sum()), 47.79, 2)
+chk("Etapa 4: porcentaje dengue grave territorial", C.total("pct_grave"), 3.67, 2)
+chk("Etapa 4: promedio anual nacional", round(cob["casos_totales"] / 16), 79334)
+chk("Fuentes separadas: casos nacionales", C.total("casos"), 1265731)
+chk("Fuentes separadas: casos regionales",
+    C.total("casos", {"fuente": ["SIVIGILA Cundinamarca"]}), 42430)
+rechaza_mezcla = False
+try:
+    C.total("casos", {"fuente": ["SIVIGILA Colombia", "SIVIGILA Cundinamarca"]})
+except ValueError:
+    rechaza_mezcla = True
+chk("Fuentes separadas: rechaza sumar dos fuentes", rechaza_mezcla, True)
+
+print(f"\n{comprobaciones} comprobaciones: "
+      f"{'TODAS LAS CIFRAS COINCIDEN' if not fallos else str(len(fallos)) + ' NO coinciden: ' + ', '.join(fallos)}")
 sys.exit(1 if fallos else 0)

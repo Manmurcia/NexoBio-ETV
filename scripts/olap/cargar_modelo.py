@@ -17,12 +17,12 @@ VALIDACIONES = os.path.join(RAIZ, "olap", "validaciones.json")
 ARCHIVOS = {
     "nacional": "Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv",
     "regional": "regional_cundinamarca_etv.csv",
-    "global": "global_brotes_etv.csv",
+    "global": "Disease_Outbreaks_HDX_Limpio.xlsx",
 }
 FUENTES = [
-    ("SIVIGILA Colombia", "Nacional", "casos notificados", ARCHIVOS["nacional"]),
-    ("SIVIGILA Cundinamarca", "Regional", "casos notificados", ARCHIVOS["regional"]),
-    ("OMS/HDX", "Global", "brotes reportados", ARCHIVOS["global"]),
+    ("SIVIGILA Colombia", "Nacional", "Casos notificados", ARCHIVOS["nacional"]),
+    ("SIVIGILA Cundinamarca", "Regional", "Casos notificados", ARCHIVOS["regional"]),
+    ("OMS/HDX", "Global", "Brotes reportados", ARCHIVOS["global"]),
 ]
 
 REGION_NATURAL = {}
@@ -36,25 +36,7 @@ for region, codigos in {
 }.items():
     REGION_NATURAL.update({str(codigo): region for codigo in codigos})
 
-VECTOR_NACIONAL = {
-    "DENGUE": "Aedes",
-    "DENGUE GRAVE": "Aedes",
-    "CHIKUNGUNYA": "Aedes",
-    "CHAGAS": "Triatominos",
-}
-VECTOR_GLOBAL = {
-    "Dengue": "Aedes",
-    "Yellow fever": "Aedes",
-    "Other mosquito-borne viral fevers": "Mosquitos",
-    "Mosquito-borne viral encephalitis": "Mosquitos",
-    "Plasmodium falciparum malaria": "Anopheles",
-    "Plasmodium vivax malaria": "Anopheles",
-    "Unspecified malaria": "Anopheles",
-    "Leishmaniasis": "Flebotominos",
-    "Plague": "Pulgas",
-    "Typhus fever": "No especificado",
-    "Other arthropod-borne viral fevers, not elsewhere classified": "Artrópodos",
-}
+EVENTOS_MORTALIDAD = {"MORTALIDAD POR DENGUE", "MORTALIDAD POR MALARIA"}
 PERIODOS_ANALISIS = [
     (2007, 2010, "2007-2010"),
     (2011, 2016, "2011-2016"),
@@ -80,9 +62,7 @@ def _periodo_analisis(anio):
     for inicio, fin, periodo in PERIODOS_ANALISIS:
         if inicio <= anio <= fin:
             return periodo
-    if anio < 2007:
-        return "Anterior a 2007"
-    return "Posterior a 2022"
+    return "Fuera de 2007-2022"
 
 
 def _periodo_oms(anio):
@@ -114,7 +94,7 @@ def _periodo_y_tipo_anio(src_nacional):
 
 def _cargar_fuentes():
     archivos = {
-        nombre: os.path.join(CONSOLIDACION if nombre in ("regional", "global") else DATOS, archivo)
+        nombre: os.path.join(CONSOLIDACION if nombre == "regional" else DATOS, archivo)
         for nombre, archivo in ARCHIVOS.items()
     }
     faltantes = [ruta for ruta in archivos.values() if not os.path.isfile(ruta)]
@@ -123,37 +103,62 @@ def _cargar_fuentes():
 
     nacional = pd.read_csv(archivos["nacional"], encoding="utf-8-sig")
     regional = pd.read_csv(archivos["regional"], encoding="utf-8-sig")
-    global_oms = pd.read_csv(archivos["global"], encoding="utf-8-sig")
+    global_oms = pd.read_excel(archivos["global"], dtype=str, keep_default_na=False)
+    global_oms = global_oms.rename(columns={
+        "year": "Year",
+        "disease": "Disease",
+        "country": "Country",
+        "unsd_region": "unsd_subregion",
+    })
+    global_oms["Year"] = pd.to_numeric(global_oms["Year"], errors="raise").astype(int)
+    global_oms["Country"] = global_oms["Country"].astype(str).str.strip()
     clasif_siv = pd.read_csv(os.path.join(DATOS, "clasificacion_evento_vigilancia.csv"), encoding="utf-8-sig")
     clasif_hdx = pd.read_csv(os.path.join(DATOS, "clasificacion_enfermedad_hdx.csv"), encoding="utf-8-sig")
+    mapa_siv = pd.read_csv(os.path.join(DATOS, "mapeo_enfermedad_sivigila.csv"), encoding="utf-8-sig")
     departamentos = pd.read_csv(os.path.join(DATOS, "dim_departamento.csv"), encoding="utf-8-sig")
 
     grupos_siv = dict(zip(clasif_siv.nombre_evento, clasif_siv.grupo_evento))
+    mapa_enfermedades_siv = dict(zip(mapa_siv.evento, mapa_siv.enfermedad))
+    nacional["nombre_evento"] = nacional.nombre_evento.astype(str).str.strip()
+    regional["evento"] = regional.evento.astype(str).str.strip()
     eventos_siv = set(nacional.nombre_evento.dropna()) | set(regional.evento.dropna())
     no_clasificados = eventos_siv - set(grupos_siv)
     if no_clasificados:
         raise ValueError(f"Eventos SIVIGILA sin clasificación: {sorted(no_clasificados)}")
     no_etv = {evento for evento in eventos_siv if grupos_siv[evento] != "ETV"}
-    eventos_sin_vector = no_etv | (eventos_siv - set(VECTOR_NACIONAL))
-    if eventos_sin_vector:
-        raise ValueError(f"Eventos fuera del alcance ETV o sin vector: {sorted(eventos_sin_vector)}")
+    if no_etv:
+        raise ValueError(f"Eventos SIVIGILA fuera del alcance ETV: {sorted(no_etv)}")
+    eventos_sin_enfermedad = (eventos_siv - EVENTOS_MORTALIDAD) - set(mapa_enfermedades_siv)
+    if eventos_sin_enfermedad:
+        raise ValueError(f"Eventos SIVIGILA sin enfermedad armonizada: {sorted(eventos_sin_enfermedad)}")
+    if not mapa_siv.evento.is_unique:
+        raise ValueError("mapeo_enfermedad_sivigila.csv contiene eventos duplicados.")
+    if not clasif_hdx.icd104n.is_unique:
+        raise ValueError("clasificacion_enfermedad_hdx.csv debe ser unica por icd104n.")
 
-    mapa_hdx = dict(zip(clasif_hdx.icd103n, clasif_hdx.es_etv.astype(str).str.strip().str.lower()))
-    sin_clasificar_hdx = set(global_oms.icd103n.dropna()) - set(mapa_hdx)
+    mapa_hdx = clasif_hdx.set_index("icd104n").to_dict("index")
+    sin_clasificar_hdx = set(global_oms.icd104n.dropna()) - set(mapa_hdx)
     if sin_clasificar_hdx:
         raise ValueError(f"Enfermedades OMS/HDX sin clasificación: {sorted(sin_clasificar_hdx)}")
+    global_oms["enfermedad"] = global_oms.icd104n.map(
+        lambda disease: mapa_hdx[disease]["enfermedad"]
+    )
     global_oms = global_oms[
-        global_oms.icd103n.map(mapa_hdx).isin(("si", "sí", "yes", "true", "1"))
+        global_oms.icd104n.map(
+            lambda disease: str(mapa_hdx[disease]["es_etv"]).strip().lower()
+        ).isin(("si", "sí", "yes", "true", "1"))
     ].copy()
-    if global_oms.id_outbreak.isna().any():
+    nacional = nacional[~nacional.nombre_evento.isin(EVENTOS_MORTALIDAD)].copy()
+    regional = regional[~regional.evento.isin(EVENTOS_MORTALIDAD)].copy()
+    if global_oms.id_outbreak.astype(str).str.strip().eq("").any():
         raise ValueError("La fuente OMS/HDX contiene brotes sin id_outbreak.")
     if global_oms.id_outbreak.duplicated().any():
         raise ValueError("La fuente OMS/HDX contiene id_outbreak duplicados.")
 
-    return nacional, regional, global_oms, departamentos
+    return nacional, regional, global_oms, departamentos, mapa_enfermedades_siv
 
 
-def _construir_dimensiones(src_nacional, src_regional, src_global, departamentos):
+def _construir_dimensiones(src_nacional, src_regional, src_global, departamentos, mapa_enfermedades_siv):
     tipo_anio, promedio = _periodo_y_tipo_anio(src_nacional)
 
     fuente_ids = {nombre: i for i, (nombre, *_resto) in enumerate(FUENTES, start=1)}
@@ -183,45 +188,42 @@ def _construir_dimensiones(src_nacional, src_regional, src_global, departamentos
     primer_anio_siv = {
         fila.nombre_evento: int(fila.anio_primer_registro) for fila in codigos_siv.itertuples()
     }
-    for evento in sorted(set(src_nacional.nombre_evento) | set(src_regional.evento)):
-        enfermedad = {
-            "DENGUE": "Dengue",
-            "DENGUE GRAVE": "Dengue",
-            "CHIKUNGUNYA": "Chikungunya",
-            "CHAGAS": "Chagas",
-        }[evento]
-        for cobertura in ("Nacional", "Solo Cundinamarca"):
+    for evento, anio in (
+        src_regional.groupby("evento").anio.min().items()
+    ):
+        primer_anio_siv[evento] = min(primer_anio_siv.get(evento, int(anio)), int(anio))
+
+    eventos_nacionales = set(src_nacional.nombre_evento)
+    eventos_regionales = set(src_regional.evento)
+    for evento in sorted(eventos_nacionales | eventos_regionales):
+        enfermedad = mapa_enfermedades_siv.get(evento)
+        if not enfermedad:
+            raise ValueError(f"Evento SIVIGILA sin enfermedad armonizada: {evento}")
+        coberturas = []
+        if evento in eventos_nacionales:
+            coberturas.append("Nacional")
+        if evento in eventos_regionales:
+            coberturas.append("Solo Cundinamarca")
+        for cobertura in coberturas:
             eventos[("SIVIGILA", evento, cobertura)] = {
                 "catalogo": "SIVIGILA",
                 "cod_evento": codigo_por_evento.get(evento),
                 "evento": evento,
                 "enfermedad": enfermedad,
-                "vector": VECTOR_NACIONAL[evento],
                 "cobertura": cobertura,
                 "capitulo_cie10": None,
                 "anio_primer_registro": primer_anio_siv[evento],
             }
 
-    clasif_hdx = pd.read_csv(os.path.join(DATOS, "clasificacion_enfermedad_hdx.csv"), encoding="utf-8-sig")
-    etv_hdx = set(
-        clasif_hdx.loc[
-            clasif_hdx.es_etv.astype(str).str.strip().str.lower().isin(("si", "sí", "yes", "true", "1")),
-            "icd103n",
-        ]
-    )
     for (nombre_evento, enfermedad, capitulo), grupo in src_global.groupby(
-        ["icd104n", "icd103n", "icd10n"], dropna=False
+        ["icd104n", "enfermedad", "icd10n"], dropna=False
     ):
-        if enfermedad not in etv_hdx:
-            continue
-        vector = VECTOR_GLOBAL.get(enfermedad, "No especificado")
         key = ("CIE-10 OMS", _texto(nombre_evento), "Global")
         eventos[key] = {
             "catalogo": "CIE-10 OMS",
-            "cod_evento": _texto(grupo.icd104c.iloc[0]) or None,
+            "cod_evento": None,
             "evento": _texto(nombre_evento),
             "enfermedad": _texto(enfermedad),
-            "vector": vector,
             "cobertura": "Global",
             "capitulo_cie10": _texto(capitulo) or None,
             "anio_primer_registro": int(grupo.Year.min()),
@@ -280,10 +282,13 @@ def _construir_dimensiones(src_nacional, src_regional, src_global, departamentos
     for row in src_regional[["cod_municipio", "municipio", "anio"]].drop_duplicates("cod_municipio").itertuples(index=False):
         agregar_territorio_colombia(row.cod_municipio, row.municipio, 25, "CUNDINAMARCA")
 
-    for row in src_global[["iso3", "Country", "who_region", "unsd_subregion"]].drop_duplicates("iso3").itertuples(index=False):
-        codigo = _texto(row.iso3).upper()
+    geografia_global = src_global[["Country", "who_region", "unsd_subregion"]].drop_duplicates()
+    if geografia_global.Country.duplicated().any():
+        raise ValueError("Un país OMS/HDX tiene más de una región o subregión asociada.")
+    for row in geografia_global.itertuples(index=False):
+        codigo = _texto(row.Country)
         if not codigo:
-            raise ValueError(f"País OMS/HDX sin código ISO3: {row.Country}")
+            raise ValueError("La fuente OMS/HDX contiene un pais sin nombre.")
         key = ("Mundo", codigo)
         territorio = {
             "ambito": "Mundo",
@@ -338,10 +343,10 @@ def _construir_dimensiones(src_nacional, src_regional, src_global, departamentos
 
 
 def transformar():
-    nacional, regional, global_oms, _departamentos = _cargar_fuentes()
+    nacional, regional, global_oms, _departamentos, mapa_enfermedades_siv = _cargar_fuentes()
     (dim_tiempo, dim_territorio, dim_evento, dim_fuente,
      tiempo_ids, territorio_ids, evento_ids, fuente_ids, promedio) = _construir_dimensiones(
-        nacional, regional, global_oms, _departamentos
+        nacional, regional, global_oms, _departamentos, mapa_enfermedades_siv
     )
 
     evento_nacional = {
@@ -365,8 +370,8 @@ def transformar():
         for row in regional[["cod_municipio"]].drop_duplicates().itertuples()
     }
     territorio_global = {
-        _texto(row.iso3).upper(): territorio_ids[("Mundo", _texto(row.iso3).upper())]
-        for row in global_oms[["iso3"]].drop_duplicates().itertuples()
+        _texto(row.Country): territorio_ids[("Mundo", _texto(row.Country))]
+        for row in global_oms[["Country"]].drop_duplicates().itertuples()
     }
     event_global = {
         ( _texto(row.icd104n), _texto(row.icd103n), _texto(row.icd10n)):
@@ -394,7 +399,7 @@ def transformar():
     })
     global_hechos = pd.DataFrame({
         "tiempo_key": [tiempo_ids[(int(y), 0)] for y in global_oms.Year],
-        "territorio_key": [territorio_global[_texto(c).upper()] for c in global_oms.iso3],
+        "territorio_key": [territorio_global[_texto(c)] for c in global_oms.Country],
         "evento_key": [
             event_global[(_texto(e), _texto(d), _texto(ch))]
             for e, d, ch in zip(global_oms.icd104n, global_oms.icd103n, global_oms.icd10n)
@@ -477,35 +482,41 @@ def validar(con, tablas, fuentes):
     ).fetchone()[0]
     agregar("Medidas", "Casos y brotes excluyentes y válidos", 0, medidas_invalidas)
 
-    esperados_filas = {
-        "SIVIGILA Colombia": len(fuentes["nacional"]),
-        "SIVIGILA Cundinamarca": len(fuentes["regional"]),
-        "OMS/HDX": len(fuentes["global"]),
+    esperados = {
+        "SIVIGILA Colombia": (
+            len(fuentes["nacional"]), int(fuentes["nacional"].conteo.sum()), 0,
+        ),
+        "SIVIGILA Cundinamarca": (
+            len(fuentes["regional"]), int(fuentes["regional"].conteo.sum()), 0,
+        ),
+        "OMS/HDX": (len(fuentes["global"]), 0, len(fuentes["global"])),
     }
-    esperados_casos = {
-        "SIVIGILA Colombia": int(fuentes["nacional"].conteo.sum()),
-        "SIVIGILA Cundinamarca": int(fuentes["regional"].conteo.sum()),
-        "OMS/HDX": None,
+    obtenidos = {
+        nombre: (filas, casos or 0, brotes or 0)
+        for nombre, filas, casos, brotes in con.execute(
+            "SELECT d.fuente, COUNT(*), SUM(f.casos), SUM(f.brotes) "
+            "FROM fact_notificacion f JOIN dim_fuente d USING (fuente_key) "
+            "GROUP BY d.fuente"
+        )
     }
-    obtenidos_filas = dict(con.execute(
-        "SELECT d.fuente, COUNT(*) FROM fact_notificacion f "
-        "JOIN dim_fuente d USING (fuente_key) GROUP BY d.fuente"
-    ))
-    obtenidos_casos = dict(con.execute(
-        "SELECT d.fuente, SUM(f.casos) FROM fact_notificacion f "
-        "JOIN dim_fuente d USING (fuente_key) GROUP BY d.fuente"
-    ))
-    for fuente, filas_esperadas in esperados_filas.items():
-        agregar("Coherencia con fuentes", f"Filas de {fuente}", filas_esperadas,
-                obtenidos_filas.get(fuente, 0))
-        if esperados_casos[fuente] is not None:
-            agregar("Coherencia con fuentes", f"Casos de {fuente}", esperados_casos[fuente],
-                    obtenidos_casos.get(fuente))
-    brotes = con.execute(
-        "SELECT SUM(brotes) FROM fact_notificacion f "
-        "JOIN dim_fuente d USING (fuente_key) WHERE d.fuente = 'OMS/HDX'"
+    for fuente, totales_esperados in esperados.items():
+        agregar(
+            "Totales por fuente sin doble conteo",
+            fuente,
+            totales_esperados,
+            obtenidos.get(fuente, (0, 0, 0)),
+            "Se concilian filas y medidas por fuente; no se suman entre coberturas superpuestas.",
+        )
+    fuentes_cargadas = con.execute(
+        "SELECT COUNT(DISTINCT fuente_key) FROM fact_notificacion"
     ).fetchone()[0]
-    agregar("Coherencia con fuentes", "Brotes OMS/HDX", esperados_filas["OMS/HDX"], brotes)
+    agregar("Totales por fuente sin doble conteo", "Fuentes segregadas", 3, fuentes_cargadas)
+    medidas_por_fuente_invalidas = con.execute(
+        "SELECT COUNT(*) FROM fact_notificacion f JOIN dim_fuente d USING (fuente_key) "
+        "WHERE (d.fuente = 'OMS/HDX' AND (f.casos IS NOT NULL OR f.brotes IS NULL)) "
+        "OR (d.fuente <> 'OMS/HDX' AND (f.casos IS NULL OR f.brotes IS NOT NULL))"
+    ).fetchone()[0]
+    agregar("Medidas", "Unidad acorde con la fuente", 0, medidas_por_fuente_invalidas)
     fuentes_sin_hechos = con.execute(
         "SELECT COUNT(*) FROM dim_fuente s WHERE NOT EXISTS "
         "(SELECT 1 FROM fact_notificacion f WHERE f.fuente_key = s.fuente_key)"
@@ -535,7 +546,7 @@ def _esquema_actual(con):
     if not {"periodo_analisis", "tipo_anio_sivigila"}.issubset(columnas):
         return False
     columnas_evento = {row[1] for row in con.execute("PRAGMA table_info(dim_evento)")}
-    if not {"vector", "anio_primer_registro"}.issubset(columnas_evento):
+    if not {"enfermedad", "anio_primer_registro"}.issubset(columnas_evento):
         return False
     fuentes = {row[0] for row in con.execute("SELECT fuente FROM dim_fuente")}
     return {"SIVIGILA Colombia", "SIVIGILA Cundinamarca", "OMS/HDX"}.issubset(fuentes)

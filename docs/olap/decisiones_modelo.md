@@ -1,84 +1,56 @@
-# Decisiones de diseño del modelo estrella
+# Decisiones del modelo OLAP de la Etapa 5
 
-El modelo integra tres fuentes (SIVIGILA Colombia, SIVIGILA Cundinamarca y brotes de la OMS) en una sola tabla de hechos.
-Al unir fuentes aparecen riesgos de doble conteo y de mezcla de unidades; estas cuatro decisiones los resuelven antes de cargar datos.
-Todas las cifras se obtuvieron de los archivos tratados en la Etapa 3 (`powerbi/datos/`).
+El modelo combina tres fuentes en `fact_notificacion`, con cuatro dimensiones conformadas. El esquema está en [`../../scripts/olap/crear_modelo.sql`](../../scripts/olap/crear_modelo.sql); el ETL, la carga y la validación se ejecutan con `python scripts/olap/cargar_modelo.py`.
 
-## Decisión 1. Qué se carga y cómo se evita el doble conteo
+## 1. Fuentes, unidad y cobertura
 
-**Problema.** Los casos de Cundinamarca aparecen en tres archivos. Los 4 eventos que el archivo de Cundinamarca comparte con el nacional
-(dengue, dengue grave, chikungunya, chagas) son idénticos al departamento 25 del archivo nacional: 13.571 filas y 41.556 casos en ambos.
-El archivo regional ETV (1.608 filas) vuelve a contener esos mismos 41.556 casos. Cargar los tres y sumar contaría Cundinamarca dos o tres veces.
+| Fuente | Archivo | Registros cargados | Medida |
+|---|---|---:|---:|
+| SIVIGILA Colombia | `datos/Datos_de_Vigilancia_ColombiaCompleto_Limpio.csv` | 237.141 | 1.269.342 casos |
+| SIVIGILA Cundinamarca | `consolidacion/regional_cundinamarca_etv.csv` | 1.640 | 42.430 casos |
+| OMS/HDX | `datos/Disease_Outbreaks_HDX_Limpio.xlsx` | 563 | 563 brotes |
 
-**Decisión.** Cargar tres fuentes que no se solapan por construcción:
+El hecho tiene 239.344 filas. Los casos nacionales incluyen 1.265.731 ubicados en departamentos y 3.611 clasificados como Exterior o procedencia desconocida. Las coberturas nacional y regional de SIVIGILA se superponen en Cundinamarca; los casos regionales no se suman a los nacionales. Las consultas de casos filtran una sola fuente y rechazan selecciones de múltiples fuentes. La vista comparativa calcula porcentajes dentro de cada fuente, no totales combinados.
 
-| Fuente (`dim_fuente`) | Qué se carga | Filas | Medida |
-|---|---|---:|---|
-| SIVIGILA Colombia (Nacional) | Dengue, dengue grave, chikungunya y chagas, 2007–2022 | 237.141 | 1.269.342 casos |
-| SIVIGILA Cundinamarca (Regional) | Solo eventos que el nacional no trae: zika, malaria (5 variantes) y leishmaniasis (3 variantes) | 3.747 | 8.782 casos |
-| OMS / HDX (Global) | Brotes de enfermedades transmitidas por vectores, 1996–2026 | 563 | 563 brotes |
+La fuente regional está agregada por año, municipio y evento; no tiene semana epidemiológica. Se representa con semana 0 y no se une con la fuente nacional como si compartiera su granularidad semanal. La tasa de incidencia y letalidad regional no se cargan: el modelo conserva casos notificados y no tiene población como denominador.
 
-**No se carga:**
+## 2. Alcance y correspondencias de evento
 
-- Los 4 eventos repetidos del archivo de Cundinamarca (13.571 filas, 41.556 casos).
-- El archivo regional ETV (1.608 filas). Se conserva como validación independiente: los casos de Cundinamarca del modelo deben coincidir con él.
-- La tasa de incidencia y la letalidad del archivo regional: no hay población por municipio para recalcularlas ni contrastarlas. Se documenta como limitación.
+Se cargan solo enfermedades transmitidas por vectores. La clasificación de SIVIGILA excluye eventos no ETV y eventos de mortalidad. `mapeo_enfermedad_sivigila.csv` armoniza el evento original: dengue, dengue grave y mortalidad por dengue comparten enfermedad Dengue, aunque mortalidad no entra al hecho.
 
-**Consecuencia.** Zika, malaria y leishmaniasis solo existen para Cundinamarca; en `dim_evento.cobertura` figuran como «Solo Cundinamarca»
-y no pueden presentarse como cifras nacionales. Como las dos fuentes SIVIGILA no comparten eventos, `SUM(casos)` entre ellas no duplica.
+OMS/HDX se clasifica por `icd104n`, no por `icd103n`, que puede agrupar enfermedades distintas. `clasificacion_enfermedad_hdx.csv` incluye la correspondencia por enfermedad, el nombre armonizado y la marca ETV. Así se mantiene Chikungunya, Zika y Oropouche como enfermedades diferenciadas. La tabla debe tener una fila única por código `icd104n`; aliases descriptivos del archivo de origen se consolidan en esa clave.
 
-## Decisión 2. Solo enfermedades transmitidas por vectores (ETV)
+No se incluye una dimensión de vector porque el origen no da esa relación para todos los eventos y asignarla manualmente sería una clasificación inferida. La jerarquía dimensional es enfermedad armonizada → evento original.
 
-**Problema.** Los archivos traen eventos ajenos al proyecto: 27 eventos de Cundinamarca (90.270 filas, 248.294 casos) y 3.005 brotes de la OMS
-(COVID-19, cólera, etc.). Cargarlos obligaría a filtrar en cada consulta y distorsionaría los totales.
+## 3. Medidas y exclusividad
 
-**Decisión.** Cargar únicamente ETV. La composición con eventos no ETV ya se presentó en la Etapa 4.
-Para la OMS se usa `clasificacion_enfermedad_hdx.csv` (`es_etv = 'Si'`): 563 brotes, 150 países, 14 de ellos en 2026 (año incompleto).
+`casos` y `brotes` son medidas excluyentes por registro. Cada fila SIVIGILA tiene `casos` y `brotes = NULL`; cada fila OMS/HDX tiene `brotes = 1` y `casos = NULL`. La carga valida las medidas según la fuente y concilia los totales de registros y medidas con cada archivo de origen.
 
-**Consecuencia en la jerarquía de evento.** Con solo ETV el nivel `grupo` (ETV / No ETV) sería constante. Se reemplaza por **vector → enfermedad → evento**.
-La clasificación por vector la define el equipo a partir del agente transmisor de cada enfermedad, igual que la región natural se define a partir del código del departamento:
+Los eventos `MORTALIDAD POR DENGUE` y `MORTALIDAD POR MALARIA` representan defunciones, no casos: se excluyen del hecho para no mezclar unidades. Por esta razón, el porcentaje de dengue grave usa como denominador Dengue + Dengue grave y se recalcula por cada grupo.
 
-| Vector | Enfermedades |
-|---|---|
-| Mosquito | Dengue, chikungunya, zika, fiebre amarilla, malaria, encefalitis transmitidas por mosquitos, otras fiebres virales transmitidas por mosquitos |
-| Triatomino | Chagas |
-| Flebótomo | Leishmaniasis |
-| Pulga | Peste |
-| Piojo | Tifus epidémico |
-| No especificado | Fiebres virales por artrópodos sin vector específico (p. ej. Oropouche) |
+## 4. Tiempo y estacionalidad
 
-## Decisión 3. Eventos de mortalidad fuera de la tabla de hechos
+La clave temporal es `tiempo_key = año * 100 + semana`. SIVIGILA Colombia conserva su semana epidemiológica; SIVIGILA Cundinamarca y OMS/HDX usan semana 0 para datos anuales. Las etiquetas `periodo_analisis` (2007–2010, 2011–2016 y 2017–2022) y `tipo_anio_sivigila` permiten reproducir los análisis existentes. La dimensión también conserva `periodo` de la serie OMS y marca 2026 como incompleto.
 
-**Problema.** `MORTALIDAD POR DENGUE` (56 filas, 57 defunciones) y `MORTALIDAD POR MALARIA` (1 fila, 1 defunción) guardan muertes en la misma columna donde
-los demás eventos guardan casos. Sumarlos mezclaría unidades y, con la enfermedad armonizada «Dengue», contaminaría el denominador del porcentaje de dengue grave.
+El índice estacional se calcula por año y unidad: los casos de cada trimestre o semana se dividen por el total anual de esa unidad, se expresan como porcentaje y luego se promedian entre años. Se excluyen semana 0 (sin semana) y semana 53; el índice semanal usa las semanas 1–52.
 
-**Decisión.** No cargarlos. Permanecen en el archivo de origen y se mencionan en la documentación. La medida `casos` queda con una sola unidad.
-Alternativa descartada: cargarlos con un atributo `tipo_registro`; obligaría a filtrar en cada consulta y no hay denominador comparable para calcular letalidad.
+## 5. Territorio y HDX
 
-**Consecuencia.** El denominador del porcentaje de dengue grave es DENGUE + DENGUE GRAVE por construcción.
+En Colombia, el código DANE permite asignar región natural, departamento y municipio. «Exterior» y «Procedencia desconocida» se conservan con `region = 'No geografico'` y se excluyen de rankings territoriales de departamentos. Los agregados nacionales que los incluyen se identifican explícitamente.
 
-## Decisión 4. Periodos, año epidémico y años sin vigilancia
+El archivo limpio de HDX no trae códigos ISO2/ISO3. El nombre del país se utiliza como `codigo_territorio`; se conservan `who_region` y `unsd_region` como región OMS y subregión ONU. No se fabrican identificadores que no estén en el origen.
 
-**Problema.** `dim_tiempo.periodo` (1996–2008, 2009–2019, 2020–2025, 2026) sirve para la serie de brotes, pero parte los 16 años de SIVIGILA en tres cortes sin sentido
-para el análisis. Las vistas y conocimientos ya construidos usan 2007–2010, 2011–2016 y 2017–2022 y la marca de año epidémico, que el modelo nuevo no tenía.
+## 6. Validaciones y regresión
 
-**Decisión.** Agregar a `dim_tiempo`:
+`cargar_modelo.py` regenera `olap/nexobio_olap.db` y `olap/validaciones.json`, comprobando claves únicas, integridad referencial, granularidad, exclusividad de medidas y conciliación por fuente. `verificar_conocimientos.py` prueba las cifras publicadas, el aislamiento de fuentes y los porcentajes de la vista comparativa.
 
-- `periodo_analisis`: 2007–2010, 2011–2016, 2017–2022 o «Fuera de 2007-2022». Es un corte de años, no de fuente.
-- `tipo_anio_sivigila`: «Epidemico» si los casos ETV del año en SIVIGILA Colombia superan el promedio anual (79.334). Corresponde a 2010, 2013, 2014, 2015, 2016 y 2019.
-  Fuera de 2007–2022 vale «No aplica».
+La regresión con los datos de Etapa 4 debe preservar:
 
-Y a `dim_evento`: `anio_primer_registro`, el primer año con notificación en la fuente. Chagas empieza en 2012, chikungunya en 2014 y zika en 2015;
-los años anteriores son «sin vigilancia», no «cero casos».
-
-## Cifras de control
-
-Con las cuatro decisiones, el modelo cargado debe dar:
-
-| Control | Valor |
+| Indicador | Valor |
 |---|---:|
-| Filas en `fact_notificacion` | 241.451 (237.141 + 3.747 + 563) |
-| Casos (suma de `casos`) | 1.278.124 (1.269.342 + 8.782) |
-| Brotes (suma de `brotes`) | 563 |
+| Casos nacionales ubicados en departamentos | 1.265.731 |
+| Porcentaje acumulado de los cinco departamentos principales | 47,79 % |
+| Porcentaje territorial de dengue grave | 3,67 % |
+| Promedio anual nacional (2007–2022) | 79.334 |
 
-Estas cifras son la base de las validaciones de la carga (`validaciones.json`).
+La comparación de fuentes usa únicamente Dengue y Chikungunya, las enfermedades comunes a las tres fuentes dentro de los datos cargados; los porcentajes se normalizan independientemente en cada una.

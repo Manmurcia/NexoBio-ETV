@@ -14,20 +14,23 @@ Proyecto de la materia **Minería de Datos**, Universidad de Cundinamarca — Ex
 ## Estructura
 
 ```
-app.py                      Aplicación Flask (rutas de las Etapas 1 a 4)
+app.py                      Aplicación Flask (rutas de las Etapas 1 a 5)
 requirements.txt            Dependencias (Flask y gunicorn para la web; pandas, openpyxl y tabulate para los scripts)
-templates/etapa 1|2|3|4/    Páginas de cada etapa (la Etapa 4 es el menú "Conocimiento evidente")
+templates/etapa 1|2|3|4|5/  Páginas de cada etapa (Etapa 4: "Conocimiento evidente"; Etapa 5: "Análisis multidimensional")
 static/                     CSS, imágenes e informes PDF
 data/                       Archivos de datos originales (Etapas 1 y 2), sin modificar
 salida/                     Resultado de la consolidación de la Etapa 1
 reporte_perfilamiento/      Resultado de los scripts de calidad de la Etapa 2
-powerbi/                    Etapa 4: datos del ETL, modelo, medidas DAX y guía del informe de Power BI
+powerbi/                    Etapa 4: modelo, medidas DAX y guía del informe de Power BI
+olap/                       Etapa 5: consultas, vistas Flask, base SQLite y validaciones del modelo estrella
+docs/olap/                  Documentación del modelo y consultas SQL generadas
 scripts/
     consolidar_datos.py         Etapa 1: consolida los datos por escala (global, nacional, regional)
     perfilamiento_etapa2.py     Etapa 2: perfil por variable (tipo, únicos, nulos, mín/máx/promedio)
     dimensiones_calidad.py      Etapa 2: las 6 dimensiones de calidad con fórmula y resultado
     tratamiento_etapa2.py       Etapa 2: aplica el plan de tratamiento y mide antes / después
     verificar_etapa4.py         Etapa 4: calcula los valores que deben mostrar las medidas DAX
+    olap/                       Etapa 5: crear_modelo.sql, cargar_modelo.py, exportar_consultas.py y verificaciones
 ```
 
 ## Datos
@@ -43,7 +46,7 @@ scripts/
 | `Datos_de_Vigilancia_en_Salud_Publica_de_Colombia.csv` | Instituto Nacional de Salud | 241.746 | [Portal SIVIGILA](https://portalsivigila.ins.gov.co/) |
 | `Public_Use_Ixodes_County_Table_2023.xlsx` | CDC (ArboNET Tick Module) | 21.775 (7 hojas) | [CDC · Tick Surveillance Data](https://www.cdc.gov/ticks/surveillance/TickSurveillanceData.html) |
 
-**Etapa 4** — archivos resultantes del ETL de la Etapa 3, en `powerbi/datos/`:
+**Etapa 4** — archivos resultantes del ETL de la Etapa 3, en `datos/`:
 
 | Archivo | Contenido | Registros | Periodo |
 |---|---|---:|---|
@@ -108,7 +111,7 @@ Análisis exploratorio de los archivos del ETL, presentado en un informe de Powe
 
 Archivos:
 
-- `powerbi/datos/` — los cuatro archivos del ETL y las tablas de apoyo que se cargan en Power BI.
+- `datos/` — los archivos tratados del ETL y las tablas de apoyo que se cargan en Power BI y la Etapa 5.
 - `powerbi/MEDIDAS_DAX.md` — modelo de datos, medidas DAX por tablero y **resultados esperados** para comprobarlas.
 - `powerbi/GUIA_CONSTRUCCION_POWERBI.md` — cómo construir, publicar, insertar y actualizar el informe.
 - `powerbi/NexoBio_ConocimientoEvidente.pbix` — archivo de Power BI (si pesa más de 100 MB, enlace de descarga aquí: _pendiente_).
@@ -121,7 +124,31 @@ pip install -r requirements.txt
 python scripts/verificar_etapa4.py
 ```
 
-Abrir y actualizar el informe: abrir el `.pbix` en Power BI Desktop, ajustar el parámetro `RutaDatos` a la carpeta `powerbi/datos` y pulsar **Actualizar**.
+Abrir y actualizar el informe: abrir el `.pbix` en Power BI Desktop, ajustar el parámetro `RutaDatos` a la carpeta `datos` y pulsar **Actualizar**.
+
+## Etapa 5 — Análisis multidimensional
+
+El menú **Análisis multidimensional** integra el modelo estrella multifuente y sus vistas interactivas. Incluye SIVIGILA Colombia, SIVIGILA Cundinamarca y brotes OMS/HDX. Cada análisis de casos selecciona una sola fuente porque las coberturas nacional y regional se superponen; los brotes usan su medida independiente. La vista comparativa presenta porcentajes normalizados por fuente para Dengue y Chikungunya, las enfermedades comunes a las tres fuentes.
+
+Estructura principal:
+
+- `scripts/olap/crear_modelo.sql` — esquema SQLite con una tabla de hechos y las dimensiones tiempo, territorio, evento y fuente.
+- `scripts/olap/cargar_modelo.py` — construye `olap/nexobio_olap.db` y regenera `olap/validaciones.json`, conciliando las filas y medidas por fuente.
+- `olap/consultas.py`, `olap/vistas.py`, `olap/rutas.py` — consultas parametrizadas, cálculos analíticos y blueprint Flask.
+- `templates/etapa 5/` — páginas de propósito, modelo, validaciones, operaciones, conocimientos y vistas.
+- `datos/clasificacion_enfermedad_hdx.csv` y `datos/mapeo_enfermedad_sivigila.csv` — correspondencias por enfermedad CIE-10 OMS y evento SIVIGILA.
+- `docs/olap/` — decisiones, diccionario campo a campo y consultas SQL exportadas.
+
+Desde la raíz del repositorio:
+
+```bash
+python scripts/olap/cargar_modelo.py
+python scripts/olap/verificar_conocimientos.py
+python scripts/verificar_etapa4.py
+python scripts/olap/exportar_consultas.py
+```
+
+La integración de la Etapa 5 se realiza mediante pull request a `main`; el número del PR se agregará cuando se cree.
 
 ## Gestión en GitHub
 

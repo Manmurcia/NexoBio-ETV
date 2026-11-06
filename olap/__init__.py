@@ -23,7 +23,7 @@ def asegurar_bd():
                 fuentes = {r[0] for r in con.execute("SELECT fuente FROM dim_fuente")}
                 if (
                     {"periodo_analisis", "tipo_anio_sivigila"}.issubset(columnas_tiempo)
-                    and {"vector", "anio_primer_registro"}.issubset(columnas_evento)
+                    and {"enfermedad", "anio_primer_registro"}.issubset(columnas_evento)
                     and {"SIVIGILA Colombia", "SIVIGILA Cundinamarca", "OMS/HDX"}.issubset(fuentes)
                 ):
                     return

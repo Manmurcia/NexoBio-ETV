@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS dim_fuente;
 -- ---------------------------------------------------------------------
 -- DIMENSION TIEMPO. Jerarquia: periodo > anio > trimestre epidemiologico > semana
 -- tiempo_key = anio * 100 + semana (semana 0 = registro anual, sin semana)
--- periodo          : cortes para series largas de brotes OMS (1996-2026)
+-- periodo          : cortes para series largas de brotes OMS (1996-2008, 2009-2019, 2020-2026)
 -- periodo_analisis : cortes de las vistas SIVIGILA (2007-2022); es un corte de anios,
 --                    por eso vale para cualquier fuente
 -- tipo_anio_sivigila: 'Epidemico' si los casos ETV de SIVIGILA Colombia del anio superan
@@ -26,7 +26,7 @@ CREATE TABLE dim_tiempo (
     semana               INTEGER NOT NULL CHECK (semana BETWEEN 0 AND 53),
     trimestre_epi        INTEGER NOT NULL CHECK (trimestre_epi BETWEEN 0 AND 4),
     trimestre_epi_nombre TEXT    NOT NULL,       -- 'T1 (sem 1-13)', ..., 'Sin semana'
-    periodo              TEXT    NOT NULL,       -- '1996-2008', '2009-2019', '2020-2025', '2026 (incompleto)'
+    periodo              TEXT    NOT NULL,       -- '1996-2008', '2009-2019', '2020-2026'
     periodo_analisis     TEXT    NOT NULL CHECK (periodo_analisis IN
                          ('2007-2010', '2011-2016', '2017-2022', 'Fuera de 2007-2022')),
     tipo_anio_sivigila   TEXT    NOT NULL CHECK (tipo_anio_sivigila IN
@@ -59,7 +59,7 @@ CREATE TABLE dim_territorio (
 );
 
 -- ---------------------------------------------------------------------
--- DIMENSION EVENTO. Jerarquia: vector > enfermedad > evento
+-- DIMENSION EVENTO. Jerarquia: enfermedad > evento
 -- Solo eventos transmitidos por vectores (ETV). Los eventos de mortalidad
 -- (defunciones, no casos) no se cargan en la tabla de hechos.
 -- anio_primer_registro: primer anio con notificacion en la fuente; los anios
@@ -71,12 +71,10 @@ CREATE TABLE dim_evento (
     cod_evento          TEXT,                    -- codigo SIVIGILA del evento
     evento              TEXT NOT NULL,           -- nombre original del evento o enfermedad
     enfermedad          TEXT NOT NULL,           -- armonizada entre catalogos
-    vector              TEXT NOT NULL CHECK (vector IN
-                        ('Mosquito', 'Triatomino', 'Flebotomo', 'Pulga', 'Piojo', 'No especificado')),
-    cobertura           TEXT NOT NULL CHECK (cobertura IN ('Nacional', 'Solo Cundinamarca', 'Global')),
+    cobertura           TEXT    NOT NULL CHECK (cobertura IN ('Nacional', 'Solo Cundinamarca', 'Global')),
     capitulo_cie10      TEXT,                    -- solo OMS (icd10n)
     anio_primer_registro INTEGER,
-    UNIQUE (catalogo, evento)
+    UNIQUE (catalogo, evento, cobertura)
 );
 
 -- ---------------------------------------------------------------------
@@ -94,8 +92,8 @@ CREATE TABLE dim_fuente (
 -- TABLA DE HECHOS
 -- Granularidad: notificacion municipal por semana epidemiologica (INS), o brote
 -- reportado por pais y anio (OMS, semana 0). Casos y brotes son excluyentes.
--- Las fuentes no se solapan por construccion (ver decisiones_modelo.md), por lo que
--- SUM(casos) entre las dos fuentes SIVIGILA no duplica; casos y brotes nunca se suman.
+-- Las coberturas SIVIGILA se solapan; las consultas deben filtrar una fuente
+-- y nunca sumar ambas. Casos y brotes tampoco se suman entre si.
 -- ---------------------------------------------------------------------
 CREATE TABLE fact_notificacion (
     notificacion_id INTEGER PRIMARY KEY,

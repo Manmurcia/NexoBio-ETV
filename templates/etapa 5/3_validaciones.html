@@ -17,6 +17,6 @@
 {% endfor %}
 <h2 class="h6 fw-bold mt-4">Explicación de diferencias</h2>
 <p class="small">Las comprobaciones de coherencia validan por separado las filas y los casos de cada archivo SIVIGILA, los brotes OMS/HDX, la integridad referencial y la exclusividad de medidas. El análisis territorial nacional excluye «Exterior» y «Procedencia desconocida», aunque sus registros se conservan en el modelo.</p>
-<p class="small">El script <code>scripts/olap/verificar_conocimientos.py</code> sigue recalculando los ocho conocimientos de casos con la fuente SIVIGILA Colombia seleccionada.</p>
+<p class="small">El script <code>scripts/olap/verificar_conocimientos.py</code> mantiene las comprobaciones de regresión de la serie nacional, verifica el aislamiento de las fuentes y recalcula los conocimientos de la comparación porcentual por fuente.</p>
 {% endif %}
 {% endblock %}
