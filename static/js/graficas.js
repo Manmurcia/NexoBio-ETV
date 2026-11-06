@@ -131,10 +131,11 @@
         dibujarSegmento();
         points.forEach((point, index) => {
           if (!point) return;
+          const isolated = !points[index - 1] && !points[index + 1];
           const circle = svgNode("circle", {
             cx: point[0],
             cy: point[1],
-            r: labels.length > 30 ? 0 : 3,
+            r: labels.length > 30 && !isolated ? 0 : 3,
             fill: colorDe(dataset, datasetIndex, index)
           });
           circle.appendChild(svgNode("title", {}, `${dataset.label}: ${formato.format(point[2])}`));
