@@ -85,18 +85,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script type="application/json" id="fuentesChartData">{"labels": {{ enfermedades|tojson }}, "datasets": {{ datasets|tojson }}}</script>
-<script>
-const fuentesChartData = JSON.parse(document.getElementById('fuentesChartData').textContent);
-new Chart(document.getElementById('fuentesChart'), {
-  type: 'bar',
-    data: fuentesChartData,
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: {y: {beginAtZero: true, max: 100, title: {display: true, text: '% dentro de cada fuente'}}},
-    plugins: {tooltip: {callbacks: {label: item => `${item.dataset.label}: ${item.formattedValue} %`}}}
-  }
-});
-</script>
+<script type="application/json" class="nexo-chart-data">{{ [{"id": "fuentesChart", "tipo": "bar", "labels": enfermedades, "datasets": datasets, "ytitle": "% dentro de cada fuente", "ymax": 100}]|tojson }}</script>
+<script src="{{ url_for('static', filename='js/graficas.js') }}" defer></script>
 {% endblock %}

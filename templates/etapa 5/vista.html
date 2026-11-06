@@ -172,43 +172,7 @@
 
 {% block scripts %}
 {% if graficas is defined and not sin_datos %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script id="graficas-data" type="application/json">{{ graficas|tojson }}</script>
-<script>
-const GRAFICAS = JSON.parse(document.getElementById('graficas-data').textContent);
-const fmt = new Intl.NumberFormat('es-CO', {maximumFractionDigits: 2});
-GRAFICAS.forEach(g => {
-  const el = document.getElementById(g.id);
-  if (!el) return;
-  const horizontal = !!g.horizontal;
-  const datasets = g.datasets.map((d, i) => {
-    if (g.tipo === 'line') {
-      return {label: d.label, data: d.data, borderColor: d.color, backgroundColor: d.color,
-              borderDash: d.dash ? [6, 4] : [], borderWidth: d.dash ? 2.5 : 2, pointRadius: g.labels.length > 30 ? 0 : 3,
-              tension: 0.25, spanGaps: true, fill: false};
-    }
-    const cols = d.primer_color ? d.data.map((_, j) => j === 0 ? d.primer_color : d.color) : d.color;
-    return {label: d.label, data: d.data, backgroundColor: cols, borderRadius: 3};
-  });
-  new Chart(el, {
-    type: g.tipo,
-    data: {labels: g.labels, datasets: datasets},
-    options: {
-      indexAxis: horizontal ? 'y' : 'x', responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: {display: datasets.length > 1, position: 'bottom'},
-        tooltip: {callbacks: {label: c => {
-          let t = c.dataset.label + ': ' + fmt.format(horizontal ? c.parsed.x : c.parsed.y);
-          if (g.tooltip_pct) t += ' (' + fmt.format(g.tooltip_pct[c.dataIndex]) + ' % de la selección)';
-          return t; }}}
-      },
-      scales: {
-        [horizontal ? 'x' : 'y']: {beginAtZero: true, max: g.ymax || undefined, title: {display: !!g.ytitle, text: g.ytitle || ''}},
-        [horizontal ? 'y' : 'x']: {title: {display: !!g.xtitle, text: g.xtitle || ''}, ticks: {autoSkip: g.tipo === 'line', maxTicksLimit: 26}}
-      }
-    }
-  });
-});
-</script>
+<script type="application/json" class="nexo-chart-data">{{ graficas|tojson }}</script>
+<script src="{{ url_for('static', filename='js/graficas.js') }}" defer></script>
 {% endif %}
 {% endblock %}

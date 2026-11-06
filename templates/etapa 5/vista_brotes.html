@@ -107,21 +107,7 @@
 
 {% block scripts %}
 {% if filas %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script>
-new Chart(document.getElementById('brotesChart'), {
-  type: 'bar',
-  data: {
-    labels: JSON.parse(document.getElementById('brotesChart').dataset.chartLabels),
-    datasets: [{label: 'Brotes reportados', data: JSON.parse(document.getElementById('brotesChart').dataset.chartData), backgroundColor: '#0284c7', borderRadius: 3}]
-  },
-  options: {
-    indexAxis: '{{ "x" if nivel in ("anio", "periodo") else "y" }}',
-    responsive: true, maintainAspectRatio: false,
-    plugins: {legend: {display: false}},
-    scales: {x: {beginAtZero: true}, y: {beginAtZero: true}}
-  }
-});
-</script>
+<script type="application/json" class="nexo-chart-data">{{ [{"id": "brotesChart", "tipo": "bar", "horizontal": nivel not in ("anio", "periodo"), "labels": labels, "datasets": [{"label": "Brotes reportados", "data": data, "color": "#0284c7"}]}]|tojson }}</script>
+<script src="{{ url_for('static', filename='js/graficas.js') }}" defer></script>
 {% endif %}
 {% endblock %}
