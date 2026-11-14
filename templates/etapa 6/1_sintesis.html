@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{# =====================================================================
+   EDITAR AQUÍ: los campos marcados con «Pendiente» deben reemplazarse
+   con los resultados reales de Orange y del análisis de YouTube.
+   No se incluyen cifras inventadas: cada hallazgo debe poder
+   reproducirse con los flujos (.ows) del repositorio.
+   ===================================================================== #}
+
+<h1 class="page-title">1. Síntesis de hallazgos · Conocimiento Oculto</h1>
+<p class="text-muted mt-2 mb-4">
+    Aprendizaje supervisado y no supervisado en Orange Data Mining, complementados con el análisis de comentarios
+    de YouTube. Los flujos de Orange, el código de extracción y las instrucciones para reproducir el trabajo están
+    en el <a href="https://github.com/Manmurcia/NexoBio-ETV" target="_blank" rel="noopener">repositorio</a>.
+</p>
+
+<div class="alert alert-info small">
+    <strong>Cómo leer esta sección.</strong> Cada hallazgo indica la evidencia que lo respalda. Lo que los datos no permiten
+    comprobar se presenta como <span class="badge bg-warning text-dark">hipótesis</span> y requiere validación adicional.
+</div>
+
+<div class="accordion" id="acc-oculto">
+
+<!-- ======================= 1. SUPERVISADO ======================= -->
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#o-1"><span class="badge bg-primary me-2">1</span>Tres modelos supervisados y selección del mejor</button></h2>
+    <div id="o-1" class="accordion-collapse collapse show" data-bs-parent="#acc-oculto"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta de predicción</th><td><span class="text-muted">Pendiente: pregunta, variable objetivo y variables predictoras.</span></td></tr>
+            <tr><th class="table-light">Tipo de problema</th><td><span class="text-muted">Pendiente: clasificación o regresión y su justificación.</span></td></tr>
+            <tr><th class="table-light">Modelos comparados</th><td><span class="text-muted">Pendiente: tres modelos, validación cruzada y parámetros (mismas condiciones para los tres).</span></td></tr>
+            <tr><th class="table-light">Métricas</th><td><span class="text-muted">Pendiente: accuracy, precisión, recall, F1 y matriz de confusión (clasificación) o MAE, RMSE y R² (regresión).</span></td></tr>
+            <tr><th class="table-light">Modelo seleccionado</th><td><span class="text-muted">Pendiente: modelo elegido, errores que comete, interpretación y utilidad.</span></td></tr>
+            <tr><th class="table-light">Limitaciones</th><td><span class="text-muted">Pendiente: clases desbalanceadas, variables no disponibles al predecir, cobertura de los datos.</span></td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<!-- ======================= 2. CLUSTERING ======================= -->
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o-2"><span class="badge bg-primary me-2">2</span>Clustering: grupos ocultos en los datos</button></h2>
+    <div id="o-2" class="accordion-collapse collapse" data-bs-parent="#acc-oculto"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Pregunta</th><td><span class="text-muted">Pendiente: qué se quiere agrupar y para qué decisión.</span></td></tr>
+            <tr><th class="table-light">Variables y tratamiento</th><td><span class="text-muted">Pendiente: variables usadas, normalización y por qué no se usó la variable objetivo del modelo supervisado.</span></td></tr>
+            <tr><th class="table-light">Algoritmo y número de grupos</th><td><span class="text-muted">Pendiente: algoritmo, parámetros y medida de calidad (p. ej., silueta) que justifica el número de grupos.</span></td></tr>
+            <tr><th class="table-light">Grupos encontrados</th><td><span class="text-muted">Pendiente: tamaño, variables que los distinguen y nombre comprensible de cada grupo.</span></td></tr>
+            <tr><th class="table-light">Utilidad</th><td><span class="text-muted">Pendiente: decisiones que podrían apoyar los grupos.</span></td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<!-- ======================= 3. YOUTUBE ======================= -->
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o-3"><span class="badge bg-primary me-2">3</span>Comentarios de YouTube: la voz de los usuarios</button></h2>
+    <div id="o-3" class="accordion-collapse collapse" data-bs-parent="#acc-oculto"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Propósito de análisis</th><td><span class="text-muted">Pendiente: qué se quería saber con los comentarios.</span></td></tr>
+            <tr><th class="table-light">Videos y recolección</th><td><span class="text-muted">Pendiente: criterios de búsqueda, videos consultados, fecha de extracción y cantidad de comentarios.</span></td></tr>
+            <tr><th class="table-light">Preparación</th><td><span class="text-muted">Pendiente: duplicados, vacíos, contenido irrelevante e idioma.</span></td></tr>
+            <tr><th class="table-light">Temas y patrones</th><td><span class="text-muted">Pendiente: temas o agrupaciones identificadas en Orange, con ejemplos de evidencia.</span></td></tr>
+            <tr><th class="table-light">Aporte frente a los datos</th><td><span class="text-muted">Pendiente: qué complementan, cuestionan o amplían respecto a los resultados cuantitativos.</span></td></tr>
+            <tr><th class="table-light">Limitación</th><td>Las opiniones corresponden a quienes comentaron en los videos seleccionados y no representan a toda la población. No se publican credenciales de la API ni datos personales de los autores.</td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+<!-- ======================= 4. INTEGRADAS ======================= -->
+<div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o-4"><span class="badge bg-primary me-2">4</span>Conclusiones integradas</button></h2>
+    <div id="o-4" class="accordion-collapse collapse" data-bs-parent="#acc-oculto"><div class="accordion-body p-0">
+        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
+            <tr><th class="w-25 table-light">Coincidencias y diferencias</th><td><span class="text-muted">Pendiente: relación entre modelo supervisado, grupos y comentarios.</span></td></tr>
+            <tr><th class="table-light">Hallazgos con evidencia</th><td><span class="text-muted">Pendiente.</span></td></tr>
+            <tr><th class="table-light">Hipótesis por validar</th><td><span class="text-muted">Pendiente.</span></td></tr>
+            <tr><th class="table-light">Decisiones que apoyan</th><td><span class="text-muted">Pendiente.</span></td></tr>
+        </tbody></table>
+    </div></div>
+</div>
+
+</div>
+
+<p class="mt-4">
+    <a class="btn btn-primary" href="{{ url_for('conocimiento_oculto_seccion', seccion='informe-video') }}">Ver informe técnico y video &rarr;</a>
+</p>
+{% endblock %}

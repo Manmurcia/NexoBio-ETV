@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="etapa3-content">
+<h1 class="page-title">2. Informe técnico y video de sustentación</h1>
+<p class="text-muted mt-2 mb-4">
+    Documentación paso a paso del trabajo en Orange Data Mining y del análisis de comentarios de YouTube,
+    junto con el video de sustentación (máximo 10 minutos).
+</p>
+
+<!-- INFORME PDF -->
+<div class="card border mb-4">
+    <div class="card-header fw-bold">Informe técnico (PDF)</div>
+    <div class="card-body">
+        {% if informe_pdf %}
+        <div class="ratio mb-3" style="height: 75vh;">
+            <iframe src="{{ url_for('static', filename='docs/' ~ informe_pdf) }}" title="Vista previa del informe técnico en PDF" class="rounded border"></iframe>
+        </div>
+        <a href="{{ url_for('static', filename='docs/' ~ informe_pdf) }}" class="btn btn-outline-danger" target="_blank" rel="noopener" download>Descargar informe técnico</a>
+        {% else %}
+        <p class="text-muted mb-0">El informe se publicará aquí en cuanto se cargue el archivo <code>static/docs/informe_etapa6.pdf</code>.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- VIDEO -->
+<div class="card border mb-4">
+    <div class="card-header fw-bold"><i class="bi bi-camera-reels-fill"></i> Video de sustentación</div>
+    <div class="card-body">
+        {% if video_url %}
+        <div class="ratio ratio-16x9">
+            <iframe src="{{ video_url }}" allow="autoplay" allowfullscreen title="Video de sustentación" class="rounded border"></iframe>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">El video de sustentación se enlazará aquí cuando esté publicado.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ENLACES -->
+<div class="card border mb-4">
+    <div class="card-header fw-bold">Enlaces del proyecto</div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Repositorio (flujos de Orange, extracción de comentarios y archivos para reproducir)</span>
+                <a href="https://github.com/Manmurcia/NexoBio-ETV" target="_blank" rel="noopener" class="btn btn-sm btn-outline-dark">Ver repositorio</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+{% endblock %}

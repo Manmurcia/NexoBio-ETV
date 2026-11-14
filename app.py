@@ -76,6 +76,11 @@ RUTAS_ETAPA4 = {
     'conocimientos': '4_conocimientos.html',
 }
 
+RUTAS_ETAPA6 = {
+    'sintesis': '1_sintesis.html',
+    'informe-video': '2_informe_video.html',
+}
+
 
 # =====================================================
 # REGISTRO DEL BLUEPRINT DE LA ETAPA 5
@@ -180,6 +185,25 @@ def etapa4_seccion(seccion):
 def etapa5_redireccion(seccion):
     return redirect(
         url_for('olap.seccion', seccion=seccion)
+    )
+
+
+# =====================================================
+# RUTAS DE LA ETAPA 6
+# CONOCIMIENTO OCULTO
+# =====================================================
+
+@app.route('/conocimiento-oculto/<seccion>')
+def conocimiento_oculto_seccion(seccion):
+
+    plantilla = RUTAS_ETAPA6.get(seccion)
+
+    if not plantilla:
+        abort(404)
+
+    return render_template(
+        f'etapa 6/{plantilla}',
+        slug_activo=seccion
     )
 
 
