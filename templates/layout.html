@@ -113,6 +113,7 @@
                             <li><a class="dropdown-item {% if slug_activo == 'olap-conocimientos' %}active{% endif %}" href="{{ url_for('olap.seccion', seccion='conocimientos') }}">5. Conocimientos</a></li>
                         </ul>
                     </li>
+<<<<<<< Updated upstream
 
                     <!-- ETAPA 6 -->
                     <li class="nav-item dropdown">
@@ -126,6 +127,19 @@
                         </ul>
                     </li>
 
+=======
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="dropEtapa6" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Conocimiento Oculto
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropEtapa6">
+                            <li><a class="dropdown-item {% if slug_activo == 'co-sintesis' %}active{% endif %}" href="{{ url_for('etapa6_seccion', seccion='sintesis') }}">1. Síntesis de hallazgos</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'co-informe' %}active{% endif %}" href="{{ url_for('etapa6_seccion', seccion='informe') }}">2. Informe técnico</a></li>
+                            <li><a class="dropdown-item {% if slug_activo == 'co-video' %}active{% endif %}" href="{{ url_for('etapa6_seccion', seccion='video') }}">3. Video de sustentación</a></li>
+                        </ul>
+                    </li>
+>>>>>>> Stashed changes
                 </ul>
             </div>
         </div>
