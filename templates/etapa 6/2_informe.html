@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-title">Conocimiento Oculto: informe técnico</h1>
+<p class="text-muted mt-2 mb-4">
+    Informe técnico que documenta paso a paso la Etapa 6: contexto y preguntas de análisis, datos y transformaciones, flujos de Orange con sus widgets y parámetros,
+    los tres modelos supervisados y la elección del modelo, el clustering, la extracción y el análisis de comentarios de YouTube, y las conclusiones integradas.
+</p>
+
+<div class="card border mb-4">
+    <div class="card-header fw-bold">Informe técnico de la Etapa 6 (PDF)</div>
+    <div class="card-body">
+        <iframe src="{{ url_for('static', filename='docs/informe_etapa6.pdf') }}" title="Vista previa del informe técnico de la Etapa 6"
+                class="rounded border w-100 mb-3" style="height: 75vh;"></iframe>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ url_for('static', filename='docs/informe_etapa6.pdf') }}" class="btn btn-outline-primary" target="_blank" rel="noopener">Abrir en una pestaña nueva</a>
+            <a href="{{ url_for('static', filename='docs/informe_etapa6.pdf') }}" class="btn btn-primary" download="informe_etapa6.pdf">Descargar informe técnico</a>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between">
+    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('etapa6_seccion', seccion='sintesis') }}">← Síntesis de hallazgos</a>
+    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('etapa6_seccion', seccion='video') }}">Video de sustentación →</a>
+</div>
+{% endblock %}

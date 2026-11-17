@@ -76,6 +76,11 @@ RUTAS_ETAPA4 = {
     'conocimientos': '4_conocimientos.html',
 }
 
+RUTAS_ETAPA6 = {
+    'sintesis': '1_sintesis.html',
+    'informe-video': '2_informe_video.html',
+}
+
 
 # =====================================================
 # REGISTRO DEL BLUEPRINT DE LA ETAPA 5
@@ -180,6 +185,61 @@ def etapa4_seccion(seccion):
 def etapa5_redireccion(seccion):
     return redirect(
         url_for('olap.seccion', seccion=seccion)
+    )
+
+VIDEO_ETAPA6 = ''
+
+RUTAS_ETAPA6 = {
+    'sintesis': '1_sintesis.html',
+    'informe': '2_informe.html',
+    'video': '3_video.html',
+}
+
+
+def video_info(url):
+    """Devuelve {'link', 'embed'} a partir de un enlace de Drive o YouTube."""
+    url = (url or '').strip()
+    if not url:
+        return None
+    m = re.search(r'drive\.google\.com/file/d/([\w-]+)', url)
+    if m:
+        return {'link': url, 'embed': f'https://drive.google.com/file/d/{m.group(1)}/preview'}
+    m = re.search(r'(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([\w-]{11})', url)
+    if m:
+        return {'link': url, 'embed': f'https://www.youtube.com/embed/{m.group(1)}'}
+    return {'link': url, 'embed': None}
+
+
+@app.route('/conocimiento-oculto/<seccion>')
+def etapa6_seccion(seccion):
+
+    plantilla = RUTAS_ETAPA6.get(seccion)
+
+    if not plantilla:
+        abort(404)
+
+    return render_template(
+        f'etapa 6/{plantilla}',
+        slug_activo=f'co-{seccion}',
+        video=video_info(VIDEO_ETAPA6)
+    )
+
+# =====================================================
+# RUTAS DE LA ETAPA 6
+# CONOCIMIENTO OCULTO
+# =====================================================
+
+@app.route('/conocimiento-oculto/<seccion>')
+def conocimiento_oculto_seccion(seccion):
+
+    plantilla = RUTAS_ETAPA6.get(seccion)
+
+    if not plantilla:
+        abort(404)
+
+    return render_template(
+        f'etapa 6/{plantilla}',
+        slug_activo=seccion
     )
 
 
