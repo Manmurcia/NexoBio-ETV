@@ -1,87 +1,203 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-{# =====================================================================
-   EDITAR AQUÍ: los campos marcados con «Pendiente» deben reemplazarse
-   con los resultados reales de Orange y del análisis de YouTube.
-   No se incluyen cifras inventadas: cada hallazgo debe poder
-   reproducirse con los flujos (.ows) del repositorio.
-   ===================================================================== #}
+<h1 class="page-title">Conocimiento Oculto: síntesis de hallazgos</h1>
 
-<h1 class="page-title">1. Síntesis de hallazgos · Conocimiento Oculto</h1>
-<p class="text-muted mt-2 mb-4">
-    Aprendizaje supervisado y no supervisado en Orange Data Mining, complementados con el análisis de comentarios
-    de YouTube. Los flujos de Orange, el código de extracción y las instrucciones para reproducir el trabajo están
-    en el <a href="https://github.com/Manmurcia/NexoBio-ETV" target="_blank" rel="noopener">repositorio</a>.
+<p class="small text-muted border-start border-3 border-primary ps-2 mb-4">
+    <strong>Fuente de los datos:</strong> Instituto Nacional de Salud (SIVIGILA), archivo tratado en la Etapa 3.
+    <strong>Cobertura:</strong> Colombia, 2007–2022; 237.141 registros y 1.269.342 casos de dengue, dengue grave, chikungunya y chagas.
+    <strong>Comentarios:</strong> cuatro videos de YouTube, extraídos el 12 de noviembre de 2026.
+    <strong>Herramienta:</strong> Orange Data Mining.
 </p>
 
-<div class="alert alert-info small">
-    <strong>Cómo leer esta sección.</strong> Cada hallazgo indica la evidencia que lo respalda. Lo que los datos no permiten
-    comprobar se presenta como <span class="badge bg-warning text-dark">hipótesis</span> y requiere validación adicional.
+<div class="d-flex flex-wrap gap-2 mb-4">
+    <a class="btn btn-outline-primary btn-sm" href="#supervisado">Aprendizaje supervisado</a>
+    <a class="btn btn-outline-primary btn-sm" href="#clustering">Clustering</a>
+    <a class="btn btn-outline-primary btn-sm" href="#comentarios">Comentarios de YouTube</a>
+    <a class="btn btn-outline-primary btn-sm" href="#conclusiones">Conclusiones integradas</a>
+    <a class="btn btn-primary btn-sm" href="{{ url_for('etapa6_seccion', seccion='informe') }}">Informe técnico</a>
+    <a class="btn btn-primary btn-sm" href="{{ url_for('etapa6_seccion', seccion='video') }}">Video de sustentación</a>
 </div>
 
-<div class="accordion" id="acc-oculto">
-
-<!-- ======================= 1. SUPERVISADO ======================= -->
-<div class="accordion-item">
-    <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#o-1"><span class="badge bg-primary me-2">1</span>Tres modelos supervisados y selección del mejor</button></h2>
-    <div id="o-1" class="accordion-collapse collapse show" data-bs-parent="#acc-oculto"><div class="accordion-body p-0">
-        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
-            <tr><th class="w-25 table-light">Pregunta de predicción</th><td><span class="text-muted">Pendiente: pregunta, variable objetivo y variables predictoras.</span></td></tr>
-            <tr><th class="table-light">Tipo de problema</th><td><span class="text-muted">Pendiente: clasificación o regresión y su justificación.</span></td></tr>
-            <tr><th class="table-light">Modelos comparados</th><td><span class="text-muted">Pendiente: tres modelos, validación cruzada y parámetros (mismas condiciones para los tres).</span></td></tr>
-            <tr><th class="table-light">Métricas</th><td><span class="text-muted">Pendiente: accuracy, precisión, recall, F1 y matriz de confusión (clasificación) o MAE, RMSE y R² (regresión).</span></td></tr>
-            <tr><th class="table-light">Modelo seleccionado</th><td><span class="text-muted">Pendiente: modelo elegido, errores que comete, interpretación y utilidad.</span></td></tr>
-            <tr><th class="table-light">Limitaciones</th><td><span class="text-muted">Pendiente: clases desbalanceadas, variables no disponibles al predecir, cobertura de los datos.</span></td></tr>
-        </tbody></table>
-    </div></div>
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="p-3 border rounded text-center bg-white h-100">
+        <div class="fs-3 fw-bold text-primary">12.410</div><div class="small fw-bold">municipio-años analizados</div><div class="small text-muted">modelo supervisado</div></div></div>
+    <div class="col-6 col-md-3"><div class="p-3 border rounded text-center bg-white h-100">
+        <div class="fs-3 fw-bold text-primary">0,794</div><div class="small fw-bold">accuracy del modelo elegido</div><div class="small text-muted">línea base: 0,630</div></div></div>
+    <div class="col-6 col-md-3"><div class="p-3 border rounded text-center bg-white h-100">
+        <div class="fs-3 fw-bold text-primary">3</div><div class="small fw-bold">tipos de municipios</div><div class="small text-muted">644 municipios, silueta 0,268</div></div></div>
+    <div class="col-6 col-md-3"><div class="p-3 border rounded text-center bg-white h-100">
+        <div class="fs-3 fw-bold text-primary">2.564</div><div class="small fw-bold">comentarios analizados</div><div class="small text-muted">de 4.269 extraídos</div></div></div>
 </div>
 
-<!-- ======================= 2. CLUSTERING ======================= -->
-<div class="accordion-item">
-    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o-2"><span class="badge bg-primary me-2">2</span>Clustering: grupos ocultos en los datos</button></h2>
-    <div id="o-2" class="accordion-collapse collapse" data-bs-parent="#acc-oculto"><div class="accordion-body p-0">
-        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
-            <tr><th class="w-25 table-light">Pregunta</th><td><span class="text-muted">Pendiente: qué se quiere agrupar y para qué decisión.</span></td></tr>
-            <tr><th class="table-light">Variables y tratamiento</th><td><span class="text-muted">Pendiente: variables usadas, normalización y por qué no se usó la variable objetivo del modelo supervisado.</span></td></tr>
-            <tr><th class="table-light">Algoritmo y número de grupos</th><td><span class="text-muted">Pendiente: algoritmo, parámetros y medida de calidad (p. ej., silueta) que justifica el número de grupos.</span></td></tr>
-            <tr><th class="table-light">Grupos encontrados</th><td><span class="text-muted">Pendiente: tamaño, variables que los distinguen y nombre comprensible de cada grupo.</span></td></tr>
-            <tr><th class="table-light">Utilidad</th><td><span class="text-muted">Pendiente: decisiones que podrían apoyar los grupos.</span></td></tr>
-        </tbody></table>
-    </div></div>
+<h2 class="h4 fw-bold mt-5" id="supervisado">1. Aprendizaje supervisado: ¿dónde aparece el dengue grave?</h2>
+<div class="p-3 mb-3" style="background:#e0f2fe; border-left:4px solid #0284c7; border-radius:6px;">
+    <strong>Pregunta.</strong> Dado lo notificado en un municipio durante un año (dengue, chikungunya y chagas), su región natural y el periodo,
+    ¿el municipio registrará casos de dengue grave ese año? Es un problema de <strong>clasificación binaria</strong>
+    (variable objetivo: al menos un caso de dengue grave, sí o no) sobre 12.410 municipio-años; el 37,0 % tuvo dengue grave y el 63,0 % no.
 </div>
 
-<!-- ======================= 3. YOUTUBE ======================= -->
-<div class="accordion-item">
-    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o-3"><span class="badge bg-primary me-2">3</span>Comentarios de YouTube: la voz de los usuarios</button></h2>
-    <div id="o-3" class="accordion-collapse collapse" data-bs-parent="#acc-oculto"><div class="accordion-body p-0">
-        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
-            <tr><th class="w-25 table-light">Propósito de análisis</th><td><span class="text-muted">Pendiente: qué se quería saber con los comentarios.</span></td></tr>
-            <tr><th class="table-light">Videos y recolección</th><td><span class="text-muted">Pendiente: criterios de búsqueda, videos consultados, fecha de extracción y cantidad de comentarios.</span></td></tr>
-            <tr><th class="table-light">Preparación</th><td><span class="text-muted">Pendiente: duplicados, vacíos, contenido irrelevante e idioma.</span></td></tr>
-            <tr><th class="table-light">Temas y patrones</th><td><span class="text-muted">Pendiente: temas o agrupaciones identificadas en Orange, con ejemplos de evidencia.</span></td></tr>
-            <tr><th class="table-light">Aporte frente a los datos</th><td><span class="text-muted">Pendiente: qué complementan, cuestionan o amplían respecto a los resultados cuantitativos.</span></td></tr>
-            <tr><th class="table-light">Limitación</th><td>Las opiniones corresponden a quienes comentaron en los videos seleccionados y no representan a toda la población. No se publican credenciales de la API ni datos personales de los autores.</td></tr>
-        </tbody></table>
-    </div></div>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle small">
+    <thead class="table-light">
+        <tr><th>Modelo (validación cruzada de 10 particiones)</th><th class="text-end">AUC</th><th class="text-end">Accuracy</th><th class="text-end">Precisión</th><th class="text-end">Recall</th><th class="text-end">F1</th></tr>
+    </thead>
+    <tbody>
+        <tr class="table-primary fw-bold"><td>Regresión logística (seleccionado)</td><td class="text-end">0,862</td><td class="text-end">0,794</td><td class="text-end">0,749</td><td class="text-end">0,665</td><td class="text-end">0,705</td></tr>
+        <tr><td>Árbol de decisión</td><td class="text-end">0,858</td><td class="text-end">0,794</td><td class="text-end">0,753</td><td class="text-end">0,661</td><td class="text-end">0,704</td></tr>
+        <tr><td>Random Forest</td><td class="text-end">0,833</td><td class="text-end">0,774</td><td class="text-end">0,727</td><td class="text-end">0,625</td><td class="text-end">0,672</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="small text-muted">Precisión, recall y F1 corresponden a la clase «dengue grave». Responder siempre «no» acertaría el 63,0 %.</p>
+
+<h3 class="h6 fw-bold mt-4">Qué se descubrió</h3>
+<ul>
+    <li><strong>El volumen de dengue domina.</strong> La presencia de dengue grave sube de 6,6 % en los municipio-años con 1 caso a 54,3 % con 21 a 100 casos y 99,4 % con más de 500.
+        Es la variable de mayor peso, casi ocho veces la del periodo.</li>
+    <li><strong>El periodo aporta algo más.</strong> Entre los municipio-años con 30 casos o más, la proporción con dengue grave baja de 86,7 % (2007–2010) a 71,0 % (2011–2016) y 61,1 % (2017–2022).
+        Que se deba a una baja real o a cambios en la clasificación es una hipótesis.</li>
+    <li><strong>La región aporta poco</strong> una vez controlado el volumen; la diferencia regional bruta podría deberse al tamaño de los brotes.</li>
+    <li><strong>El error principal es no detectar casos graves:</strong> los modelos dejan escapar cerca de un tercio de los municipio-años con dengue grave (33,5 % con la regresión logística).</li>
+</ul>
+<div class="alert alert-light border small">
+    <strong>Cómo leerlo.</strong> Las predictoras corresponden al mismo año que el objetivo, por lo que el modelo sirve para <strong>estratificar el riesgo</strong>
+    cuando ya hay casos notificados, no para pronosticar antes de que empiece el año. El efecto de la chikungunya no se interpreta: antes de 2014 no se notificaba y sus ceros significan «sin vigilancia».
+</div>
+<div class="row g-3 mb-2">
+    <div class="col-md-6"><figure class="figure w-100 text-center"><img src="{{ url_for('static', filename='img/etapa6/test_and_score.jpg') }}" class="figure-img img-fluid border rounded" alt="Resultados de Test and Score en Orange para los tres modelos"><figcaption class="figure-caption">Evaluación de los tres modelos en Orange (clase «Si»).</figcaption></figure></div>
+    <div class="col-md-6"><figure class="figure w-100 text-center"><img src="{{ url_for('static', filename='img/etapa6/nomograma.jpg') }}" class="figure-img img-fluid border rounded" alt="Nomograma de la regresión logística"><figcaption class="figure-caption">Nomograma de la regresión logística: el volumen de dengue abarca el mayor rango.</figcaption></figure></div>
 </div>
 
-<!-- ======================= 4. INTEGRADAS ======================= -->
-<div class="accordion-item">
-    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o-4"><span class="badge bg-primary me-2">4</span>Conclusiones integradas</button></h2>
-    <div id="o-4" class="accordion-collapse collapse" data-bs-parent="#acc-oculto"><div class="accordion-body p-0">
-        <table class="table table-sm table-bordered mb-0 align-middle"><tbody>
-            <tr><th class="w-25 table-light">Coincidencias y diferencias</th><td><span class="text-muted">Pendiente: relación entre modelo supervisado, grupos y comentarios.</span></td></tr>
-            <tr><th class="table-light">Hallazgos con evidencia</th><td><span class="text-muted">Pendiente.</span></td></tr>
-            <tr><th class="table-light">Hipótesis por validar</th><td><span class="text-muted">Pendiente.</span></td></tr>
-            <tr><th class="table-light">Decisiones que apoyan</th><td><span class="text-muted">Pendiente.</span></td></tr>
-        </tbody></table>
-    </div></div>
+<h2 class="h4 fw-bold mt-5" id="clustering">2. Clustering: ¿qué tipos de municipios existen?</h2>
+<div class="p-3 mb-3" style="background:#e0f2fe; border-left:4px solid #0284c7; border-radius:6px;">
+    <strong>Pregunta.</strong> ¿Qué tipos de municipios existen según su comportamiento de transmisión de dengue entre 2007 y 2022 (intensidad, persistencia y concentración en un año pico)
+    y su presencia de chikungunya y chagas? Se agruparon 644 municipios (los que tienen al menos 100 casos, el 98,9 % de los casos de dengue) con k-means sobre variables estandarizadas.
+    Con k = 3 la silueta promedio es la más alta (0,268).
+</div>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle small">
+    <thead class="table-light">
+        <tr><th>Grupo</th><th class="text-end">Municipios</th><th class="text-end">% de los casos de dengue</th><th class="text-end">Casos 2007–2022 (mediana)</th><th class="text-end">Años con dengue (de 16)</th><th class="text-end">% de casos en el año pico</th><th class="text-end">% de dengue grave</th></tr>
+    </thead>
+    <tbody>
+        <tr><td><strong>C1. Endémicos de alta carga</strong></td><td class="text-end">175</td><td class="text-end">81,7 %</td><td class="text-end">2.080</td><td class="text-end">15,9</td><td class="text-end">23 %</td><td class="text-end">3,4</td></tr>
+        <tr><td><strong>C2. Endémicos de carga media</strong></td><td class="text-end">355</td><td class="text-end">16,0 %</td><td class="text-end">415</td><td class="text-end">15,1</td><td class="text-end">27 %</td><td class="text-end">3,5</td></tr>
+        <tr><td><strong>C3. Episódicos o intermitentes</strong></td><td class="text-end">114</td><td class="text-end">2,3 %</td><td class="text-end">164,5</td><td class="text-end">11,3</td><td class="text-end">49 %</td><td class="text-end">2,6</td></tr>
+    </tbody>
+</table>
+</div>
+<h3 class="h6 fw-bold mt-3">Qué se descubrió</h3>
+<ul>
+    <li><strong>Pocos municipios concentran casi todo el dengue:</strong> los 175 municipios endémicos de alta carga (27 % de los 644) aportan el 81,7 % de los casos.</li>
+    <li><strong>No solo importa cuántos casos, sino cómo se presentan:</strong> los endémicos tienen dengue casi todos los años; los episódicos concentran casi la mitad de sus casos en un solo año, sobre todo 2016 y 2010.</li>
+    <li><strong>La geografía se reparte distinto:</strong> el 52 % de los municipios de Orinoquía está en el grupo de alta carga (25 % en la región Andina); el Caribe es sobre todo de carga media (69 %); el grupo episódico es principalmente andino, del Pacífico y de la Amazonía.</li>
+    <li><strong>La gravedad no distingue a los grupos:</strong> el porcentaje medio de dengue grave es parecido (3,4 %, 3,5 % y 2,6 %). Los grupos describen el patrón de transmisión.</li>
+</ul>
+<div class="alert alert-light border small">
+    <strong>Cómo leerlo.</strong> Una silueta de 0,27 indica una estructura moderada o débil: los grupos son zonas de un continuo y no están claramente separados, sobre todo C1 y C3.
+    El «pico alto» del grupo episódico es en parte mecánico, porque con pocos casos un solo año pesa mucho más. Se excluyeron 426 municipios con menos de 100 casos (1,1 % de los casos).
+</div>
+<div class="row g-3 mb-2">
+    <div class="col-md-6"><figure class="figure w-100 text-center"><img src="{{ url_for('static', filename='img/etapa6/clusters_dispersion.jpg') }}" class="figure-img img-fluid border rounded" alt="Dispersión de intensidad y concentración en el año pico por grupo"><figcaption class="figure-caption">Intensidad (eje horizontal, logaritmo de los casos) contra proporción de casos en el año pico (eje vertical).</figcaption></figure></div>
+    <div class="col-md-6"><figure class="figure w-100 text-center"><img src="{{ url_for('static', filename='img/etapa6/clusters_region.jpg') }}" class="figure-img img-fluid border rounded" alt="Composición regional de los tres grupos"><figcaption class="figure-caption">Composición regional de los grupos: C1 azul, C2 rojo, C3 verde.</figcaption></figure></div>
 </div>
 
+<h2 class="h4 fw-bold mt-5" id="comentarios">3. Comentarios de YouTube: ¿qué percibe el público?</h2>
+<div class="p-3 mb-3" style="background:#e0f2fe; border-left:4px solid #0284c7; border-radius:6px;">
+    <strong>Propósito.</strong> Conocer qué preocupa, qué se pregunta y qué se valora cuando las personas comentan videos de divulgación médica sobre dengue, chagas y enfermedad de Lyme,
+    y contrastarlo con los resultados de los datos de vigilancia. Se extrajeron 4.269 comentarios de cuatro videos y, tras limpiar vacíos, spam, textos muy cortos, otros idiomas y duplicados, se analizaron 2.564 (60,1 %).
 </div>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle small">
+    <thead class="table-light"><tr><th>Video</th><th class="text-end">Extraídos</th><th class="text-end">Analizados</th><th>Lo que más aparece en los comentarios</th></tr></thead>
+    <tbody>
+        <tr><td>Chagas</td><td class="text-end">2.478</td><td class="text-end">1.435</td><td>El vector (parásito, bicho, chinches, vinchuca), el agradecimiento («gracias», 150 veces) y el miedo.</td></tr>
+        <tr><td>Dengue: prevención y vacuna</td><td class="text-end">681</td><td class="text-end">391</td><td>Síntomas (dolor, fiebre, plaquetas, hemorrágico) y prevención (vacuna, repelente, mosquito).</td></tr>
+        <tr><td>Dengue: experiencias clínicas</td><td class="text-end">762</td><td class="text-end">532</td><td>Testimonios, descenso de plaquetas, forma hemorrágica y reinfección (segunda vez).</td></tr>
+        <tr><td>Enfermedad de Lyme</td><td class="text-end">348</td><td class="text-end">206</td><td>El vector (garrapata y garrapatas, 51 menciones) y el agradecimiento al divulgador.</td></tr>
+    </tbody>
+</table>
+</div>
+<h3 class="h6 fw-bold mt-3">Qué se descubrió</h3>
+<ul>
+    <li><strong>En el dengue, la preocupación es la gravedad clínica:</strong> dolor, fiebre, plaquetas y forma hemorrágica aparecen en los dos corpus. Coincide con el foco del análisis supervisado.</li>
+    <li><strong>En chagas y Lyme, el tema es el vector.</strong></li>
+    <li><strong>El público casi no menciona territorio ni épocas del año,</strong> que son justo lo que muestran los datos de vigilancia (tipos de municipio y estacionalidad regional).</li>
+    <li><strong>El interés no sigue la carga de casos:</strong> chagas es el video más comentado (2.478), pero representa el 0,39 % de los casos del archivo de vigilancia. Es una hipótesis, porque depende de la popularidad del video.</li>
+    <li><strong>Sentimiento y «me gusta»:</strong> los comentarios más apoyados están cerca de la polaridad neutra (entre −20 y +15) y los extremos casi no reciben apoyo; los aportes informativos y los testimonios reciben más respaldo que las reacciones puramente emocionales.</li>
+</ul>
+<div class="alert alert-warning small">
+    <strong>Representatividad.</strong> Las opiniones corresponden a los usuarios que comentaron esos cuatro videos y no representan a toda la población; la audiencia es latinoamericana, no solo colombiana.
+    El sentimiento se calculó con un léxico, que clasifica palabras y no opiniones, y las métricas de los tópicos no son comparables entre corpus de distinto tamaño.
+</div>
+<figure class="figure w-100 text-center">
+    <img src="{{ url_for('static', filename='img/etapa6/nubes_palabras.jpg') }}" class="figure-img img-fluid border rounded" style="max-width:760px" alt="Nubes de palabras de los cuatro videos">
+    <figcaption class="figure-caption">Nubes de palabras: chagas, dengue (prevención y vacuna), dengue (experiencias clínicas) y Lyme.</figcaption>
+</figure>
 
-<p class="mt-4">
-    <a class="btn btn-primary" href="{{ url_for('conocimiento_oculto_seccion', seccion='informe-video') }}">Ver informe técnico y video &rarr;</a>
+<h2 class="h4 fw-bold mt-5" id="conclusiones">4. Conclusiones integradas</h2>
+<p>
+    Los tres análisis miran el mismo problema desde ángulos distintos: el modelo supervisado dice <em>dónde</em> aparece el dengue grave, el clustering dice <em>qué tipos de municipio</em> existen
+    y los comentarios dicen <em>qué le preocupa al público</em>.
 </p>
+<div class="row g-3 mb-3">
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100">
+        <h3 class="h6 fw-bold">Coincidencias</h3>
+        <ul class="small mb-0">
+            <li>El <strong>volumen de dengue</strong> es el eje que organiza tanto la presencia de dengue grave como los grupos de municipios.</li>
+            <li>El <strong>dengue grave</strong> es lo que más preocupa al público y es el foco del modelo supervisado.</li>
+            <li>El periodo <strong>2007–2010</strong> concentra más dengue grave, y 2010 y 2016 marcan a los municipios episódicos.</li>
+        </ul></div></div>
+    <div class="col-md-6"><div class="p-3 border rounded bg-white h-100">
+        <h3 class="h6 fw-bold">Diferencias</h3>
+        <ul class="small mb-0">
+            <li>Los grupos no difieren en el porcentaje de dengue grave, pero el riesgo de tener <em>algún</em> caso grave crece con el volumen: son dos medidas distintas (proporción contra presencia).</li>
+            <li>El interés del público (chagas) no sigue la carga de casos notificados.</li>
+            <li>Los comentarios no hablan de territorio ni de estacionalidad; los datos sí.</li>
+        </ul></div></div>
+</div>
+
+<h3 class="h6 fw-bold mt-4">Decisiones que se podrían apoyar</h3>
+<ul>
+    <li><strong>Priorizar la vigilancia y la preparación clínica</strong> en municipios con alto volumen de dengue: entre los municipio-años con 30 casos o más, el 70,4 % tuvo dengue grave.</li>
+    <li><strong>Diferenciar estrategias por tipo de municipio:</strong> control vectorial sostenido en los endémicos de alta carga y planes de alerta ante brotes en los episódicos.</li>
+    <li><strong>Orientar la comunicación al público</strong> a lo que pregunta (signos de alarma, plaquetas, vacuna, repelente) y hacerlo con mensajes territoriales.</li>
+    <li><strong>Mejorar el registro:</strong> documentar cambios en la clasificación del dengue grave y el inicio de la notificación de cada evento.</li>
+</ul>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6"><div class="card h-100 border-success">
+        <div class="card-header bg-success text-white fw-bold">Respaldado por evidencia</div>
+        <div class="card-body small"><ul class="mb-0">
+            <li>La presencia de dengue grave aumenta con el volumen de casos (6,6 % con 1 caso, 99,4 % con más de 500).</li>
+            <li>Dos modelos superan la línea base (0,794 contra 0,630) y dejan escapar cerca de un tercio de los casos graves.</li>
+            <li>Existen tres tipos de municipios (silueta 0,268, estructura moderada); 175 municipios aportan el 81,7 % de los casos.</li>
+            <li>Los comentarios de dengue se centran en síntomas y gravedad; los de chagas y Lyme, en el vector.</li>
+            <li>Los comentarios no mencionan territorio ni estacionalidad.</li>
+        </ul></div></div></div>
+    <div class="col-md-6"><div class="card h-100 border-warning">
+        <div class="card-header bg-warning fw-bold">Hipótesis por validar</div>
+        <div class="card-body small"><ul class="mb-0">
+            <li>La baja del dengue grave con el tiempo se debe a un cambio en la clasificación y no a una reducción real.</li>
+            <li>La diferencia regional en dengue grave se explica por el tamaño de los brotes municipales.</li>
+            <li>Los municipios episódicos requieren alerta ante brotes y los de alta carga, control permanente.</li>
+            <li>El interés por chagas supera a su carga de casos por la popularidad del video.</li>
+            <li>El efecto negativo de la chikungunya en el modelo es un artefacto de la vigilancia iniciada en 2014.</li>
+        </ul></div></div></div>
+</div>
+
+<h3 class="h6 fw-bold">Limitaciones generales</h3>
+<ul class="small">
+    <li>Se trabaja con conteos de casos notificados, no con tasas por población.</li>
+    <li>Los años 2020 y 2021 pueden estar afectados por la pandemia en la notificación.</li>
+    <li>El modelo supervisado es de estratificación de riesgo, no de pronóstico anticipado.</li>
+    <li>El clustering excluye 426 municipios con menos de 100 casos.</li>
+    <li>Los comentarios provienen de cuatro videos y de personas que decidieron comentar.</li>
+</ul>
+
+<div class="d-flex justify-content-between mt-4">
+    <span></span>
+    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('etapa6_seccion', seccion='informe') }}">Informe técnico →</a>
+</div>
 {% endblock %}
