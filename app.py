@@ -1,4 +1,4 @@
-
+import re
 from flask import Flask, render_template, abort, redirect, url_for
 
 app = Flask(__name__)
@@ -187,7 +187,7 @@ def etapa5_redireccion(seccion):
         url_for('olap.seccion', seccion=seccion)
     )
 
-VIDEO_ETAPA6 = ''
+VIDEO_ETAPA6 = 'https://drive.google.com/drive/folders/1iT8VuILj01eXMnew3d8wjmctZutJIVZl?usp=sharing'
 
 RUTAS_ETAPA6 = {
     'sintesis': '1_sintesis.html',
@@ -197,17 +197,21 @@ RUTAS_ETAPA6 = {
 
 
 def video_info(url):
-    """Devuelve {'link', 'embed'} a partir de un enlace de Drive o YouTube."""
+    """Devuelve {'link', 'embed', 'carpeta'} a partir de un enlace de Drive o YouTube."""
     url = (url or '').strip()
     if not url:
         return None
+    m = re.search(r'drive\.google\.com/drive/(?:u/\d+/)?folders/([\w-]+)', url)
+    if m:  
+        return {'link': url, 'carpeta': True,
+                'embed': f'https://drive.google.com/embeddedfolderview?id={m.group(1)}#list'}
     m = re.search(r'drive\.google\.com/file/d/([\w-]+)', url)
     if m:
-        return {'link': url, 'embed': f'https://drive.google.com/file/d/{m.group(1)}/preview'}
+        return {'link': url, 'carpeta': False, 'embed': f'https://drive.google.com/file/d/{m.group(1)}/preview'}
     m = re.search(r'(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([\w-]{11})', url)
     if m:
-        return {'link': url, 'embed': f'https://www.youtube.com/embed/{m.group(1)}'}
-    return {'link': url, 'embed': None}
+        return {'link': url, 'carpeta': False, 'embed': f'https://www.youtube.com/embed/{m.group(1)}'}
+    return {'link': url, 'carpeta': False, 'embed': None}
 
 
 @app.route('/conocimiento-oculto/<seccion>')
@@ -223,25 +227,6 @@ def etapa6_seccion(seccion):
         slug_activo=f'co-{seccion}',
         video=video_info(VIDEO_ETAPA6)
     )
-
-# =====================================================
-# RUTAS DE LA ETAPA 6
-# CONOCIMIENTO OCULTO
-# =====================================================
-
-@app.route('/conocimiento-oculto/<seccion>')
-def conocimiento_oculto_seccion(seccion):
-
-    plantilla = RUTAS_ETAPA6.get(seccion)
-
-    if not plantilla:
-        abort(404)
-
-    return render_template(
-        f'etapa 6/{plantilla}',
-        slug_activo=seccion
-    )
-
 
 # =====================================================
 # EJECUCIÓN DE LA APLICACIÓN
