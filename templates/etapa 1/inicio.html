@@ -1,7 +1,45 @@
 {% extends 'layout.html' %}
 
-{% block content %}
-<h1 class="page-title">Análisis de Datos: Enfermedades</h1>
+{% block title %}NexoBio · Inicio{% endblock %}
+{% block content_class %}home-content{% endblock %}
 
-<p>Bienvenido al portal del proyecto enfocado en la investigación y análisis de datos epidemiológicos y de salud sobre <strong>Enfermedades</strong>.</p>
+{% block content %}
+<section class="home-hero" aria-labelledby="titulo-inicio">
+    <div class="hero-copy">
+        <p class="hero-label">Proyecto de análisis epidemiológico</p>
+        <h1 id="titulo-inicio">Análisis de datos sobre enfermedades</h1>
+        <p>Explora el recorrido del proyecto, desde la selección y preparación de los datos hasta los análisis de dengue, brotes globales y comentarios.</p>
+        <div class="hero-actions">
+            <a class="btn hero-primary" href="#etapas">Explorar etapas</a>
+            <a class="btn hero-secondary" href="{{ url_for('etapa6_seccion', seccion='sintesis') }}">Ver hallazgos</a>
+        </div>
+    </div>
+    <div class="hero-graphic" aria-hidden="true">
+        <div class="hero-orbit"></div>
+        <div class="hero-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+</section>
+
+{% set etapas = [
+    ('Contexto y fuentes', 'Problema de investigación, preguntas y fuentes de datos.', url_for('etapa1_seccion', seccion='problema')),
+    ('Calidad de datos', 'Perfilamiento, problemas de calidad y estrategias de mejora.', url_for('etapa2_seccion', seccion='descripcion-datos')),
+    ('Preparación de datos', 'Reglas de tratamiento, diseño ETL y comparación de iteraciones.', url_for('etapa3_seccion', seccion='reglas-tratamiento')),
+    ('Visualización en Power BI', 'Informe interactivo y hallazgos del análisis exploratorio.', url_for('etapa4_seccion', seccion='informe')),
+    ('Análisis OLAP', 'Modelo dimensional y consultas sobre dengue y brotes globales.', url_for('olap.seccion', seccion='proposito')),
+    ('Conocimiento oculto', 'Hallazgos de minería de datos y análisis de comentarios.', url_for('etapa6_seccion', seccion='sintesis'))
+] %}
+<section class="home-stages" id="etapas" aria-labelledby="titulo-etapas">
+    <h2 id="titulo-etapas">Etapas del proyecto</h2>
+    <ol class="stage-grid">
+        {% for titulo, descripcion, enlace in etapas %}
+        <li>
+            <a class="stage-card" href="{{ enlace }}">
+                <span class="stage-label">Etapa {{ loop.index }}</span>
+                <h3>{{ titulo }}</h3>
+                <p>{{ descripcion }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ol>
+</section>
 {% endblock %}
